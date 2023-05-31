@@ -590,11 +590,14 @@ class OVTrainer(Trainer):
                 self.compression_metrics["distillation_loss"] = distillation_loss.item()
 
         if self.compression_controller is not None:
+            task_loss = loss
             compression_loss = self.compression_controller.loss()
-            loss += compression_loss
-            if model.training:
-                self.compression_metrics["compression_loss"] = compression_loss.item()
+            loss = (1 - self.args.distillation_weight) * task_loss + self.args.distillation_weight * compression_loss
 
+            if model.training:
+                self.compression_metrics["task_loss"] = task_loss.item()
+                self.compression_metrics["compression_loss"] = compression_loss.item()
+            print(f"total loss={loss}, distill_loss={compression_loss.item()}, task_loss={task_loss.item()}")
         return (loss, outputs) if return_outputs else loss
 
     def _maybe_log_save_evaluate(self, tr_loss, model, trial, epoch, ignore_keys_for_eval):
