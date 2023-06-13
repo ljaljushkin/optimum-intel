@@ -12,9 +12,12 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-sst2",
-                "--task_name=sst2",
-                "--output_dir=/tmp/qat-bert-base-ft-sst2",
+                "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-mnli",
+                // "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-sst2",
+                "--task_name=mnli",
+                // "--task_name=sst2",
+                "--output_dir=/tmp/qat-bert-base-ft-mnli",
+                // "--output_dir=/tmp/qat-bert-base-ft-sst2",
                 "--overwrite_output_dir",
                 "--do_eval",
                 "--do_train",
@@ -27,7 +30,7 @@
                 "--evaluation_strategy=steps",
                 "--eval_steps=250",
                 "--save_strategy=epoch",
-                "--fp16",
+                // "--fp16",
                 "--seed=4",
             ]
         }

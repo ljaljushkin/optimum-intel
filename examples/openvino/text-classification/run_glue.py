@@ -604,11 +604,11 @@ def main():
     #     trainer.save_state()
 
     # do_eval(data_args, raw_datasets, eval_dataset, trainer)
-    do_lkd_tuning(training_args.device, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
+    # do_lkd_tuning(training_args.device, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
 
     # Evaluation
-    # if training_args.do_eval:
-    #     do_eval(data_args, raw_datasets, eval_dataset, trainer)
+    if training_args.do_eval:
+        do_eval(data_args, raw_datasets, eval_dataset, trainer)
 
     if training_args.do_predict:
         logger.info("*** Predict ***")
