@@ -27,7 +27,9 @@ import openvino.runtime
 import torch
 import torch.distributed as dist
 import torch.nn.functional as F
+from nncf.experimental.torch.quantization.quantize_model import quantize_impl as pt_impl_experimental
 from nncf import NNCFConfig
+import nncf
 from nncf.common.logging.logger import nncf_logger, set_log_level
 from nncf.common.utils.tensorboard import prepare_for_tensorboard
 from nncf.config.structures import BNAdaptationInitArgs, QuantizationRangeInitArgs
@@ -162,9 +164,11 @@ class OVTrainer(Trainer):
             self.teacher.eval()
         self.compression_controller = None
 
-        if self.ov_config is not None and self.args.do_train:
+        # if self.ov_config is not None and self.args.do_train:
+        if True:
             self._set_task()
             train_dataloader = self.get_train_dataloader()
+            self.nik_train_dataloader = train_dataloader
             model_inputs = next(iter(train_dataloader))
             for label_name in self.label_names:
                 model_inputs.pop(label_name)
@@ -190,6 +194,23 @@ class OVTrainer(Trainer):
             nncf_log_file_handler.setLevel(logging.INFO)
 
             self.compression_controller, self.model = create_compressed_model(self.model, nncf_config)
+            # calibration_dataloader = OVDataLoader(train_dataloader)
+            # quantization_dataset = nncf.Dataset(calibration_dataloader, lambda x: x)
+            # self.model = pt_impl_experimental(
+            #     self.model,
+            #     quantization_dataset,
+            #     model_type=nncf.ModelType.TRANSFORMER,
+            #     fast_bias_correction=True,
+            #     preset = nncf.QuantizationPreset.PERFORMANCE,
+            #     target_device = nncf.TargetDevice.CPU,
+            #     subset_size=200,
+            #     ignored_scope=[
+            #         "{re}.*__add___[0-1]",
+            #         "{re}.*layer_norm_0",
+            #         "{re}.*matmul_1",
+            #         "{re}.*__truediv__*"
+            #     ]
+            # )
             self.model_wrapped = self.model
             # TODO : To deprecate once support transformers > 4.30.0
             self.deepspeed = None

@@ -16,22 +16,26 @@
 """ Finetuning the library models for sequence classification on GLUE."""
 # You can also adapt this script on your own text classification task. Pointers for this are left as comments.
 
+from copy import deepcopy
 import logging
 import os
 import random
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+import time
 from typing import Optional
 
 import datasets
 import evaluate
 import jstyleson as json
 import numpy as np
+import torch
 import transformers
 from datasets import load_dataset
 from nncf.common.utils.os import safe_open
 from transformers import (
+    AdamW,
     AutoConfig,
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -47,6 +51,30 @@ from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
 from optimum.intel.openvino import OVConfig, OVTrainer, OVTrainingArguments
+
+def to_device(batch, device):
+    output = {}
+    for k, v in batch.items():
+        try:
+            output[k] = v.to(device)
+        except:
+            output[k] = v
+    return output
+
+def recursive_getattr(model, module_name):
+    """
+    Recursively get the attribute of a module.
+    Args:
+        model (`torch.nn.Module`)
+            The model to get the attribute from.
+        module_name (`str`)
+            The name of the module to get the attribute from.
+    """
+    split_list = module_name.split('.')
+    output = model
+    for name in split_list:
+        output = getattr(output, name)
+    return output
 
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
@@ -391,7 +419,7 @@ def main():
         use_auth_token=True if model_args.use_auth_token else None,
         ignore_mismatched_sizes=model_args.ignore_mismatched_sizes,
     )
-    teacher_model = None
+    teacher_model = deepcopy(model)
     if model_args.teacher_model_name_or_path is not None:
         teacher_model = AutoModelForSequenceClassification.from_pretrained(
             model_args.teacher_model_name_or_path,
@@ -556,56 +584,31 @@ def main():
     )
 
     # Training
-    if training_args.do_train:
-        checkpoint = None
-        if training_args.resume_from_checkpoint is not None:
-            checkpoint = training_args.resume_from_checkpoint
-        elif last_checkpoint is not None:
-            checkpoint = last_checkpoint
-        train_result = trainer.train(resume_from_checkpoint=checkpoint)
-        metrics = train_result.metrics
-        max_train_samples = (
-            data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
-        )
-        metrics["train_samples"] = min(max_train_samples, len(train_dataset))
+    # if training_args.do_train:
+    #     checkpoint = None
+    #     if training_args.resume_from_checkpoint is not None:
+    #         checkpoint = training_args.resume_from_checkpoint
+    #     elif last_checkpoint is not None:
+    #         checkpoint = last_checkpoint
+    #     train_result = trainer.train(resume_from_checkpoint=checkpoint)
+    #     metrics = train_result.metrics
+    #     max_train_samples = (
+    #         data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
+    #     )
+    #     metrics["train_samples"] = min(max_train_samples, len(train_dataset))
 
-        trainer.save_model()  # Saves the tokenizer too for easy upload
+    #     trainer.save_model()  # Saves the tokenizer too for easy upload
 
-        trainer.log_metrics("train", metrics)
-        trainer.save_metrics("train", metrics)
-        trainer.save_state()
+    #     trainer.log_metrics("train", metrics)
+    #     trainer.save_metrics("train", metrics)
+    #     trainer.save_state()
+
+    # do_eval(data_args, raw_datasets, eval_dataset, trainer)
+    do_lkd_tuning(training_args.device, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
 
     # Evaluation
-    if training_args.do_eval:
-        logger.info("*** Evaluate ***")
-
-        # Loop to handle MNLI double evaluation (matched, mis-matched)
-        tasks = [data_args.task_name]
-        eval_datasets = [eval_dataset]
-        if data_args.task_name == "mnli":
-            tasks.append("mnli-mm")
-            valid_mm_dataset = raw_datasets["validation_mismatched"]
-            if data_args.max_eval_samples is not None:
-                max_eval_samples = min(len(valid_mm_dataset), data_args.max_eval_samples)
-                valid_mm_dataset = valid_mm_dataset.select(range(max_eval_samples))
-            eval_datasets.append(valid_mm_dataset)
-            combined = {}
-
-        for eval_dataset, task in zip(eval_datasets, tasks):
-            metrics = trainer.evaluate(eval_dataset=eval_dataset)
-
-            max_eval_samples = (
-                data_args.max_eval_samples if data_args.max_eval_samples is not None else len(eval_dataset)
-            )
-            metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
-
-            if task == "mnli-mm":
-                metrics = {k + "_mm": v for k, v in metrics.items()}
-            if task is not None and "mnli" in task:
-                combined.update(metrics)
-
-            trainer.log_metrics("eval", metrics)
-            trainer.save_metrics("eval", combined if task is not None and "mnli" in task else metrics)
+    # if training_args.do_eval:
+    #     do_eval(data_args, raw_datasets, eval_dataset, trainer)
 
     if training_args.do_predict:
         logger.info("*** Predict ***")
@@ -647,6 +650,151 @@ def main():
     else:
         trainer.create_model_card(**kwargs)
 
+def do_eval(data_args, raw_datasets, eval_dataset, trainer):
+    logger.info("*** Evaluate ***")
+
+        # Loop to handle MNLI double evaluation (matched, mis-matched)
+    tasks = [data_args.task_name]
+    eval_datasets = [eval_dataset]
+    if data_args.task_name == "mnli":
+        tasks.append("mnli-mm")
+        valid_mm_dataset = raw_datasets["validation_mismatched"]
+        if data_args.max_eval_samples is not None:
+            max_eval_samples = min(len(valid_mm_dataset), data_args.max_eval_samples)
+            valid_mm_dataset = valid_mm_dataset.select(range(max_eval_samples))
+        eval_datasets.append(valid_mm_dataset)
+        combined = {}
+
+    for eval_dataset, task in zip(eval_datasets, tasks):
+        metrics = trainer.evaluate(eval_dataset=eval_dataset)
+
+        max_eval_samples = (
+                data_args.max_eval_samples if data_args.max_eval_samples is not None else len(eval_dataset)
+            )
+        metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
+
+        if task == "mnli-mm":
+            metrics = {k + "_mm": v for k, v in metrics.items()}
+        if task is not None and "mnli" in task:
+            combined.update(metrics)
+
+        trainer.log_metrics("eval", metrics)
+        trainer.save_metrics("eval", combined if task is not None and "mnli" in task else metrics)
+    return metrics['eval_accuracy']
+
+
+def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_datasets, eval_dataset):
+    student_model.eval()
+    teacher_model.eval()
+    start_time = time.time()
+
+    no_decay=['bias', 'weight', 'LayerNorm.weight', '_scale_param_storage']
+    ignored_names = ['signed_tensor', '_num_bits', 'bias', 'weight']
+    target_names = ['_scale_param_storage']
+    weight_decay=1e-2
+    num_train_epochs=1
+    max_train_steps=100
+    learning_rate=1e-5
+    num_layers = student_model.config.num_hidden_layers
+    num_improved = 0
+    diff_improved = []
+
+    from torch.utils.tensorboard import SummaryWriter
+    tb = SummaryWriter()
+    first_names_wd = None
+    first_names_no_wd = None
+    for l in range(num_layers): # iterate across BERT layers
+        # print(f"layer {l}")
+        student_layer = recursive_getattr(student_model, f'bert.encoder.layer.{l}')  # extract the lth layer of student
+        ignored_target_fn = lambda pair: not any(i in pair[0] for i in ignored_names) or any(t in pair[0] for t in target_names)
+        wd_fn = lambda pair: not any(nd in pair[0] for nd in no_decay)
+        no_wd_fn = lambda pair: any(nd in pair[0] for nd in no_decay)
+        np_with_wd = dict(filter(wd_fn, filter(ignored_target_fn, student_layer.named_parameters())))
+        np_no_wd = dict(filter(no_wd_fn, filter(ignored_target_fn, student_layer.named_parameters())))
+
+        optimizer_param = [
+            {
+                "params": np_with_wd.values(),
+                "weight_decay": weight_decay,
+            },
+            {
+                "params": np_no_wd.values(),
+                "weight_decay": 0.0,
+            },
+        ]
+        if l == 0:
+            print(' With wd:')
+            print(*np_with_wd.keys(), sep='\n')
+            print(' No_wd:')
+            print(*np_no_wd.keys(), sep='\n')
+            first_names_wd = np_with_wd.keys()
+            first_names_no_wd = np_no_wd.keys()
+
+        optimizer = AdamW(optimizer_param, lr=learning_rate)
+
+        updated_steps = 0
+        for _ in range(num_train_epochs):
+            first_loss = None
+            for _, batch in enumerate(trainer.nik_train_dataloader):  # load each batch
+                batch = to_device(batch, device)
+                with torch.no_grad():
+                    # for simplicity, we always run the full inference of the teacher model.
+                    # To get the best performance, you can run the teacher model only for the first l layers,
+                    # which requires some modifications to the modeling code.
+                    teacher_out = teacher_model(**batch, output_hidden_states=True) # get the output of the teacher model
+                layer_input = teacher_out.hidden_states[l] # extract the lth-layer's input of teacher
+                teacher_o = teacher_out.hidden_states[l+1] # extract the lth-layer's output of teacher
+
+                real_mask = teacher_model.bert.get_extended_attention_mask(batch['attention_mask'], \
+                    batch['input_ids'].shape, batch['input_ids'].device) # get the mask
+                student_o = student_layer(layer_input, real_mask)[0] # run inference for the student
+
+                loss = torch.nn.functional.mse_loss(student_o, teacher_o)
+                if first_loss is None:
+                    first_loss = loss
+                # print(f"LKD loss {l} = {loss.item()}")
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+                updated_steps += 1
+                if updated_steps >= max_train_steps :  # break when the number of steps is reached, typically in hundreds
+                    diff = loss - first_loss
+                    prefix = '=)' if diff < 0 else '=('
+                    percent = abs(diff / first_loss) * 100
+                    tb.add_scalar("kd_loss_decrease", percent, l)
+                    if diff < 0:
+                        num_improved+=1
+                        diff_improved.append(percent.item())
+                    # print(f"diff={diff} is_good={diff<0}")
+                    print(f"{prefix} {percent.item():.2f}% for {l}")
+                    break
+
+            if updated_steps >= max_train_steps:
+                break
+
+        accuracy = do_eval(data_args, raw_datasets, eval_dataset, trainer)
+        tb.add_scalar("per_layer_accuracy", accuracy * 100, l)
+
+    from statistics import mean
+    hparam_dict = {
+        'lr': learning_rate,
+        'wd': weight_decay,
+        'steps': max_train_steps,
+        'epochs': num_train_epochs,
+    }
+    metric_dict={
+        "accuracy": accuracy,
+        "num_improved": num_improved,
+        "mean improvement": mean(diff_improved)
+    }
+    tb.add_hparams(hparam_dict, metric_dict)
+    tb.add_text('wd_names', str(list(first_names_wd)))
+    tb.add_text('no_wd_names', str(list(first_names_no_wd)))
+    tb.add_text('ignored_names', str(ignored_names))
+    tb.add_text('target_names', str(target_names))
+    tb.add_text('no_decay', str(no_decay))
+
 
 def _mp_fn(index):
     # For xla_spawn (TPUs)
@@ -655,3 +803,5 @@ def _mp_fn(index):
 
 if __name__ == "__main__":
     main()
+
+
