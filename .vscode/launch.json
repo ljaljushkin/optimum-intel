@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-sst2",
+                "--task_name=sst2",
+                "--output_dir=/tmp/qat-bert-base-ft-sst2",
+                "--overwrite_output_dir",
+                "--do_eval",
+                "--do_train",
+                "--max_seq_length=128",
+                "--per_device_train_batch_size=32",
+                "--learning_rate=1e-5",
+                "--optim=adamw_torch",
+                "--num_train_epochs=3",
+                "--logging_steps=10",
+                "--evaluation_strategy=steps",
+                "--eval_steps=250",
+                "--save_strategy=epoch",
+                "--fp16",
+                "--seed=4",
+            ]
+        }
+    ]
+}

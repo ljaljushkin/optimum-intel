@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../nncf"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"autoDocstring.docstringFormat": "sphinx",
+		"autoDocstring.generateDocstringOnEnter": true,
+		"workbench.editor.wrapTabs": false,
+		"workbench.editor.tabSizing": "shrink",
+		"debug.allowBreakpointsEverywhere": true
+	}
+}

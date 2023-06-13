@@ -688,9 +688,9 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
     teacher_model.eval()
     start_time = time.time()
 
-    no_decay=['bias', 'weight', 'LayerNorm.weight', '_scale_param_storage']
-    ignored_names = ['signed_tensor', '_num_bits', 'bias', 'weight']
-    target_names = ['_scale_param_storage']
+    no_decay=['bias', 'LayerNorm.weight']
+    ignored_names = ['signed_tensor', '_num_bits', '_scale_param_storage']
+    target_names = ['weight', 'bias']#,'_scale_param_storage']
     weight_decay=1e-2
     num_train_epochs=1
     max_train_steps=100
@@ -774,6 +774,7 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
                 break
 
         accuracy = do_eval(data_args, raw_datasets, eval_dataset, trainer)
+        student_model.eval()
         tb.add_scalar("per_layer_accuracy", accuracy * 100, l)
 
     from statistics import mean
