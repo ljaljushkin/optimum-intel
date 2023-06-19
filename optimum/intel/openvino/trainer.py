@@ -197,27 +197,28 @@ class OVTrainer(Trainer):
             # self.compression_controller, self.model = create_compressed_model(self.model, nncf_config)
 
             # after
-            calibration_dataloader = OVDataLoader(train_dataloader)
-
-            quantization_dataset = nncf.Dataset(
-                calibration_dataloader,
-                lambda x: (x['input_ids'].to(args.device), x['token_type_ids'].to(args.device), x['attention_mask'].to(args.device))
-            )
-            self.model = pt_impl_experimental(
-                self.model,
-                quantization_dataset,
-                model_type=nncf.ModelType.TRANSFORMER,
-                fast_bias_correction=True,
-                preset = nncf.QuantizationPreset.PERFORMANCE,
-                target_device = nncf.TargetDevice.CPU,
-                subset_size=200,
-                # ignored_scope=[
-                #     "{re}.*__add___[0-1]",
-                #     "{re}.*layer_norm_0",
-                #     "{re}.*matmul_1",
-                #     "{re}.*__truediv__*"
-                # ]
-            )
+            # calibration_dataloader = OVDataLoader(train_dataloader)
+            # quantization_dataset = nncf.Dataset(
+            #     calibration_dataloader,
+            #     lambda x: (x['input_ids'].to(args.device), x['token_type_ids'].to(args.device), x['attention_mask'].to(args.device))
+            # )
+            # patterns=[
+            #     ".*__add___[0-1]",
+            #     ".*layer_norm_0",
+            #     ".*matmul_1",
+            #     ".*__truediv__*",
+            #     ".*Embedding*"
+            # ]
+            # self.model = pt_impl_experimental(
+            #     self.model,
+            #     quantization_dataset,
+            #     model_type=None,#nncf.ModelType.TRANSFORMER,
+            #     fast_bias_correction=True,
+            #     preset = nncf.QuantizationPreset.PERFORMANCE,
+            #     target_device = nncf.TargetDevice.CPU,
+            #     subset_size=600,
+            #     ignored_scope = nncf.IgnoredScope(patterns=patterns)
+            # )
             self.model_wrapped = self.model
             # TODO : To deprecate once support transformers > 4.30.0
             self.deepspeed = None

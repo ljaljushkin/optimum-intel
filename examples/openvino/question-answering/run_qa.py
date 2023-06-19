@@ -19,6 +19,9 @@ Fine-tuning a 🤗 Transformers model for question answering while applying quan
 
 # You can also adapt this script on your own question answering task. Pointers for this are left as comments.
 
+from copy import deepcopy
+from torch.utils.tensorboard import SummaryWriter
+import torch
 import logging
 import os
 import sys
@@ -34,6 +37,7 @@ from datasets import load_dataset
 from nncf.common.utils.os import safe_open
 from trainer_qa import QuestionAnsweringOVTrainer
 from transformers import (
+    AdamW,
     AutoConfig,
     AutoModelForQuestionAnswering,
     AutoTokenizer,
@@ -59,7 +63,38 @@ require_version("datasets>=1.8.0", "To fix: pip install -r examples/openvino/que
 
 logger = logging.getLogger(__name__)
 
+def get_learning_rate(lr_scheduler, optimizer):
+    if isinstance(lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+        last_lr = optimizer.param_groups[0]["lr"]
+    else:
+        last_lr = lr_scheduler.get_last_lr()[0]
+    if torch.is_tensor(last_lr):
+        last_lr = last_lr.item()
+    return last_lr
 
+def to_device(batch, device):
+    output = {}
+    for k, v in batch.items():
+        try:
+            output[k] = v.to(device)
+        except:
+            output[k] = v
+    return output
+
+def recursive_getattr(model, module_name):
+    """
+    Recursively get the attribute of a module.
+    Args:
+        model (`torch.nn.Module`)
+            The model to get the attribute from.
+        module_name (`str`)
+            The name of the module to get the attribute from.
+    """
+    split_list = module_name.split('.')
+    output = model
+    for name in split_list:
+        output = getattr(output, name)
+    return output
 @dataclass
 class ModelArguments:
     """
@@ -628,10 +663,12 @@ def main():
     else:
         ov_config = OVConfig()
 
+    teacher_model = deepcopy(model).to(training_args.device)
+
     # Initialize our Trainer
     trainer = QuestionAnsweringOVTrainer(
         model=model,
-        teacher_model=teacher_model,
+        teacher_model=None,
         ov_config=ov_config,
         task="question-answering",
         args=training_args,
@@ -645,64 +682,191 @@ def main():
     )
 
     # Training
-    if training_args.do_train:
-        checkpoint = None
-        if training_args.resume_from_checkpoint is not None:
-            checkpoint = training_args.resume_from_checkpoint
-        elif last_checkpoint is not None:
-            checkpoint = last_checkpoint
-        train_result = trainer.train(resume_from_checkpoint=checkpoint)
-        trainer.save_model()  # Saves the tokenizer too for easy upload
+    # if training_args.do_train:
+    #     checkpoint = None
+    #     if training_args.resume_from_checkpoint is not None:
+    #         checkpoint = training_args.resume_from_checkpoint
+    #     elif last_checkpoint is not None:
+    #         checkpoint = last_checkpoint
+    #     train_result = trainer.train(resume_from_checkpoint=checkpoint)
+    #     trainer.save_model()  # Saves the tokenizer too for easy upload
 
-        metrics = train_result.metrics
-        max_train_samples = (
-            data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
-        )
-        metrics["train_samples"] = min(max_train_samples, len(train_dataset))
+    #     metrics = train_result.metrics
+    #     max_train_samples = (
+    #         data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
+    #     )
+    #     metrics["train_samples"] = min(max_train_samples, len(train_dataset))
 
-        trainer.log_metrics("train", metrics)
-        trainer.save_metrics("train", metrics)
-        trainer.save_state()
+    #     trainer.log_metrics("train", metrics)
+    #     trainer.save_metrics("train", metrics)
+    #     trainer.save_state()
 
     # Evaluation
-    if training_args.do_eval:
-        logger.info("*** Evaluate ***")
-        metrics = trainer.evaluate()
+    # if training_args.do_eval:
+    #     logger.info("*** Evaluate ***")
+    #     metrics = trainer.evaluate()
 
-        max_eval_samples = data_args.max_eval_samples if data_args.max_eval_samples is not None else len(eval_dataset)
-        metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
+    #     max_eval_samples = data_args.max_eval_samples if data_args.max_eval_samples is not None else len(eval_dataset)
+    #     metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
 
-        trainer.log_metrics("eval", metrics)
-        trainer.save_metrics("eval", metrics)
+    #     trainer.log_metrics("eval", metrics)
+    #     trainer.save_metrics("eval", metrics)
+
+    do_lkd_tuning(training_args, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
 
     # Prediction
-    if training_args.do_predict:
-        logger.info("*** Predict ***")
-        results = trainer.predict(predict_dataset, predict_examples)
-        metrics = results.metrics
+    # if training_args.do_predict:
+    #     logger.info("*** Predict ***")
+    #     results = trainer.predict(predict_dataset, predict_examples)
+    #     metrics = results.metrics
 
-        max_predict_samples = (
-            data_args.max_predict_samples if data_args.max_predict_samples is not None else len(predict_dataset)
-        )
-        metrics["predict_samples"] = min(max_predict_samples, len(predict_dataset))
+    #     max_predict_samples = (
+    #         data_args.max_predict_samples if data_args.max_predict_samples is not None else len(predict_dataset)
+    #     )
+    #     metrics["predict_samples"] = min(max_predict_samples, len(predict_dataset))
 
-        trainer.log_metrics("predict", metrics)
-        trainer.save_metrics("predict", metrics)
+    #     trainer.log_metrics("predict", metrics)
+    #     trainer.save_metrics("predict", metrics)
 
-    kwargs = {"finetuned_from": model_args.model_name_or_path, "tasks": "question-answering"}
-    if data_args.dataset_name is not None:
-        kwargs["dataset_tags"] = data_args.dataset_name
-        if data_args.dataset_config_name is not None:
-            kwargs["dataset_args"] = data_args.dataset_config_name
-            kwargs["dataset"] = f"{data_args.dataset_name} {data_args.dataset_config_name}"
-        else:
-            kwargs["dataset"] = data_args.dataset_name
+    # kwargs = {"finetuned_from": model_args.model_name_or_path, "tasks": "question-answering"}
+    # if data_args.dataset_name is not None:
+    #     kwargs["dataset_tags"] = data_args.dataset_name
+    #     if data_args.dataset_config_name is not None:
+    #         kwargs["dataset_args"] = data_args.dataset_config_name
+    #         kwargs["dataset"] = f"{data_args.dataset_name} {data_args.dataset_config_name}"
+    #     else:
+    #         kwargs["dataset"] = data_args.dataset_name
 
-    if training_args.push_to_hub:
-        trainer.push_to_hub(**kwargs)
-    else:
-        trainer.create_model_card(**kwargs)
+    # if training_args.push_to_hub:
+    #     trainer.push_to_hub(**kwargs)
+    # else:
+    #     trainer.create_model_card(**kwargs)
 
+
+def do_lkd_tuning(training_args, student_model, teacher_model, trainer, data_args, raw_datasets, eval_dataset):
+    student_model.eval()
+    teacher_model.eval()
+
+    no_decay=['bias', 'LayerNorm.weight']
+    ignored_names = ['signed_tensor', '_num_bits']#, '_scale_param_storage']
+    target_names = ['weight', 'bias', '_scale_param_storage']
+
+    num_train_epochs=1
+    max_train_steps=1000
+    weight_decay=training_args.weight_decay
+    learning_rate=training_args.learning_rate
+
+    hparam_dict = {
+        'lr': learning_rate,
+        'wd': weight_decay,
+        'steps': max_train_steps,
+    }
+
+    from datetime import datetime
+    exp_name = '__'.join(f'{k}={v}'for k,v in hparam_dict.items()) + "__" + datetime.now().strftime("%b%d_%H-%M-%S")
+    tb = SummaryWriter(log_dir=Path('/home/nlyaly/sandbox/models/KD/iterative/SQUAD/Optimum') / exp_name)
+    tb.add_text('ignored_names', str(ignored_names))
+    tb.add_text('target_names', str(target_names))
+    tb.add_text('no_decay', str(no_decay))
+
+    num_layers = student_model.config.num_hidden_layers
+    num_improved = 0
+    diff_improved = []
+
+    tb.add_text('training_args', str(training_args))
+    tb.add_text('data_args', str(data_args))
+
+    first_names_wd = None
+    first_names_no_wd = None
+    for l in range(num_layers): # iterate across BERT layers
+        print(f'process layer{l}')
+        student_layer = recursive_getattr(student_model, f'distilbert.transformer.layer.{l}')  # extract the lth layer of student
+        ignored_target_fn = lambda pair: not any(i in pair[0] for i in ignored_names) or any(t in pair[0] for t in target_names)
+        wd_fn = lambda pair: not any(nd in pair[0] for nd in no_decay)
+        no_wd_fn = lambda pair: any(nd in pair[0] for nd in no_decay)
+        np_with_wd = dict(filter(wd_fn, filter(ignored_target_fn, student_layer.named_parameters())))
+        np_no_wd = dict(filter(no_wd_fn, filter(ignored_target_fn, student_layer.named_parameters())))
+
+        optimizer_param = [
+            {
+                "params": np_with_wd.values(),
+                "weight_decay": weight_decay,
+            },
+            {
+                "params": np_no_wd.values(),
+                "weight_decay": 0.0,
+            },
+        ]
+        if l == 0:
+            print(' With wd:')
+            print(*np_with_wd.keys(), sep='\n')
+            print(' No_wd:')
+            print(*np_no_wd.keys(), sep='\n')
+            first_names_wd = np_with_wd.keys()
+            first_names_no_wd = np_no_wd.keys()
+            tb.add_text('wd_names', str(list(first_names_wd)))
+            tb.add_text('no_wd_names', str(list(first_names_no_wd)))
+
+
+        optimizer = AdamW(optimizer_param, lr=learning_rate)
+        lr_scheduler = trainer.create_scheduler(num_training_steps=max_train_steps, optimizer=optimizer)
+        # lr_scheduler.cooldown = 100
+        # lr_scheduler.min_lr = 1e-8
+
+        updated_steps = 0
+        for _ in range(num_train_epochs):
+            first_loss = None
+            for data_idx, batch in enumerate(trainer.nik_train_dataloader):  # load each batch
+                batch = to_device(batch, training_args.device)
+                with torch.no_grad():
+                    # for simplicity, we always run the full inference of the teacher model.
+                    # To get the best performance, you can run the teacher model only for the first l layers,
+                    # which requires some modifications to the modeling code.
+                    teacher_out = teacher_model(**batch, output_hidden_states=True) # get the output of the teacher model
+                layer_input = teacher_out.hidden_states[l] # extract the lth-layer's input of teacher
+                teacher_o = teacher_out.hidden_states[l+1] # extract the lth-layer's output of teacher
+
+                real_mask = teacher_model.distilbert.get_extended_attention_mask(batch['attention_mask'], \
+                    batch['input_ids'].shape, batch['input_ids'].device) # get the mask
+                student_o = student_layer(layer_input, real_mask)[0] # run inference for the student
+
+                loss = torch.nn.functional.mse_loss(student_o, teacher_o)
+                if first_loss is None:
+                    first_loss = loss
+                tb.add_scalar(f"loss for {l} layer", loss.item(), data_idx)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                lr_scheduler.step(data_idx)
+                tb.add_scalar(f"LR for {l} layer", get_learning_rate(lr_scheduler, optimizer), data_idx)
+                updated_steps += 1
+                if updated_steps >= max_train_steps :  # break when the number of steps is reached, typically in hundreds
+                    diff = loss - first_loss
+                    prefix = '=)' if diff < 0 else '=('
+                    percent = diff / first_loss * (-100)
+                    tb.add_scalar("kd_loss_decrease", percent, l)
+                    if diff < 0:
+                        num_improved+=1
+                    diff_improved.append(abs(percent.item()))
+                    # print(f"diff={diff} is_good={diff<0}")
+                    print(f"{prefix} {percent.item():.2f}% for {l}")
+                    break
+
+            if updated_steps >= max_train_steps:
+                break
+
+        metrics = trainer.evaluate()
+        accuracy=metrics['eval_exact_match']
+        student_model.eval()
+        tb.add_scalar("per_layer_accuracy", accuracy, l)
+
+    from statistics import mean
+    metric_dict={
+        "accuracy": accuracy,
+        "num_improved": num_improved,
+        "mean improvement": mean(diff_improved)
+    }
+    tb.add_hparams(hparam_dict, metric_dict)
 
 def _mp_fn(index):
     # For xla_spawn (TPUs)

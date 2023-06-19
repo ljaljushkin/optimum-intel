@@ -26,6 +26,7 @@ from pathlib import Path
 import time
 from typing import Optional
 
+from torch.utils.tensorboard import SummaryWriter
 import datasets
 import evaluate
 import jstyleson as json
@@ -419,7 +420,6 @@ def main():
         use_auth_token=True if model_args.use_auth_token else None,
         ignore_mismatched_sizes=model_args.ignore_mismatched_sizes,
     )
-    teacher_model = deepcopy(model)
     if model_args.teacher_model_name_or_path is not None:
         teacher_model = AutoModelForSequenceClassification.from_pretrained(
             model_args.teacher_model_name_or_path,
@@ -569,10 +569,11 @@ def main():
         ov_config = OVConfig()
     ov_config.log_dir = training_args.output_dir
 
+    teacher_model = deepcopy(model).to(training_args.device)
     # Initialize our Trainer
     trainer = OVTrainer(
         model=model,
-        teacher_model=teacher_model,
+        teacher_model=None,
         ov_config=ov_config,
         task="text-classification",
         args=training_args,
@@ -603,12 +604,23 @@ def main():
     #     trainer.save_metrics("train", metrics)
     #     trainer.save_state()
 
+    # from torch.utils.data import DataLoader, SequentialSampler
+
+    # eval_sampler = SequentialSampler(eval_dataset)
+    # eval_dataloader = DataLoader(eval_dataset,
+    #                              collate_fn=default_data_collator,
+    #                              sampler=eval_sampler,
+    #                              batch_size=training_args.per_device_eval_batch_size)
+    # print(f'eval length={len(eval_dataloader)}')
+    # do_eval_2(model, eval_dataloader, data_args.task_name, training_args.device, is_regression)
+
     # do_eval(data_args, raw_datasets, eval_dataset, trainer)
-    # do_lkd_tuning(training_args.device, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
+
+    do_lkd_tuning(training_args, model, teacher_model, trainer, data_args, raw_datasets, eval_dataset)
 
     # Evaluation
-    if training_args.do_eval:
-        do_eval(data_args, raw_datasets, eval_dataset, trainer)
+    # if training_args.do_eval:
+    #     do_eval(data_args, raw_datasets, eval_dataset, trainer)
 
     if training_args.do_predict:
         logger.info("*** Predict ***")
@@ -650,6 +662,18 @@ def main():
     else:
         trainer.create_model_card(**kwargs)
 
+# def do_eval_2(model, eval_dataloader, task_name, device, is_regression):
+#     from datasets import load_metric
+#     metric = load_metric("glue", task_name)
+#     for _, batch in enumerate(eval_dataloader):
+#         print(f'eval length={len(eval_dataloader)}')
+#         batch = to_device(batch, device)
+#         outputs = model(**batch)
+#         predictions = outputs.logits.argmax(dim=-1) if not is_regression else outputs.logits.squeeze()
+#         metric.add_batch(predictions=predictions, references=batch["labels"])
+#     eval_metric = metric.compute()
+#     print(f'Eval accuracy={eval_metric}')
+
 def do_eval(data_args, raw_datasets, eval_dataset, trainer):
     logger.info("*** Evaluate ***")
 
@@ -657,12 +681,12 @@ def do_eval(data_args, raw_datasets, eval_dataset, trainer):
     tasks = [data_args.task_name]
     eval_datasets = [eval_dataset]
     if data_args.task_name == "mnli":
-        tasks.append("mnli-mm")
-        valid_mm_dataset = raw_datasets["validation_mismatched"]
-        if data_args.max_eval_samples is not None:
-            max_eval_samples = min(len(valid_mm_dataset), data_args.max_eval_samples)
-            valid_mm_dataset = valid_mm_dataset.select(range(max_eval_samples))
-        eval_datasets.append(valid_mm_dataset)
+        # tasks.append("mnli-mm")
+        # valid_mm_dataset = raw_datasets["validation_mismatched"]
+        # if data_args.max_eval_samples is not None:
+        #     max_eval_samples = min(len(valid_mm_dataset), data_args.max_eval_samples)
+        #     valid_mm_dataset = valid_mm_dataset.select(range(max_eval_samples))
+        # eval_datasets.append(valid_mm_dataset)
         combined = {}
 
     for eval_dataset, task in zip(eval_datasets, tasks):
@@ -673,8 +697,8 @@ def do_eval(data_args, raw_datasets, eval_dataset, trainer):
             )
         metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
 
-        if task == "mnli-mm":
-            metrics = {k + "_mm": v for k, v in metrics.items()}
+        # if task == "mnli-mm":
+        #     metrics = {k + "_mm": v for k, v in metrics.items()}
         if task is not None and "mnli" in task:
             combined.update(metrics)
 
@@ -683,28 +707,31 @@ def do_eval(data_args, raw_datasets, eval_dataset, trainer):
     return metrics['eval_accuracy']
 
 
-def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_datasets, eval_dataset):
+def do_lkd_tuning(training_args, student_model, teacher_model, trainer, data_args, raw_datasets, eval_dataset):
     student_model.eval()
     teacher_model.eval()
-    start_time = time.time()
 
     no_decay=['bias', 'LayerNorm.weight']
-    ignored_names = ['signed_tensor', '_num_bits', '_scale_param_storage']
-    target_names = ['weight', 'bias']#,'_scale_param_storage']
-    weight_decay=1e-2
+    ignored_names = ['signed_tensor', '_num_bits']#, '_scale_param_storage']
+    target_names = ['weight', 'bias', '_scale_param_storage']
+    tb = SummaryWriter()
+    tb.add_text('ignored_names', str(ignored_names))
+    tb.add_text('target_names', str(target_names))
+    tb.add_text('no_decay', str(no_decay))
+    weight_decay=0.75
     num_train_epochs=1
-    max_train_steps=100
-    learning_rate=1e-5
+    max_train_steps=1000
+    learning_rate=1e-3
     num_layers = student_model.config.num_hidden_layers
     num_improved = 0
     diff_improved = []
 
-    from torch.utils.tensorboard import SummaryWriter
-    tb = SummaryWriter()
+    tb.add_text('training_args', str(training_args))
+    tb.add_text('data_args', str(training_args))
+
     first_names_wd = None
     first_names_no_wd = None
     for l in range(num_layers): # iterate across BERT layers
-        # print(f"layer {l}")
         student_layer = recursive_getattr(student_model, f'bert.encoder.layer.{l}')  # extract the lth layer of student
         ignored_target_fn = lambda pair: not any(i in pair[0] for i in ignored_names) or any(t in pair[0] for t in target_names)
         wd_fn = lambda pair: not any(nd in pair[0] for nd in no_decay)
@@ -729,14 +756,20 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
             print(*np_no_wd.keys(), sep='\n')
             first_names_wd = np_with_wd.keys()
             first_names_no_wd = np_no_wd.keys()
+            tb.add_text('wd_names', str(list(first_names_wd)))
+            tb.add_text('no_wd_names', str(list(first_names_no_wd)))
+
 
         optimizer = AdamW(optimizer_param, lr=learning_rate)
+        lr_scheduler = trainer.create_scheduler(num_training_steps=max_train_steps, optimizer=optimizer)
+        # lr_scheduler.cooldown = 100
+        # lr_scheduler.min_lr = 1e-8
 
         updated_steps = 0
         for _ in range(num_train_epochs):
             first_loss = None
-            for _, batch in enumerate(trainer.nik_train_dataloader):  # load each batch
-                batch = to_device(batch, device)
+            for data_idx, batch in enumerate(trainer.nik_train_dataloader):  # load each batch
+                batch = to_device(batch, training_args.device)
                 with torch.no_grad():
                     # for simplicity, we always run the full inference of the teacher model.
                     # To get the best performance, you can run the teacher model only for the first l layers,
@@ -752,20 +785,21 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
                 loss = torch.nn.functional.mse_loss(student_o, teacher_o)
                 if first_loss is None:
                     first_loss = loss
-                # print(f"LKD loss {l} = {loss.item()}")
+                tb.add_scalar(f"loss for {l} layer", loss.item(), data_idx)
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-
+                lr_scheduler.step(data_idx)
+                tb.add_scalar(f"LR for {l} layer", get_learning_rate(lr_scheduler, optimizer), data_idx)
                 updated_steps += 1
                 if updated_steps >= max_train_steps :  # break when the number of steps is reached, typically in hundreds
                     diff = loss - first_loss
                     prefix = '=)' if diff < 0 else '=('
-                    percent = abs(diff / first_loss) * 100
+                    percent = diff / first_loss * 100
                     tb.add_scalar("kd_loss_decrease", percent, l)
                     if diff < 0:
                         num_improved+=1
-                        diff_improved.append(percent.item())
+                    diff_improved.append(percent.item())
                     # print(f"diff={diff} is_good={diff<0}")
                     print(f"{prefix} {percent.item():.2f}% for {l}")
                     break
@@ -773,6 +807,7 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
             if updated_steps >= max_train_steps:
                 break
 
+        # accuracy = do_eval_2(student_model, eval_dataloader, task_name, device, is_regression)
         accuracy = do_eval(data_args, raw_datasets, eval_dataset, trainer)
         student_model.eval()
         tb.add_scalar("per_layer_accuracy", accuracy * 100, l)
@@ -790,11 +825,17 @@ def do_lkd_tuning(device, student_model, teacher_model, trainer, data_args, raw_
         "mean improvement": mean(diff_improved)
     }
     tb.add_hparams(hparam_dict, metric_dict)
-    tb.add_text('wd_names', str(list(first_names_wd)))
-    tb.add_text('no_wd_names', str(list(first_names_no_wd)))
-    tb.add_text('ignored_names', str(ignored_names))
-    tb.add_text('target_names', str(target_names))
-    tb.add_text('no_decay', str(no_decay))
+
+
+
+def get_learning_rate(lr_scheduler, optimizer):
+    if isinstance(lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+        last_lr = optimizer.param_groups[0]["lr"]
+    else:
+        last_lr = lr_scheduler.get_last_lr()[0]
+    if torch.is_tensor(last_lr):
+        last_lr = last_lr.item()
+    return last_lr
 
 
 def _mp_fn(index):
