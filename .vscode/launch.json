@@ -11,14 +11,28 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
+
             // -------------------- GLUE
             // "args": [
-            //     "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-mnli",
+            //     "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-qqp",
+            //     // "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-mnli",
             //     // "--model_name_or_path=yoshitomo-matsubara/bert-base-uncased-sst2",
-            //     "--task_name=mnli",
+            //     "--task_name=qqp",
+            //     // "--task_name=mnli",
             //     // "--task_name=sst2",
-            //     "--output_dir=/tmp/qat-bert-base-ft-mnli",
+            //     "--output_dir=/tmp/qat-bert-base-ft-qqp",
+            //     // "--output_dir=/tmp/qat-bert-base-ft-mnli",
             //     // "--output_dir=/tmp/qat-bert-base-ft-sst2",
+            //     // "--lr_scheduler_type=reduce_lr_on_plateau",
+            //     // "--lr_scheduler_type=cosine",
+            //     // "--lr_scheduler_type=constant_with_warmup",
+            //     "--lr_scheduler_type=constant",
+            //     "--per_device_eval_batch_size=256",
+            //     "--learning_rate=5e-8",
+            //     "--weight_decay=1e-2",
+            //     // "--warmup_ratio=0.2",
+
+
             //     "--overwrite_output_dir",
             //     "--do_eval",
             //     "--do_train",
@@ -27,38 +41,75 @@
             //     // "--learning_rate=1e-5",
             //     "--optim=adamw_torch",
             //     // "--num_train_epochs=3",
-            //     // "--lr_scheduler_type=reduce_lr_on_plateau",
-            //     // "--lr_scheduler_type=cosine",
-            //     "--lr_scheduler_type=constant_with_warmup",
-            //     "--warmup_ratio=0.2",
             //     "--logging_steps=10",
             //     "--evaluation_strategy=steps",
             //     "--eval_steps=1000",
             //     "--save_strategy=epoch",
-            //     "--per_device_eval_batch_size=256",
             //     // "--fp16",
             //     "--seed=4",
             // ],
+
+
             // -------------------- SQUAD
+            // "args":[
+            //     "--model_name_or_path=distilbert-base-uncased-distilled-squad",
+            //     "--dataset_name=squad",
+            //     "--do_train",
+            //     "--do_eval",
+            //     "--per_device_train_batch_size=8",
+            //     "--per_device_eval_batch_size=256",
+            //     // "--max_train_samples=1024",
+
+            //     // "--lr_scheduler_type=cosine",
+            //     "--lr_scheduler_type=constant",
+            //     "--warmup_ratio=0.2",
+            //     "--learning_rate=5e-6",
+            //     "--weight_decay=75e-2",
+
+            //     "--max_seq_length=384",
+            //     "--doc_stride=128",
+            //     "--overwrite_output_dir",
+            //     "--output_dir=/tmp/outputs_squaq",
+            // ]
+
+
+            // -------------------- ViT
             "args":[
-                "--model_name_or_path=distilbert-base-uncased-distilled-squad",
-                "--dataset_name=squad",
+                // "--model_name_or_path=nateraw/vit-base-beans", // FP32 -> PTQ: 97.74 -> 97.74
+                // "--dataset_name=beans",
+                // "--model_name_or_path=skylord/swin-finetuned-food101", // FP32 -> PTQ: 91.99 -> 91.96
+                // "--model_name_or_path=smangrul/vit-base-patch16-224-in21k-finetuned-lora-food101", // FP32: 0.06
+                // "--model_name_or_path=eslamxm/vit-base-food101", // FP32 -> PTQ: 88.8 -> 88.71
+                // "--model_name_or_path=microsoft/swin-tiny-patch4-window7-224", // FP32 -> PTQ: 80.44 -> 80.28
+                "--model_name_or_path=google/vit-base-patch16-224", // FP32 -> PTQ:  80.33 ->  (sym. activations)
+                // "--dataset_name=food101",
+                // "--dataset_name=Maysee/tiny-imagenet",
+                // "--dataset_name=imagenet-1k",
+                "--train_dir=/home/nlyaly/sandbox/datasets/train",
+                "--validation_dir=/home/nlyaly/sandbox/datasets/val",
+                //     // "--lr_scheduler_type=cosine",
+                    "--lr_scheduler_type=constant",
+                //     "--warmup_ratio=0.2",
+                "--learning_rate=1e-5",
+                "--weight_decay=1e-2",
+                "--max_train_steps=100",
+                "--per_device_eval_batch_size=500",
+                // "--learning_rate 2e-5",
+                // "--max_eval_samples=1000",
+
+                "--remove_unused_columns=False",
                 "--do_train",
                 "--do_eval",
+                "--num_train_epochs=1",
                 "--per_device_train_batch_size=8",
-                "--per_device_eval_batch_size=256",
-                // "--max_train_samples=1024",
-
-                // "--lr_scheduler_type=cosine",
-                "--lr_scheduler_type=constant",
-                "--warmup_ratio=0.2",
-                "--learning_rate=5e-6",
-                "--weight_decay=75e-2",
-
-                "--max_seq_length=384",
-                "--doc_stride=128",
-                "--overwrite_output_dir",
-                "--output_dir=/tmp/outputs_squaq",
+                "--logging_strategy=steps",
+                "--logging_steps=10",
+                "--evaluation_strategy=epoch",
+                "--save_strategy=epoch",
+                "--save_total_limit=3",
+                "--seed=1337",
+                "--output_dir=/tmp/beans_output",
+                "--overwrite_output_dir"
             ]
         }
     ]

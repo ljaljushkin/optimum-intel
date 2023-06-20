@@ -1,0 +1,1175 @@
+INFO:nncf:NNCF initialized successfully. Supported frameworks detected: torch, onnx, openvino
+06/19/2023 19:14:07 - WARNING - __main__ - Process rank: 0, device: cuda:0, n_gpu: 1distributed training: True, 16-bits training: False
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/torchvision/image.so: undefined symbol: _ZN3c104cuda20CUDACachingAllocator9allocatorE'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/diffusers/models/cross_attention.py:30: FutureWarning: Importing from cross_attention is deprecated. Please import from diffusers.models.attention_processor instead.
+  deprecate(
+Resolving data files:   0%|          | 0/172394 [00:00<?, ?it/s]Resolving data files:  27%|██▋       | 46068/172394 [00:00<00:00, 460654.08it/s]Resolving data files:  66%|██████▌   | 114195/172394 [00:00<00:00, 590412.23it/s]Resolving data files: 100%|██████████| 172394/172394 [00:00<00:00, 610069.64it/s]
+Resolving data files:   0%|          | 0/50000 [00:00<?, ?it/s]Resolving data files:  39%|███▉      | 19559/50000 [00:00<00:00, 165146.57it/s]Resolving data files:  72%|███████▏  | 36074/50000 [00:00<00:00, 102430.78it/s]Resolving data files:  95%|█████████▍| 47457/50000 [00:00<00:00, 44885.93it/s] Resolving data files: 100%|██████████| 50000/50000 [00:01<00:00, 43067.80it/s]
+Downloading and preparing dataset imagefolder/default to /home/nlyaly/.cache/huggingface/datasets/imagefolder/default-e8eaef7d72da731d/0.0.0/37fbb85cc714a338bea574ac6c7d0b5be5aff46c1862c1989b20e0771199e93f...
+Downloading data files:   0%|          | 0/172394 [00:00<?, ?it/s]Downloading data files:   7%|▋         | 12053/172394 [00:00<00:01, 120524.37it/s]Downloading data files:  14%|█▍        | 24623/172394 [00:00<00:01, 123566.27it/s]Downloading data files:  22%|██▏       | 37374/172394 [00:00<00:01, 125363.94it/s]Downloading data files:  29%|██▉       | 50211/172394 [00:00<00:00, 126546.42it/s]Downloading data files:  37%|███▋      | 63086/172394 [00:00<00:00, 127336.46it/s]Downloading data files:  44%|████▍     | 75952/172394 [00:00<00:00, 127783.48it/s]Downloading data files:  51%|█████▏    | 88731/172394 [00:00<00:00, 127607.13it/s]Downloading data files:  59%|█████▉    | 101492/172394 [00:00<00:00, 127500.18it/s]Downloading data files:  66%|██████▋   | 114431/172394 [00:00<00:00, 128087.69it/s]Downloading data files:  74%|███████▍  | 127240/172394 [00:01<00:00, 127890.84it/s]Downloading data files:  81%|████████▏ | 140160/172394 [00:01<00:00, 128286.76it/s]Downloading data files:  89%|████████▉ | 153071/172394 [00:01<00:00, 128535.73it/s]Downloading data files:  96%|█████████▋| 166087/172394 [00:01<00:00, 129023.77it/s]Downloading data files: 100%|██████████| 172394/172394 [00:01<00:00, 127631.24it/s]
+Downloading data files: 0it [00:00, ?it/s]Downloading data files: 0it [00:00, ?it/s]
+Extracting data files: 0it [00:00, ?it/s]Extracting data files: 0it [00:00, ?it/s]
+Downloading data files:   0%|          | 0/50000 [00:00<?, ?it/s]Downloading data files:  25%|██▌       | 12710/50000 [00:00<00:00, 127093.15it/s]Downloading data files:  51%|█████     | 25558/50000 [00:00<00:00, 127904.87it/s]Downloading data files:  77%|███████▋  | 38557/50000 [00:00<00:00, 128851.82it/s]Downloading data files: 100%|██████████| 50000/50000 [00:00<00:00, 128600.30it/s]
+Downloading data files: 0it [00:00, ?it/s]Downloading data files: 0it [00:00, ?it/s]
+Extracting data files: 0it [00:00, ?it/s]Extracting data files: 0it [00:00, ?it/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1900 examples [00:00, 18955.41 examples/s]Generating train split: 3944 examples [00:00, 19823.12 examples/s]Generating train split: 5959 examples [00:00, 19968.66 examples/s]Generating train split: 7991 examples [00:00, 20106.53 examples/s]Generating train split: 10011 examples [00:00, 20044.53 examples/s]Generating train split: 12040 examples [00:00, 20126.64 examples/s]Generating train split: 14092 examples [00:00, 20253.71 examples/s]Generating train split: 16187 examples [00:01, 9771.73 examples/s] Generating train split: 18249 examples [00:01, 11702.53 examples/s]Generating train split: 20303 examples [00:01, 13493.35 examples/s]Generating train split: 22366 examples [00:01, 15095.77 examples/s]Generating train split: 24417 examples [00:01, 16409.24 examples/s]Generating train split: 26476 examples [00:01, 17483.54 examples/s]Generating train split: 28530 examples [00:01, 18305.16 examples/s]Generating train split: 30590 examples [00:01, 18938.82 examples/s]Generating train split: 32627 examples [00:01, 19342.63 examples/s]Generating train split: 34683 examples [00:02, 19691.66 examples/s]Generating train split: 37731 examples [00:02, 19929.08 examples/s]Generating train split: 39779 examples [00:02, 20073.39 examples/s]Generating train split: 41825 examples [00:02, 20177.32 examples/s]Generating train split: 44869 examples [00:02, 20215.15 examples/s]Generating train split: 47899 examples [00:02, 20206.08 examples/s]Generating train split: 50952 examples [00:02, 20253.52 examples/s]Generating train split: 52996 examples [00:02, 20294.65 examples/s]Generating train split: 56031 examples [00:03, 20226.99 examples/s]Generating train split: 59057 examples [00:03, 20206.55 examples/s]Generating train split: 62084 examples [00:03, 20193.11 examples/s]Generating train split: 65084 examples [00:03, 20130.47 examples/s]Generating train split: 67114 examples [00:03, 20166.98 examples/s]Generating train split: 69169 examples [00:03, 20259.94 examples/s]Generating train split: 71205 examples [00:03, 20282.85 examples/s]Generating train split: 74241 examples [00:03, 20264.13 examples/s]Generating train split: 76282 examples [00:04, 20298.49 examples/s]Generating train split: 78320 examples [00:04, 20316.92 examples/s]Generating train split: 81339 examples [00:04, 20243.76 examples/s]Generating train split: 83392 examples [00:04, 20314.49 examples/s]Generating train split: 85429 examples [00:04, 20324.77 examples/s]Generating train split: 88471 examples [00:04, 20305.54 examples/s]Generating train split: 90529 examples [00:04, 20372.78 examples/s]Generating train split: 93551 examples [00:04, 20288.63 examples/s]Generating train split: 96574 examples [00:05, 20239.95 examples/s]Generating train split: 99554 examples [00:05, 20115.70 examples/s]Generating train split: 101593 examples [00:05, 20178.51 examples/s]Generating train split: 103621 examples [00:05, 20200.06 examples/s]Generating train split: 105658 examples [00:05, 20242.21 examples/s]Generating train split: 107694 examples [00:05, 20271.07 examples/s]Generating train split: 110729 examples [00:05, 20252.10 examples/s]Generating train split: 112773 examples [00:05, 20298.79 examples/s]Generating train split: 114834 examples [00:05, 20378.98 examples/s]Generating train split: 117898 examples [00:06, 20393.71 examples/s]Generating train split: 119944 examples [00:06, 20407.55 examples/s]Generating train split: 122978 examples [00:06, 20338.30 examples/s]Generating train split: 126008 examples [00:06, 20208.70 examples/s]Generating train split: 129018 examples [00:06, 20157.98 examples/s]Generating train split: 131039 examples [00:06, 20168.10 examples/s]Generating train split: 133060 examples [00:06, 20176.40 examples/s]Generating train split: 135118 examples [00:07, 20282.05 examples/s]Generating train split: 138170 examples [00:07, 20301.74 examples/s]Generating train split: 141206 examples [00:07, 20276.09 examples/s]Generating train split: 143247 examples [00:07, 20306.93 examples/s]Generating train split: 145301 examples [00:07, 20364.72 examples/s]Generating train split: 147347 examples [00:07, 20386.91 examples/s]Generating train split: 150395 examples [00:07, 20358.13 examples/s]Generating train split: 152435 examples [00:07, 20367.56 examples/s]Generating train split: 155453 examples [00:08, 20275.98 examples/s]Generating train split: 157485 examples [00:08, 20286.41 examples/s]Generating train split: 159525 examples [00:08, 20312.65 examples/s]Generating train split: 161574 examples [00:08, 20359.01 examples/s]Generating train split: 164617 examples [00:08, 20329.13 examples/s]Generating train split: 167648 examples [00:08, 20284.33 examples/s]Generating train split: 169681 examples [00:08, 20293.98 examples/s]Generating train split: 171712 examples [00:08, 20295.95 examples/s]                                                                    Generating validation split: 0 examples [00:00, ? examples/s]Generating validation split: 2005 examples [00:00, 19627.04 examples/s]Generating validation split: 4049 examples [00:00, 20095.97 examples/s]Generating validation split: 6086 examples [00:00, 20217.93 examples/s]Generating validation split: 8128 examples [00:00, 20292.06 examples/s]Generating validation split: 10179 examples [00:00, 20366.12 examples/s]Generating validation split: 12228 examples [00:00, 20404.83 examples/s]Generating validation split: 15261 examples [00:00, 20323.00 examples/s]Generating validation split: 18304 examples [00:00, 20306.68 examples/s]Generating validation split: 20349 examples [00:01, 20343.16 examples/s]Generating validation split: 23383 examples [00:01, 20297.11 examples/s]Generating validation split: 25419 examples [00:01, 20310.19 examples/s]Generating validation split: 28417 examples [00:01, 20191.79 examples/s]Generating validation split: 31416 examples [00:01, 20122.40 examples/s]Generating validation split: 33439 examples [00:01, 20144.25 examples/s]Generating validation split: 36483 examples [00:01, 20193.90 examples/s]Generating validation split: 38516 examples [00:01, 20224.66 examples/s]Generating validation split: 40554 examples [00:02, 20262.66 examples/s]Generating validation split: 43589 examples [00:02, 20247.03 examples/s]Generating validation split: 46606 examples [00:02, 20197.48 examples/s]Generating validation split: 49631 examples [00:02, 20186.05 examples/s]                                                                        Dataset imagefolder downloaded and prepared to /home/nlyaly/.cache/huggingface/datasets/imagefolder/default-e8eaef7d72da731d/0.0.0/37fbb85cc714a338bea574ac6c7d0b5be5aff46c1862c1989b20e0771199e93f. Subsequent calls will reuse this data.
+  0%|          | 0/2 [00:00<?, ?it/s] 50%|█████     | 1/2 [00:00<00:00,  1.59it/s]100%|██████████| 2/2 [00:01<00:00,  1.60it/s]100%|██████████| 2/2 [00:01<00:00,  1.60it/s]
+Casting the dataset:   0%|          | 0/172394 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 172394/172394 [00:00<00:00, 270453.60 examples/s]                                                                                       Casting the dataset:   0%|          | 0/50000 [00:00<?, ? examples/s]Casting the dataset: 100%|██████████| 50000/50000 [00:00<00:00, 81468.77 examples/s]                                                                                    create_compressed_model
+
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/models/vit/feature_extraction_vit.py:28: FutureWarning: The class ViTFeatureExtractor is deprecated and will be removed in version 5 of Transformers. Please use ViTImageProcessor instead.
+  warnings.warn(
+ViTForImageClassification(
+  (vit): ViTModel(
+    (embeddings): ViTEmbeddings(
+      (patch_embeddings): ViTPatchEmbeddings(
+        (projection): NNCFConv2d(
+          3, 768, kernel_size=(16, 16), stride=(16, 16)
+          (pre_ops): ModuleDict()
+          (post_ops): ModuleDict()
+        )
+      )
+      (dropout): Dropout(p=0.0, inplace=False)
+    )
+    (encoder): ViTEncoder(
+      (layer): ModuleList(
+        (0): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (1): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (2): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (3): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (4): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (5): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (6): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (7): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (8): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (9): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (10): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+        (11): ViTLayer(
+          (attention): ViTAttention(
+            (attention): ViTSelfAttention(
+              (query): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (key): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (value): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): ViTSelfOutput(
+              (dense): NNCFLinear(
+                in_features=768, out_features=768, bias=True
+                (pre_ops): ModuleDict(
+                  (0): UpdateWeight(
+                    (op): SymmetricQuantizer(bit=8, ch=True)
+                  )
+                )
+                (post_ops): ModuleDict()
+              )
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): ViTIntermediate(
+            (dense): NNCFLinear(
+              in_features=768, out_features=3072, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): ViTOutput(
+            (dense): NNCFLinear(
+              in_features=3072, out_features=768, bias=True
+              (pre_ops): ModuleDict(
+                (0): UpdateWeight(
+                  (op): SymmetricQuantizer(bit=8, ch=True)
+                )
+              )
+              (post_ops): ModuleDict()
+            )
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+          (layernorm_after): NNCFLayerNorm(
+            (768,), eps=1e-12, elementwise_affine=True
+            (pre_ops): ModuleDict()
+            (post_ops): ModuleDict()
+          )
+        )
+      )
+    )
+    (layernorm): NNCFLayerNorm(
+      (768,), eps=1e-12, elementwise_affine=True
+      (pre_ops): ModuleDict()
+      (post_ops): ModuleDict()
+    )
+  )
+  (classifier): NNCFLinear(
+    in_features=768, out_features=1000, bias=True
+    (pre_ops): ModuleDict(
+      (0): UpdateWeight(
+        (op): SymmetricQuantizer(bit=8, ch=True)
+      )
+    )
+    (post_ops): ModuleDict()
+  )
+  (_nncf): NNCFNetworkInterface(
+    (external_quantizers): ModuleDict(
+      (ViTForImageClassification/ViTModel[vit]/NNCFLayerNorm[layernorm]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[0]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[10]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[11]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[1]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[2]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[3]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[4]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[5]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[6]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[7]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[8]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/NNCFLayerNorm[layernorm_after]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/NNCFLayerNorm[layernorm_before]/layer_norm_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[key]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/ViTAttention[attention]/ViTSelfAttention[attention]/NNCFLinear[query]/linear_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/ViTAttention[attention]/ViTSelfAttention[attention]/matmul_1|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+      (ViTForImageClassification/ViTModel[vit]/ViTEncoder[encoder]/ModuleList[layer]/ViTLayer[9]/ViTIntermediate[intermediate]/GELUActivation[intermediate_act_fn]/gelu_0|OUTPUT): SymmetricQuantizer(bit=8, ch=False)
+    )
+  )
+)/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+
+process layer0
+ With wd:
+attention.attention.query.weight
+attention.attention.key.weight
+attention.attention.value.weight
+attention.output.dense.weight
+intermediate.dense.weight
+output.dense.weight
+layernorm_before.weight
+layernorm_after.weight
+ No_wd:
+attention.attention.query.bias
+attention.attention.key.bias
+attention.attention.value.bias
+attention.output.dense.bias
+intermediate.dense.bias
+output.dense.bias
+layernorm_before.bias
+layernorm_after.bias
+=) 47.44% for 0
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:04<03:37,  2.22s/it]  3%|▎         | 3/100 [00:09<05:24,  3.35s/it]  4%|▍         | 4/100 [00:14<06:40,  4.17s/it]  5%|▌         | 5/100 [00:21<07:42,  4.87s/it]  6%|▌         | 6/100 [00:26<07:40,  4.90s/it]  7%|▋         | 7/100 [00:30<07:18,  4.72s/it]  8%|▊         | 8/100 [00:34<07:00,  4.57s/it]  9%|▉         | 9/100 [00:38<06:29,  4.28s/it] 10%|█         | 10/100 [00:41<06:05,  4.06s/it] 11%|█         | 11/100 [00:45<05:49,  3.93s/it] 12%|█▏        | 12/100 [00:49<05:38,  3.85s/it] 13%|█▎        | 13/100 [00:52<05:33,  3.83s/it] 14%|█▍        | 14/100 [00:56<05:22,  3.75s/it] 15%|█▌        | 15/100 [01:00<05:16,  3.73s/it] 16%|█▌        | 16/100 [01:03<05:04,  3.63s/it] 17%|█▋        | 17/100 [01:06<04:55,  3.56s/it] 18%|█▊        | 18/100 [01:10<04:52,  3.57s/it] 19%|█▉        | 19/100 [01:13<04:44,  3.52s/it] 20%|██        | 20/100 [01:17<04:43,  3.54s/it] 21%|██        | 21/100 [01:20<04:35,  3.49s/it] 22%|██▏       | 22/100 [01:24<04:34,  3.52s/it] 23%|██▎       | 23/100 [01:27<04:27,  3.48s/it] 24%|██▍       | 24/100 [01:31<04:23,  3.47s/it] 25%|██▌       | 25/100 [01:34<04:20,  3.47s/it] 26%|██▌       | 26/100 [01:38<04:21,  3.53s/it] 27%|██▋       | 27/100 [01:42<04:22,  3.59s/it] 28%|██▊       | 28/100 [01:45<04:20,  3.62s/it] 29%|██▉       | 29/100 [01:49<04:18,  3.65s/it] 30%|███       | 30/100 [01:53<04:17,  3.67s/it] 31%|███       | 31/100 [01:56<04:09,  3.62s/it] 32%|███▏      | 32/100 [02:00<04:07,  3.64s/it] 33%|███▎      | 33/100 [02:04<04:07,  3.69s/it] 34%|███▍      | 34/100 [02:08<04:04,  3.70s/it] 35%|███▌      | 35/100 [02:11<03:55,  3.62s/it] 36%|███▌      | 36/100 [02:15<03:50,  3.60s/it] 37%|███▋      | 37/100 [02:18<03:46,  3.59s/it] 38%|███▊      | 38/100 [02:22<03:50,  3.72s/it] 39%|███▉      | 39/100 [02:26<03:46,  3.71s/it] 40%|████      | 40/100 [02:30<03:42,  3.70s/it] 41%|████      | 41/100 [02:33<03:40,  3.73s/it] 42%|████▏     | 42/100 [02:38<03:51,  4.00s/it] 43%|████▎     | 43/100 [02:41<03:39,  3.85s/it] 44%|████▍     | 44/100 [02:45<03:27,  3.70s/it] 45%|████▌     | 45/100 [02:48<03:19,  3.62s/it] 46%|████▌     | 46/100 [02:52<03:16,  3.63s/it] 47%|████▋     | 47/100 [02:56<03:14,  3.66s/it] 48%|████▊     | 48/100 [02:59<03:10,  3.66s/it] 49%|████▉     | 49/100 [03:03<03:03,  3.60s/it] 50%|█████     | 50/100 [03:06<02:59,  3.60s/it] 51%|█████     | 51/100 [03:10<02:53,  3.55s/it] 52%|█████▏    | 52/100 [03:13<02:48,  3.52s/it] 53%|█████▎    | 53/100 [03:17<02:47,  3.56s/it] 54%|█████▍    | 54/100 [03:21<02:45,  3.60s/it] 55%|█████▌    | 55/100 [03:24<02:39,  3.55s/it] 56%|█████▌    | 56/100 [03:28<02:36,  3.55s/it] 57%|█████▋    | 57/100 [03:31<02:31,  3.53s/it] 58%|█████▊    | 58/100 [03:35<02:28,  3.53s/it] 59%|█████▉    | 59/100 [03:38<02:26,  3.56s/it] 60%|██████    | 60/100 [03:42<02:24,  3.60s/it] 61%|██████    | 61/100 [03:45<02:18,  3.55s/it] 62%|██████▏   | 62/100 [03:49<02:15,  3.56s/it] 63%|██████▎   | 63/100 [03:52<02:09,  3.50s/it] 64%|██████▍   | 64/100 [03:56<02:05,  3.49s/it] 65%|██████▌   | 65/100 [03:59<02:02,  3.51s/it] 66%|██████▌   | 66/100 [04:03<01:59,  3.50s/it] 67%|██████▋   | 67/100 [04:07<01:58,  3.58s/it] 68%|██████▊   | 68/100 [04:11<01:59,  3.73s/it] 69%|██████▉   | 69/100 [04:14<01:51,  3.59s/it] 70%|███████   | 70/100 [04:17<01:48,  3.60s/it] 71%|███████   | 71/100 [04:22<01:49,  3.78s/it] 72%|███████▏  | 72/100 [04:25<01:45,  3.77s/it] 73%|███████▎  | 73/100 [04:29<01:40,  3.71s/it] 74%|███████▍  | 74/100 [04:33<01:35,  3.67s/it] 75%|███████▌  | 75/100 [04:36<01:31,  3.65s/it] 76%|███████▌  | 76/100 [04:40<01:26,  3.60s/it] 77%|███████▋  | 77/100 [04:44<01:25,  3.70s/it] 78%|███████▊  | 78/100 [04:47<01:22,  3.73s/it] 79%|███████▉  | 79/100 [04:51<01:18,  3.73s/it] 80%|████████  | 80/100 [04:55<01:12,  3.63s/it] 81%|████████  | 81/100 [04:58<01:08,  3.63s/it] 82%|████████▏ | 82/100 [05:02<01:04,  3.61s/it] 83%|████████▎ | 83/100 [05:05<01:00,  3.55s/it] 84%|████████▍ | 84/100 [05:09<00:57,  3.59s/it] 85%|████████▌ | 85/100 [05:14<01:00,  4.07s/it] 86%|████████▌ | 86/100 [05:18<00:55,  3.93s/it] 87%|████████▋ | 87/100 [05:21<00:49,  3.80s/it] 88%|████████▊ | 88/100 [05:25<00:44,  3.75s/it] 89%|████████▉ | 89/100 [05:28<00:40,  3.66s/it] 90%|█████████ | 90/100 [05:32<00:37,  3.71s/it] 91%|█████████ | 91/100 [05:36<00:33,  3.67s/it] 92%|█████████▏| 92/100 [05:39<00:28,  3.60s/it] 93%|█████████▎| 93/100 [05:42<00:24,  3.56s/it] 94%|█████████▍| 94/100 [05:46<00:21,  3.58s/it] 95%|█████████▌| 95/100 [05:50<00:17,  3.57s/it] 96%|█████████▌| 96/100 [05:53<00:14,  3.54s/it] 97%|█████████▋| 97/100 [05:57<00:10,  3.51s/it] 98%|█████████▊| 98/100 [06:00<00:07,  3.54s/it] 99%|█████████▉| 99/100 [06:04<00:03,  3.61s/it]100%|██████████| 100/100 [06:08<00:00,  3.80s/it]100%|██████████| 100/100 [06:08<00:00,  3.69s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer1
+=) 24.41% for 1
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<03:04,  1.88s/it]  3%|▎         | 3/100 [00:07<04:28,  2.77s/it]  4%|▍         | 4/100 [00:11<05:09,  3.22s/it]  5%|▌         | 5/100 [00:15<05:27,  3.45s/it]  6%|▌         | 6/100 [00:19<05:33,  3.55s/it]  7%|▋         | 7/100 [00:23<05:39,  3.65s/it]  8%|▊         | 8/100 [00:27<05:47,  3.78s/it]  9%|▉         | 9/100 [00:30<05:41,  3.75s/it] 10%|█         | 10/100 [00:34<05:32,  3.69s/it] 11%|█         | 11/100 [00:38<05:26,  3.67s/it] 12%|█▏        | 12/100 [00:41<05:27,  3.72s/it] 13%|█▎        | 13/100 [00:45<05:25,  3.74s/it] 14%|█▍        | 14/100 [00:49<05:17,  3.69s/it] 15%|█▌        | 15/100 [00:52<05:09,  3.64s/it] 16%|█▌        | 16/100 [00:56<05:06,  3.65s/it] 17%|█▋        | 17/100 [01:00<05:02,  3.65s/it] 18%|█▊        | 18/100 [01:03<04:58,  3.63s/it] 19%|█▉        | 19/100 [01:07<04:55,  3.64s/it] 20%|██        | 20/100 [01:10<04:47,  3.60s/it] 21%|██        | 21/100 [01:14<04:40,  3.55s/it] 22%|██▏       | 22/100 [01:17<04:37,  3.56s/it] 23%|██▎       | 23/100 [01:21<04:33,  3.56s/it] 24%|██▍       | 24/100 [01:24<04:27,  3.52s/it] 25%|██▌       | 25/100 [01:28<04:22,  3.50s/it] 26%|██▌       | 26/100 [01:31<04:19,  3.50s/it] 27%|██▋       | 27/100 [01:35<04:19,  3.56s/it] 28%|██▊       | 28/100 [01:39<04:15,  3.55s/it] 29%|██▉       | 29/100 [01:42<04:14,  3.58s/it] 30%|███       | 30/100 [01:46<04:15,  3.65s/it] 31%|███       | 31/100 [01:50<04:22,  3.81s/it] 32%|███▏      | 32/100 [01:55<04:39,  4.11s/it] 33%|███▎      | 33/100 [01:59<04:33,  4.09s/it] 34%|███▍      | 34/100 [02:03<04:16,  3.89s/it] 35%|███▌      | 35/100 [02:06<04:04,  3.76s/it] 36%|███▌      | 36/100 [02:09<03:55,  3.68s/it] 37%|███▋      | 37/100 [02:13<03:49,  3.64s/it] 38%|███▊      | 38/100 [02:17<03:52,  3.75s/it] 39%|███▉      | 39/100 [02:21<03:49,  3.77s/it] 40%|████      | 40/100 [02:26<04:07,  4.13s/it] 41%|████      | 41/100 [02:30<04:04,  4.15s/it] 42%|████▏     | 42/100 [02:33<03:48,  3.94s/it] 43%|████▎     | 43/100 [02:37<03:42,  3.91s/it] 44%|████▍     | 44/100 [02:41<03:35,  3.85s/it] 45%|████▌     | 45/100 [02:45<03:28,  3.80s/it] 46%|████▌     | 46/100 [02:48<03:24,  3.79s/it] 47%|████▋     | 47/100 [02:53<03:26,  3.89s/it] 48%|████▊     | 48/100 [02:57<03:22,  3.90s/it] 49%|████▉     | 49/100 [03:00<03:14,  3.80s/it] 50%|█████     | 50/100 [03:04<03:04,  3.69s/it] 51%|█████     | 51/100 [03:07<02:57,  3.62s/it] 52%|█████▏    | 52/100 [03:11<02:53,  3.62s/it] 53%|█████▎    | 53/100 [03:14<02:52,  3.68s/it] 54%|█████▍    | 54/100 [03:18<02:48,  3.67s/it] 55%|█████▌    | 55/100 [03:22<02:46,  3.70s/it] 56%|█████▌    | 56/100 [03:25<02:42,  3.69s/it] 57%|█████▋    | 57/100 [03:29<02:36,  3.64s/it] 58%|█████▊    | 58/100 [03:33<02:32,  3.63s/it] 59%|█████▉    | 59/100 [03:36<02:29,  3.65s/it] 60%|██████    | 60/100 [03:40<02:28,  3.72s/it] 61%|██████    | 61/100 [03:44<02:20,  3.61s/it] 62%|██████▏   | 62/100 [03:47<02:15,  3.58s/it] 63%|██████▎   | 63/100 [03:51<02:13,  3.60s/it] 64%|██████▍   | 64/100 [03:54<02:08,  3.57s/it] 65%|██████▌   | 65/100 [03:58<02:06,  3.62s/it] 66%|██████▌   | 66/100 [04:03<02:14,  3.96s/it] 67%|██████▋   | 67/100 [04:08<02:26,  4.43s/it] 68%|██████▊   | 68/100 [04:12<02:17,  4.31s/it] 69%|██████▉   | 69/100 [04:16<02:05,  4.05s/it] 70%|███████   | 70/100 [04:19<01:57,  3.91s/it] 71%|███████   | 71/100 [04:23<01:50,  3.80s/it] 72%|███████▏  | 72/100 [04:26<01:44,  3.72s/it] 73%|███████▎  | 73/100 [04:30<01:39,  3.68s/it] 74%|███████▍  | 74/100 [04:33<01:34,  3.63s/it] 75%|███████▌  | 75/100 [04:37<01:28,  3.53s/it] 76%|███████▌  | 76/100 [04:40<01:25,  3.55s/it] 77%|███████▋  | 77/100 [04:44<01:20,  3.52s/it] 78%|███████▊  | 78/100 [04:48<01:18,  3.58s/it] 79%|███████▉  | 79/100 [04:51<01:15,  3.62s/it] 80%|████████  | 80/100 [04:55<01:12,  3.61s/it] 81%|████████  | 81/100 [04:59<01:08,  3.62s/it] 82%|████████▏ | 82/100 [05:02<01:05,  3.62s/it] 83%|████████▎ | 83/100 [05:06<01:00,  3.56s/it] 84%|████████▍ | 84/100 [05:09<00:57,  3.58s/it] 85%|████████▌ | 85/100 [05:13<00:53,  3.59s/it] 86%|████████▌ | 86/100 [05:16<00:49,  3.54s/it] 87%|████████▋ | 87/100 [05:20<00:45,  3.51s/it] 88%|████████▊ | 88/100 [05:23<00:42,  3.53s/it] 89%|████████▉ | 89/100 [05:27<00:38,  3.53s/it] 90%|█████████ | 90/100 [05:31<00:36,  3.63s/it] 91%|█████████ | 91/100 [05:34<00:32,  3.63s/it] 92%|█████████▏| 92/100 [05:38<00:28,  3.58s/it] 93%|█████████▎| 93/100 [05:41<00:24,  3.56s/it] 94%|█████████▍| 94/100 [05:45<00:21,  3.66s/it] 95%|█████████▌| 95/100 [05:49<00:18,  3.68s/it] 96%|█████████▌| 96/100 [05:53<00:14,  3.73s/it] 97%|█████████▋| 97/100 [05:56<00:11,  3.75s/it] 98%|█████████▊| 98/100 [06:01<00:08,  4.01s/it] 99%|█████████▉| 99/100 [06:07<00:04,  4.64s/it]100%|██████████| 100/100 [06:12<00:00,  4.74s/it]100%|██████████| 100/100 [06:12<00:00,  3.73s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer2
+=) 27.75% for 2
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<03:09,  1.94s/it]  3%|▎         | 3/100 [00:07<04:25,  2.74s/it]  4%|▍         | 4/100 [00:11<04:56,  3.09s/it]  5%|▌         | 5/100 [00:15<05:17,  3.34s/it]  6%|▌         | 6/100 [00:19<05:31,  3.52s/it]  7%|▋         | 7/100 [00:22<05:35,  3.61s/it]  8%|▊         | 8/100 [00:26<05:43,  3.74s/it]  9%|▉         | 9/100 [00:30<05:41,  3.75s/it] 10%|█         | 10/100 [00:34<05:37,  3.75s/it] 11%|█         | 11/100 [00:38<05:35,  3.77s/it] 12%|█▏        | 12/100 [00:42<05:53,  4.02s/it] 13%|█▎        | 13/100 [00:48<06:26,  4.44s/it] 14%|█▍        | 14/100 [00:52<06:26,  4.50s/it] 15%|█▌        | 15/100 [00:56<05:52,  4.15s/it] 16%|█▌        | 16/100 [01:00<05:46,  4.13s/it] 17%|█▋        | 17/100 [01:04<05:40,  4.10s/it] 18%|█▊        | 18/100 [01:08<05:27,  4.00s/it] 19%|█▉        | 19/100 [01:11<05:10,  3.83s/it] 20%|██        | 20/100 [01:15<04:58,  3.73s/it] 21%|██        | 21/100 [01:18<04:47,  3.64s/it] 22%|██▏       | 22/100 [01:22<04:42,  3.62s/it] 23%|██▎       | 23/100 [01:25<04:43,  3.68s/it] 24%|██▍       | 24/100 [01:29<04:43,  3.73s/it] 25%|██▌       | 25/100 [01:33<04:38,  3.71s/it] 26%|██▌       | 26/100 [01:37<04:37,  3.75s/it] 27%|██▋       | 27/100 [01:40<04:31,  3.71s/it] 28%|██▊       | 28/100 [01:44<04:27,  3.71s/it] 29%|██▉       | 29/100 [01:49<04:56,  4.18s/it] 30%|███       | 30/100 [01:55<05:13,  4.48s/it] 31%|███       | 31/100 [01:59<05:05,  4.42s/it] 32%|███▏      | 32/100 [02:02<04:41,  4.13s/it] 33%|███▎      | 33/100 [02:06<04:31,  4.06s/it] 34%|███▍      | 34/100 [02:10<04:21,  3.96s/it] 35%|███▌      | 35/100 [02:16<04:58,  4.59s/it] 36%|███▌      | 36/100 [02:23<05:35,  5.25s/it] 37%|███▋      | 37/100 [02:29<05:41,  5.41s/it] 38%|███▊      | 38/100 [02:33<05:12,  5.05s/it] 39%|███▉      | 39/100 [02:37<04:45,  4.69s/it] 40%|████      | 40/100 [02:40<04:23,  4.38s/it] 41%|████      | 41/100 [02:44<04:02,  4.11s/it] 42%|████▏     | 42/100 [02:48<03:54,  4.04s/it] 43%|████▎     | 43/100 [02:52<03:55,  4.13s/it] 44%|████▍     | 44/100 [02:56<03:45,  4.02s/it] 45%|████▌     | 45/100 [03:00<03:40,  4.00s/it] 46%|████▌     | 46/100 [03:05<03:50,  4.28s/it] 47%|████▋     | 47/100 [03:10<04:08,  4.70s/it] 48%|████▊     | 48/100 [03:14<03:50,  4.43s/it] 49%|████▉     | 49/100 [03:18<03:31,  4.14s/it] 50%|█████     | 50/100 [03:21<03:16,  3.93s/it] 51%|█████     | 51/100 [03:24<03:05,  3.79s/it] 52%|█████▏    | 52/100 [03:28<02:56,  3.68s/it] 53%|█████▎    | 53/100 [03:32<02:55,  3.74s/it] 54%|█████▍    | 54/100 [03:35<02:49,  3.69s/it] 55%|█████▌    | 55/100 [03:39<02:44,  3.65s/it] 56%|█████▌    | 56/100 [03:43<02:45,  3.75s/it] 57%|█████▋    | 57/100 [03:47<02:44,  3.82s/it] 58%|█████▊    | 58/100 [03:51<02:39,  3.81s/it] 59%|█████▉    | 59/100 [03:55<02:38,  3.86s/it] 60%|██████    | 60/100 [03:58<02:34,  3.85s/it] 61%|██████    | 61/100 [04:02<02:25,  3.73s/it] 62%|██████▏   | 62/100 [04:06<02:26,  3.86s/it] 63%|██████▎   | 63/100 [04:10<02:20,  3.79s/it] 64%|██████▍   | 64/100 [04:13<02:13,  3.71s/it] 65%|██████▌   | 65/100 [04:17<02:10,  3.72s/it] 66%|██████▌   | 66/100 [04:20<02:04,  3.65s/it] 67%|██████▋   | 67/100 [04:24<02:01,  3.69s/it] 68%|██████▊   | 68/100 [04:28<02:02,  3.82s/it] 69%|██████▉   | 69/100 [04:32<01:59,  3.86s/it] 70%|███████   | 70/100 [04:38<02:09,  4.31s/it] 71%|███████   | 71/100 [04:44<02:21,  4.87s/it] 72%|███████▏  | 72/100 [04:49<02:17,  4.91s/it] 73%|███████▎  | 73/100 [04:53<02:05,  4.63s/it] 74%|███████▍  | 74/100 [04:58<02:02,  4.71s/it] 75%|███████▌  | 75/100 [05:01<01:46,  4.24s/it] 76%|███████▌  | 76/100 [05:04<01:35,  3.99s/it] 77%|███████▋  | 77/100 [05:08<01:31,  3.98s/it] 78%|███████▊  | 78/100 [05:12<01:29,  4.07s/it] 79%|███████▉  | 79/100 [05:17<01:29,  4.25s/it] 80%|████████  | 80/100 [05:21<01:22,  4.14s/it] 81%|████████  | 81/100 [05:25<01:17,  4.08s/it] 82%|████████▏ | 82/100 [05:29<01:10,  3.92s/it] 83%|████████▎ | 83/100 [05:32<01:04,  3.82s/it] 84%|████████▍ | 84/100 [05:36<00:59,  3.71s/it] 85%|████████▌ | 85/100 [05:39<00:55,  3.70s/it] 86%|████████▌ | 86/100 [05:43<00:51,  3.65s/it] 87%|████████▋ | 87/100 [05:47<00:48,  3.73s/it] 88%|████████▊ | 88/100 [05:51<00:45,  3.79s/it] 89%|████████▉ | 89/100 [05:54<00:41,  3.77s/it] 90%|█████████ | 90/100 [05:58<00:38,  3.87s/it] 91%|█████████ | 91/100 [06:02<00:35,  3.92s/it] 92%|█████████▏| 92/100 [06:06<00:30,  3.83s/it] 93%|█████████▎| 93/100 [06:10<00:26,  3.73s/it] 94%|█████████▍| 94/100 [06:13<00:22,  3.74s/it] 95%|█████████▌| 95/100 [06:17<00:18,  3.72s/it] 96%|█████████▌| 96/100 [06:20<00:14,  3.62s/it] 97%|█████████▋| 97/100 [06:24<00:10,  3.57s/it] 98%|█████████▊| 98/100 [06:28<00:07,  3.60s/it] 99%|█████████▉| 99/100 [06:31<00:03,  3.62s/it]100%|██████████| 100/100 [06:35<00:00,  3.64s/it]100%|██████████| 100/100 [06:35<00:00,  3.96s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer3
+=) 28.91% for 3
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:04<03:24,  2.09s/it]  3%|▎         | 3/100 [00:08<05:04,  3.14s/it]  4%|▍         | 4/100 [00:13<06:08,  3.84s/it]  5%|▌         | 5/100 [00:18<06:22,  4.03s/it]  6%|▌         | 6/100 [00:21<06:01,  3.84s/it]  7%|▋         | 7/100 [00:25<05:48,  3.75s/it]  8%|▊         | 8/100 [00:29<05:58,  3.89s/it]  9%|▉         | 9/100 [00:33<05:50,  3.85s/it] 10%|█         | 10/100 [00:36<05:44,  3.83s/it] 11%|█         | 11/100 [00:40<05:38,  3.81s/it] 12%|█▏        | 12/100 [00:44<05:34,  3.80s/it] 13%|█▎        | 13/100 [00:48<05:36,  3.87s/it] 14%|█▍        | 14/100 [00:52<05:33,  3.88s/it] 15%|█▌        | 15/100 [00:56<05:32,  3.91s/it] 16%|█▌        | 16/100 [01:00<05:26,  3.89s/it] 17%|█▋        | 17/100 [01:04<05:20,  3.87s/it] 18%|█▊        | 18/100 [01:07<05:09,  3.77s/it] 19%|█▉        | 19/100 [01:11<04:57,  3.68s/it] 20%|██        | 20/100 [01:14<04:54,  3.68s/it] 21%|██        | 21/100 [01:18<04:51,  3.69s/it] 22%|██▏       | 22/100 [01:22<04:57,  3.81s/it] 23%|██▎       | 23/100 [01:26<04:49,  3.75s/it] 24%|██▍       | 24/100 [01:29<04:39,  3.68s/it] 25%|██▌       | 25/100 [01:33<04:35,  3.67s/it] 26%|██▌       | 26/100 [01:38<04:58,  4.03s/it] 27%|██▋       | 27/100 [01:44<05:33,  4.57s/it] 28%|██▊       | 28/100 [01:48<05:22,  4.48s/it] 29%|██▉       | 29/100 [01:52<05:03,  4.27s/it] 30%|███       | 30/100 [01:55<04:47,  4.11s/it] 31%|███       | 31/100 [01:59<04:34,  3.98s/it] 32%|███▏      | 32/100 [02:04<04:44,  4.18s/it] 33%|███▎      | 33/100 [02:07<04:32,  4.07s/it] 34%|███▍      | 34/100 [02:11<04:18,  3.91s/it] 35%|███▌      | 35/100 [02:15<04:10,  3.85s/it] 36%|███▌      | 36/100 [02:20<04:25,  4.15s/it] 37%|███▋      | 37/100 [02:25<04:47,  4.57s/it] 38%|███▊      | 38/100 [02:31<05:02,  4.88s/it] 39%|███▉      | 39/100 [02:36<05:02,  4.96s/it] 40%|████      | 40/100 [02:40<04:37,  4.63s/it] 41%|████      | 41/100 [02:43<04:09,  4.23s/it] 42%|████▏     | 42/100 [02:47<03:55,  4.07s/it] 43%|████▎     | 43/100 [02:50<03:45,  3.96s/it] 44%|████▍     | 44/100 [02:54<03:34,  3.83s/it] 45%|████▌     | 45/100 [02:57<03:23,  3.70s/it] 46%|████▌     | 46/100 [03:01<03:21,  3.72s/it] 47%|████▋     | 47/100 [03:05<03:17,  3.72s/it] 48%|████▊     | 48/100 [03:09<03:14,  3.74s/it] 49%|████▉     | 49/100 [03:13<03:18,  3.90s/it] 50%|█████     | 50/100 [03:17<03:11,  3.82s/it] 51%|█████     | 51/100 [03:20<03:04,  3.76s/it] 52%|█████▏    | 52/100 [03:24<03:00,  3.75s/it] 53%|█████▎    | 53/100 [03:28<02:56,  3.76s/it] 54%|█████▍    | 54/100 [03:31<02:50,  3.72s/it] 55%|█████▌    | 55/100 [03:35<02:45,  3.69s/it] 56%|█████▌    | 56/100 [03:38<02:40,  3.64s/it] 57%|█████▋    | 57/100 [03:42<02:35,  3.61s/it] 58%|█████▊    | 58/100 [03:45<02:29,  3.57s/it] 59%|█████▉    | 59/100 [03:49<02:28,  3.62s/it] 60%|██████    | 60/100 [03:53<02:25,  3.65s/it] 61%|██████    | 61/100 [03:56<02:19,  3.58s/it] 62%|██████▏   | 62/100 [04:00<02:18,  3.64s/it] 63%|██████▎   | 63/100 [04:04<02:13,  3.62s/it] 64%|██████▍   | 64/100 [04:07<02:09,  3.60s/it] 65%|██████▌   | 65/100 [04:11<02:07,  3.64s/it] 66%|██████▌   | 66/100 [04:14<02:03,  3.62s/it] 67%|██████▋   | 67/100 [04:18<01:59,  3.62s/it] 68%|██████▊   | 68/100 [04:22<01:54,  3.57s/it] 69%|██████▉   | 69/100 [04:25<01:50,  3.56s/it] 70%|███████   | 70/100 [04:29<01:46,  3.56s/it] 71%|███████   | 71/100 [04:32<01:43,  3.59s/it] 72%|███████▏  | 72/100 [04:36<01:43,  3.69s/it] 73%|███████▎  | 73/100 [04:40<01:40,  3.74s/it] 74%|███████▍  | 74/100 [04:44<01:36,  3.70s/it] 75%|███████▌  | 75/100 [04:47<01:32,  3.69s/it] 76%|███████▌  | 76/100 [04:51<01:26,  3.60s/it] 77%|███████▋  | 77/100 [04:54<01:23,  3.62s/it] 78%|███████▊  | 78/100 [04:59<01:23,  3.81s/it] 79%|███████▉  | 79/100 [05:02<01:19,  3.77s/it] 80%|████████  | 80/100 [05:06<01:14,  3.70s/it] 81%|████████  | 81/100 [05:10<01:10,  3.70s/it] 82%|████████▏ | 82/100 [05:13<01:06,  3.69s/it] 83%|████████▎ | 83/100 [05:17<01:01,  3.61s/it] 84%|████████▍ | 84/100 [05:20<00:56,  3.55s/it] 85%|████████▌ | 85/100 [05:24<00:53,  3.57s/it] 86%|████████▌ | 86/100 [05:27<00:50,  3.58s/it] 87%|████████▋ | 87/100 [05:31<00:46,  3.55s/it] 88%|████████▊ | 88/100 [05:34<00:42,  3.55s/it] 89%|████████▉ | 89/100 [05:38<00:39,  3.58s/it] 90%|█████████ | 90/100 [05:42<00:36,  3.63s/it] 91%|█████████ | 91/100 [05:45<00:32,  3.64s/it] 92%|█████████▏| 92/100 [05:49<00:29,  3.69s/it] 93%|█████████▎| 93/100 [05:53<00:25,  3.61s/it] 94%|█████████▍| 94/100 [05:56<00:21,  3.64s/it] 95%|█████████▌| 95/100 [06:00<00:18,  3.64s/it] 96%|█████████▌| 96/100 [06:03<00:14,  3.58s/it] 97%|█████████▋| 97/100 [06:07<00:10,  3.66s/it] 98%|█████████▊| 98/100 [06:12<00:08,  4.10s/it] 99%|█████████▉| 99/100 [06:17<00:04,  4.40s/it]100%|██████████| 100/100 [06:24<00:00,  5.13s/it]100%|██████████| 100/100 [06:25<00:00,  3.85s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer4
+=) 30.30% for 4
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<03:12,  1.97s/it]  3%|▎         | 3/100 [00:07<04:24,  2.72s/it]  4%|▍         | 4/100 [00:11<04:51,  3.04s/it]  5%|▌         | 5/100 [00:14<05:05,  3.21s/it]  6%|▌         | 6/100 [00:18<05:16,  3.37s/it]  7%|▋         | 7/100 [00:22<05:27,  3.52s/it]  8%|▊         | 8/100 [00:26<05:36,  3.65s/it]  9%|▉         | 9/100 [00:29<05:32,  3.66s/it] 10%|█         | 10/100 [00:33<05:34,  3.72s/it] 11%|█         | 11/100 [00:37<05:33,  3.75s/it] 12%|█▏        | 12/100 [00:41<05:33,  3.79s/it] 13%|█▎        | 13/100 [00:45<05:38,  3.90s/it] 14%|█▍        | 14/100 [00:49<05:34,  3.89s/it] 15%|█▌        | 15/100 [00:53<05:24,  3.82s/it] 16%|█▌        | 16/100 [00:56<05:20,  3.81s/it] 17%|█▋        | 17/100 [01:00<05:07,  3.70s/it] 18%|█▊        | 18/100 [01:04<05:00,  3.67s/it] 19%|█▉        | 19/100 [01:07<04:52,  3.61s/it] 20%|██        | 20/100 [01:11<04:48,  3.60s/it] 21%|██        | 21/100 [01:14<04:40,  3.56s/it] 22%|██▏       | 22/100 [01:18<04:39,  3.58s/it] 23%|██▎       | 23/100 [01:21<04:36,  3.59s/it] 24%|██▍       | 24/100 [01:25<04:34,  3.61s/it] 25%|██▌       | 25/100 [01:29<04:36,  3.68s/it] 26%|██▌       | 26/100 [01:32<04:26,  3.61s/it] 27%|██▋       | 27/100 [01:36<04:25,  3.64s/it] 28%|██▊       | 28/100 [01:39<04:19,  3.61s/it] 29%|██▉       | 29/100 [01:43<04:19,  3.66s/it] 30%|███       | 30/100 [01:48<04:44,  4.06s/it] 31%|███       | 31/100 [01:53<04:58,  4.33s/it] 32%|███▏      | 32/100 [01:59<05:14,  4.63s/it] 33%|███▎      | 33/100 [02:05<05:40,  5.09s/it] 34%|███▍      | 34/100 [02:09<05:15,  4.78s/it] 35%|███▌      | 35/100 [02:13<04:50,  4.47s/it] 36%|███▌      | 36/100 [02:16<04:24,  4.13s/it] 37%|███▋      | 37/100 [02:19<04:05,  3.90s/it] 38%|███▊      | 38/100 [02:24<04:13,  4.08s/it] 39%|███▉      | 39/100 [02:29<04:28,  4.41s/it] 40%|████      | 40/100 [02:34<04:34,  4.57s/it] 41%|████      | 41/100 [02:37<04:10,  4.25s/it] 42%|████▏     | 42/100 [02:41<03:52,  4.00s/it] 43%|████▎     | 43/100 [02:44<03:39,  3.85s/it] 44%|████▍     | 44/100 [02:48<03:30,  3.76s/it] 45%|████▌     | 45/100 [02:52<03:28,  3.79s/it] 46%|████▌     | 46/100 [02:58<04:03,  4.52s/it] 47%|████▋     | 47/100 [03:05<04:42,  5.32s/it] 48%|████▊     | 48/100 [03:10<04:25,  5.10s/it] 49%|████▉     | 49/100 [03:14<04:01,  4.74s/it] 50%|█████     | 50/100 [03:17<03:40,  4.41s/it] 51%|█████     | 51/100 [03:21<03:24,  4.17s/it] 52%|█████▏    | 52/100 [03:24<03:10,  3.96s/it] 53%|█████▎    | 53/100 [03:28<03:04,  3.93s/it] 54%|█████▍    | 54/100 [03:32<02:58,  3.89s/it] 55%|█████▌    | 55/100 [03:36<02:57,  3.95s/it] 56%|█████▌    | 56/100 [03:40<02:54,  3.96s/it] 57%|█████▋    | 57/100 [03:45<02:58,  4.14s/it] 58%|█████▊    | 58/100 [03:48<02:46,  3.97s/it] 59%|█████▉    | 59/100 [03:52<02:41,  3.93s/it] 60%|██████    | 60/100 [03:56<02:37,  3.95s/it] 61%|██████    | 61/100 [04:00<02:35,  3.98s/it] 62%|██████▏   | 62/100 [04:04<02:33,  4.04s/it] 63%|██████▎   | 63/100 [04:08<02:24,  3.91s/it] 64%|██████▍   | 64/100 [04:11<02:15,  3.78s/it] 65%|██████▌   | 65/100 [04:15<02:10,  3.73s/it] 66%|██████▌   | 66/100 [04:18<02:04,  3.66s/it] 67%|██████▋   | 67/100 [04:22<01:59,  3.63s/it] 68%|██████▊   | 68/100 [04:25<01:55,  3.60s/it] 69%|██████▉   | 69/100 [04:29<01:49,  3.54s/it] 70%|███████   | 70/100 [04:32<01:46,  3.54s/it] 71%|███████   | 71/100 [04:36<01:43,  3.57s/it] 72%|███████▏  | 72/100 [04:40<01:40,  3.59s/it] 73%|███████▎  | 73/100 [04:43<01:36,  3.57s/it] 74%|███████▍  | 74/100 [04:47<01:34,  3.62s/it] 75%|███████▌  | 75/100 [04:51<01:33,  3.73s/it] 76%|███████▌  | 76/100 [04:55<01:31,  3.83s/it] 77%|███████▋  | 77/100 [04:59<01:26,  3.76s/it] 78%|███████▊  | 78/100 [05:02<01:21,  3.69s/it] 79%|███████▉  | 79/100 [05:06<01:17,  3.71s/it] 80%|████████  | 80/100 [05:09<01:11,  3.60s/it] 81%|████████  | 81/100 [05:13<01:08,  3.58s/it] 82%|████████▏ | 82/100 [05:16<01:04,  3.59s/it] 83%|████████▎ | 83/100 [05:20<01:01,  3.60s/it] 84%|████████▍ | 84/100 [05:23<00:56,  3.55s/it] 85%|████████▌ | 85/100 [05:27<00:53,  3.54s/it] 86%|████████▌ | 86/100 [05:30<00:49,  3.54s/it] 87%|████████▋ | 87/100 [05:34<00:46,  3.59s/it] 88%|████████▊ | 88/100 [05:39<00:45,  3.82s/it] 89%|████████▉ | 89/100 [05:42<00:41,  3.75s/it] 90%|█████████ | 90/100 [05:46<00:37,  3.71s/it] 91%|█████████ | 91/100 [05:49<00:33,  3.71s/it] 92%|█████████▏| 92/100 [05:53<00:29,  3.69s/it] 93%|█████████▎| 93/100 [05:57<00:25,  3.69s/it] 94%|█████████▍| 94/100 [06:00<00:22,  3.67s/it] 95%|█████████▌| 95/100 [06:04<00:18,  3.64s/it] 96%|█████████▌| 96/100 [06:07<00:14,  3.57s/it] 97%|█████████▋| 97/100 [06:11<00:10,  3.54s/it] 98%|█████████▊| 98/100 [06:15<00:07,  3.57s/it] 99%|█████████▉| 99/100 [06:18<00:03,  3.62s/it]100%|██████████| 100/100 [06:22<00:00,  3.70s/it]100%|██████████| 100/100 [06:22<00:00,  3.83s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer5
+=) 43.79% for 5
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:07<05:56,  3.64s/it]  3%|▎         | 3/100 [00:13<07:36,  4.70s/it]  4%|▍         | 4/100 [00:18<07:38,  4.78s/it]  5%|▌         | 5/100 [00:21<06:48,  4.30s/it]  6%|▌         | 6/100 [00:25<06:18,  4.03s/it]  7%|▋         | 7/100 [00:28<06:02,  3.90s/it]  8%|▊         | 8/100 [00:32<05:56,  3.88s/it]  9%|▉         | 9/100 [00:36<05:40,  3.74s/it] 10%|█         | 10/100 [00:39<05:29,  3.66s/it] 11%|█         | 11/100 [00:43<05:22,  3.63s/it] 12%|█▏        | 12/100 [00:46<05:15,  3.58s/it] 13%|█▎        | 13/100 [00:50<05:17,  3.65s/it] 14%|█▍        | 14/100 [00:54<05:11,  3.62s/it] 15%|█▌        | 15/100 [00:57<05:06,  3.60s/it] 16%|█▌        | 16/100 [01:01<05:02,  3.60s/it] 17%|█▋        | 17/100 [01:04<05:01,  3.63s/it] 18%|█▊        | 18/100 [01:08<05:04,  3.71s/it] 19%|█▉        | 19/100 [01:12<04:59,  3.70s/it] 20%|██        | 20/100 [01:16<04:58,  3.73s/it] 21%|██        | 21/100 [01:19<04:49,  3.67s/it] 22%|██▏       | 22/100 [01:23<04:52,  3.75s/it] 23%|██▎       | 23/100 [01:27<04:44,  3.70s/it] 24%|██▍       | 24/100 [01:31<04:44,  3.74s/it] 25%|██▌       | 25/100 [01:35<04:44,  3.79s/it] 26%|██▌       | 26/100 [01:38<04:37,  3.75s/it] 27%|██▋       | 27/100 [01:42<04:30,  3.70s/it] 28%|██▊       | 28/100 [01:45<04:23,  3.65s/it] 29%|██▉       | 29/100 [01:49<04:23,  3.71s/it] 30%|███       | 30/100 [01:53<04:19,  3.71s/it] 31%|███       | 31/100 [01:56<04:12,  3.66s/it] 32%|███▏      | 32/100 [02:00<04:10,  3.68s/it] 33%|███▎      | 33/100 [02:04<04:10,  3.74s/it] 34%|███▍      | 34/100 [02:08<04:09,  3.78s/it] 35%|███▌      | 35/100 [02:12<04:09,  3.84s/it] 36%|███▌      | 36/100 [02:16<04:06,  3.85s/it] 37%|███▋      | 37/100 [02:20<04:13,  4.03s/it] 38%|███▊      | 38/100 [02:26<04:37,  4.48s/it] 39%|███▉      | 39/100 [02:31<04:44,  4.66s/it] 40%|████      | 40/100 [02:36<04:40,  4.68s/it] 41%|████      | 41/100 [02:40<04:24,  4.48s/it] 42%|████▏     | 42/100 [02:43<04:03,  4.20s/it] 43%|████▎     | 43/100 [02:47<03:49,  4.02s/it] 44%|████▍     | 44/100 [02:50<03:35,  3.84s/it] 45%|████▌     | 45/100 [02:54<03:28,  3.79s/it] 46%|████▌     | 46/100 [02:58<03:27,  3.84s/it] 47%|████▋     | 47/100 [03:01<03:22,  3.81s/it] 48%|████▊     | 48/100 [03:05<03:12,  3.70s/it] 49%|████▉     | 49/100 [03:09<03:07,  3.68s/it] 50%|█████     | 50/100 [03:12<03:03,  3.67s/it] 51%|█████     | 51/100 [03:16<02:58,  3.64s/it] 52%|█████▏    | 52/100 [03:20<02:56,  3.69s/it] 53%|█████▎    | 53/100 [03:24<03:06,  3.97s/it] 54%|█████▍    | 54/100 [03:28<03:02,  3.96s/it] 55%|█████▌    | 55/100 [03:33<03:10,  4.24s/it] 56%|█████▌    | 56/100 [03:38<03:22,  4.61s/it] 57%|█████▋    | 57/100 [03:43<03:19,  4.64s/it] 58%|█████▊    | 58/100 [03:46<02:57,  4.24s/it] 59%|█████▉    | 59/100 [03:51<02:52,  4.20s/it] 60%|██████    | 60/100 [03:55<02:50,  4.27s/it] 61%|██████    | 61/100 [04:00<02:53,  4.44s/it] 62%|██████▏   | 62/100 [04:05<02:59,  4.72s/it] 63%|██████▎   | 63/100 [04:09<02:42,  4.39s/it] 64%|██████▍   | 64/100 [04:12<02:27,  4.11s/it] 65%|██████▌   | 65/100 [04:16<02:18,  3.96s/it] 66%|██████▌   | 66/100 [04:20<02:11,  3.85s/it] 67%|██████▋   | 67/100 [04:24<02:10,  3.96s/it] 68%|██████▊   | 68/100 [04:27<02:04,  3.89s/it] 69%|██████▉   | 69/100 [04:31<01:55,  3.71s/it] 70%|███████   | 70/100 [04:35<01:56,  3.90s/it] 71%|███████   | 71/100 [04:40<02:03,  4.26s/it] 72%|███████▏  | 72/100 [04:46<02:09,  4.61s/it] 73%|███████▎  | 73/100 [04:50<02:05,  4.65s/it] 74%|███████▍  | 74/100 [04:55<01:58,  4.57s/it] 75%|███████▌  | 75/100 [04:59<01:48,  4.33s/it] 76%|███████▌  | 76/100 [05:02<01:38,  4.11s/it] 77%|███████▋  | 77/100 [05:06<01:31,  3.97s/it] 78%|███████▊  | 78/100 [05:09<01:24,  3.85s/it] 79%|███████▉  | 79/100 [05:13<01:19,  3.79s/it] 80%|████████  | 80/100 [05:16<01:13,  3.66s/it] 81%|████████  | 81/100 [05:20<01:09,  3.66s/it] 82%|████████▏ | 82/100 [05:24<01:07,  3.73s/it] 83%|████████▎ | 83/100 [05:28<01:02,  3.70s/it] 84%|████████▍ | 84/100 [05:31<00:58,  3.68s/it] 85%|████████▌ | 85/100 [05:35<00:54,  3.66s/it] 86%|████████▌ | 86/100 [05:38<00:50,  3.62s/it] 87%|████████▋ | 87/100 [05:42<00:46,  3.57s/it] 88%|████████▊ | 88/100 [05:45<00:43,  3.59s/it] 89%|████████▉ | 89/100 [05:49<00:39,  3.56s/it] 90%|█████████ | 90/100 [05:53<00:36,  3.60s/it] 91%|█████████ | 91/100 [05:56<00:32,  3.64s/it] 92%|█████████▏| 92/100 [06:00<00:28,  3.62s/it] 93%|█████████▎| 93/100 [06:04<00:25,  3.64s/it] 94%|█████████▍| 94/100 [06:07<00:21,  3.64s/it] 95%|█████████▌| 95/100 [06:11<00:18,  3.60s/it] 96%|█████████▌| 96/100 [06:14<00:14,  3.54s/it] 97%|█████████▋| 97/100 [06:18<00:10,  3.51s/it] 98%|█████████▊| 98/100 [06:21<00:07,  3.55s/it] 99%|█████████▉| 99/100 [06:25<00:03,  3.59s/it]100%|██████████| 100/100 [06:29<00:00,  3.64s/it]100%|██████████| 100/100 [06:29<00:00,  3.89s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer6
+=) 41.67% for 6
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<02:59,  1.83s/it]  3%|▎         | 3/100 [00:08<05:06,  3.16s/it]  4%|▍         | 4/100 [00:14<06:35,  4.12s/it]  5%|▌         | 5/100 [00:18<06:30,  4.11s/it]  6%|▌         | 6/100 [00:22<06:19,  4.04s/it]  7%|▋         | 7/100 [00:25<05:57,  3.84s/it]  8%|▊         | 8/100 [00:29<05:52,  3.83s/it]  9%|▉         | 9/100 [00:33<05:55,  3.90s/it] 10%|█         | 10/100 [00:37<05:58,  3.99s/it] 11%|█         | 11/100 [00:42<06:16,  4.22s/it] 12%|█▏        | 12/100 [00:47<06:22,  4.35s/it] 13%|█▎        | 13/100 [00:51<06:26,  4.44s/it] 14%|█▍        | 14/100 [00:55<06:09,  4.30s/it] 15%|█▌        | 15/100 [00:59<05:51,  4.14s/it] 16%|█▌        | 16/100 [01:04<05:54,  4.22s/it] 17%|█▋        | 17/100 [01:07<05:31,  3.99s/it] 18%|█▊        | 18/100 [01:11<05:16,  3.86s/it] 19%|█▉        | 19/100 [01:14<05:06,  3.78s/it] 20%|██        | 20/100 [01:18<04:59,  3.74s/it] 21%|██        | 21/100 [01:21<04:52,  3.70s/it] 22%|██▏       | 22/100 [01:25<04:51,  3.73s/it] 23%|██▎       | 23/100 [01:29<04:46,  3.71s/it] 24%|██▍       | 24/100 [01:33<04:42,  3.72s/it] 25%|██▌       | 25/100 [01:36<04:36,  3.69s/it] 26%|██▌       | 26/100 [01:40<04:30,  3.65s/it] 27%|██▋       | 27/100 [01:44<04:31,  3.71s/it] 28%|██▊       | 28/100 [01:47<04:27,  3.72s/it] 29%|██▉       | 29/100 [01:51<04:21,  3.68s/it] 30%|███       | 30/100 [01:56<04:37,  3.96s/it] 31%|███       | 31/100 [02:00<04:35,  4.00s/it] 32%|███▏      | 32/100 [02:04<04:47,  4.23s/it] 33%|███▎      | 33/100 [02:10<05:04,  4.54s/it] 34%|███▍      | 34/100 [02:15<05:20,  4.85s/it] 35%|███▌      | 35/100 [02:19<04:50,  4.47s/it] 36%|███▌      | 36/100 [02:22<04:26,  4.16s/it] 37%|███▋      | 37/100 [02:26<04:16,  4.06s/it] 38%|███▊      | 38/100 [02:32<04:46,  4.63s/it] 39%|███▉      | 39/100 [02:37<04:50,  4.76s/it] 40%|████      | 40/100 [02:42<04:48,  4.81s/it] 41%|████      | 41/100 [02:46<04:20,  4.41s/it] 42%|████▏     | 42/100 [02:49<03:58,  4.11s/it] 43%|████▎     | 43/100 [02:53<03:44,  3.93s/it] 44%|████▍     | 44/100 [02:56<03:30,  3.77s/it] 45%|████▌     | 45/100 [03:00<03:27,  3.77s/it] 46%|████▌     | 46/100 [03:04<03:31,  3.91s/it] 47%|████▋     | 47/100 [03:08<03:25,  3.87s/it] 48%|████▊     | 48/100 [03:11<03:15,  3.76s/it] 49%|████▉     | 49/100 [03:15<03:07,  3.67s/it] 50%|█████     | 50/100 [03:18<02:59,  3.59s/it] 51%|█████     | 51/100 [03:22<02:57,  3.61s/it] 52%|█████▏    | 52/100 [03:26<03:09,  3.94s/it] 53%|█████▎    | 53/100 [03:31<03:19,  4.24s/it] 54%|█████▍    | 54/100 [03:35<03:09,  4.12s/it] 55%|█████▌    | 55/100 [03:39<02:55,  3.89s/it] 56%|█████▌    | 56/100 [03:42<02:47,  3.81s/it] 57%|█████▋    | 57/100 [03:46<02:44,  3.83s/it] 58%|█████▊    | 58/100 [03:50<02:41,  3.85s/it] 59%|█████▉    | 59/100 [03:54<02:40,  3.92s/it] 60%|██████    | 60/100 [03:58<02:35,  3.89s/it] 61%|██████    | 61/100 [04:01<02:25,  3.74s/it] 62%|██████▏   | 62/100 [04:05<02:23,  3.76s/it] 63%|██████▎   | 63/100 [04:09<02:25,  3.94s/it] 64%|██████▍   | 64/100 [04:13<02:14,  3.75s/it] 65%|██████▌   | 65/100 [04:16<02:10,  3.72s/it] 66%|██████▌   | 66/100 [04:21<02:11,  3.87s/it] 67%|██████▋   | 67/100 [04:26<02:20,  4.26s/it] 68%|██████▊   | 68/100 [04:30<02:17,  4.31s/it] 69%|██████▉   | 69/100 [04:34<02:08,  4.15s/it] 70%|███████   | 70/100 [04:38<01:59,  4.00s/it] 71%|███████   | 71/100 [04:41<01:53,  3.92s/it] 72%|███████▏  | 72/100 [04:45<01:47,  3.84s/it] 73%|███████▎  | 73/100 [04:49<01:41,  3.77s/it] 74%|███████▍  | 74/100 [04:52<01:36,  3.71s/it] 75%|███████▌  | 75/100 [04:56<01:30,  3.61s/it] 76%|███████▌  | 76/100 [04:59<01:26,  3.60s/it] 77%|███████▋  | 77/100 [05:03<01:22,  3.61s/it] 78%|███████▊  | 78/100 [05:06<01:19,  3.62s/it] 79%|███████▉  | 79/100 [05:10<01:15,  3.61s/it] 80%|████████  | 80/100 [05:13<01:10,  3.54s/it] 81%|████████  | 81/100 [05:17<01:07,  3.57s/it] 82%|████████▏ | 82/100 [05:21<01:07,  3.74s/it] 83%|████████▎ | 83/100 [05:25<01:02,  3.68s/it] 84%|████████▍ | 84/100 [05:28<00:58,  3.66s/it] 85%|████████▌ | 85/100 [05:32<00:55,  3.67s/it] 86%|████████▌ | 86/100 [05:35<00:50,  3.60s/it] 87%|████████▋ | 87/100 [05:39<00:46,  3.59s/it] 88%|████████▊ | 88/100 [05:43<00:42,  3.58s/it] 89%|████████▉ | 89/100 [05:46<00:38,  3.53s/it] 90%|█████████ | 90/100 [05:50<00:35,  3.54s/it] 91%|█████████ | 91/100 [05:53<00:31,  3.55s/it] 92%|█████████▏| 92/100 [05:57<00:28,  3.54s/it] 93%|█████████▎| 93/100 [06:00<00:24,  3.54s/it] 94%|█████████▍| 94/100 [06:04<00:21,  3.61s/it] 95%|█████████▌| 95/100 [06:08<00:18,  3.65s/it] 96%|█████████▌| 96/100 [06:11<00:14,  3.63s/it] 97%|█████████▋| 97/100 [06:15<00:10,  3.57s/it] 98%|█████████▊| 98/100 [06:18<00:07,  3.60s/it] 99%|█████████▉| 99/100 [06:22<00:03,  3.65s/it]100%|██████████| 100/100 [06:26<00:00,  3.78s/it]100%|██████████| 100/100 [06:27<00:00,  3.87s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer7
+=) 17.63% for 7
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<02:55,  1.79s/it]  3%|▎         | 3/100 [00:07<04:25,  2.74s/it]  4%|▍         | 4/100 [00:11<04:51,  3.03s/it]  5%|▌         | 5/100 [00:14<05:02,  3.19s/it]  6%|▌         | 6/100 [00:18<05:09,  3.29s/it]  7%|▋         | 7/100 [00:21<05:15,  3.39s/it]  8%|▊         | 8/100 [00:25<05:31,  3.60s/it]  9%|▉         | 9/100 [00:29<05:43,  3.77s/it] 10%|█         | 10/100 [00:34<06:04,  4.05s/it] 11%|█         | 11/100 [00:38<06:05,  4.11s/it] 12%|█▏        | 12/100 [00:42<05:55,  4.04s/it] 13%|█▎        | 13/100 [00:46<05:42,  3.94s/it] 14%|█▍        | 14/100 [00:50<05:31,  3.86s/it] 15%|█▌        | 15/100 [00:53<05:22,  3.79s/it] 16%|█▌        | 16/100 [00:57<05:14,  3.74s/it] 17%|█▋        | 17/100 [01:01<05:07,  3.70s/it] 18%|█▊        | 18/100 [01:04<05:00,  3.67s/it] 19%|█▉        | 19/100 [01:08<04:53,  3.63s/it] 20%|██        | 20/100 [01:11<04:47,  3.59s/it] 21%|██        | 21/100 [01:15<04:40,  3.55s/it] 22%|██▏       | 22/100 [01:18<04:41,  3.61s/it] 23%|██▎       | 23/100 [01:22<04:44,  3.69s/it] 24%|██▍       | 24/100 [01:26<04:39,  3.68s/it] 25%|██▌       | 25/100 [01:29<04:32,  3.63s/it] 26%|██▌       | 26/100 [01:33<04:29,  3.64s/it] 27%|██▋       | 27/100 [01:37<04:30,  3.70s/it] 28%|██▊       | 28/100 [01:41<04:31,  3.76s/it] 29%|██▉       | 29/100 [01:45<04:26,  3.75s/it] 30%|███       | 30/100 [01:48<04:24,  3.78s/it] 31%|███       | 31/100 [01:52<04:18,  3.75s/it] 32%|███▏      | 32/100 [01:56<04:16,  3.77s/it] 33%|███▎      | 33/100 [02:01<04:32,  4.07s/it] 34%|███▍      | 34/100 [02:04<04:23,  4.00s/it] 35%|███▌      | 35/100 [02:08<04:14,  3.91s/it] 36%|███▌      | 36/100 [02:12<04:00,  3.76s/it] 37%|███▋      | 37/100 [02:15<03:51,  3.67s/it] 38%|███▊      | 38/100 [02:20<04:17,  4.15s/it] 39%|███▉      | 39/100 [02:26<04:44,  4.66s/it] 40%|████      | 40/100 [02:32<04:53,  4.89s/it] 41%|████      | 41/100 [02:36<04:47,  4.87s/it] 42%|████▏     | 42/100 [02:42<04:47,  4.96s/it] 43%|████▎     | 43/100 [02:45<04:23,  4.62s/it] 44%|████▍     | 44/100 [02:49<03:59,  4.28s/it] 45%|████▌     | 45/100 [02:53<03:59,  4.36s/it] 46%|████▌     | 46/100 [02:58<04:06,  4.56s/it] 47%|████▋     | 47/100 [03:04<04:12,  4.77s/it] 48%|████▊     | 48/100 [03:09<04:10,  4.82s/it] 49%|████▉     | 49/100 [03:12<03:49,  4.51s/it] 50%|█████     | 50/100 [03:16<03:28,  4.18s/it] 51%|█████     | 51/100 [03:19<03:15,  3.99s/it] 52%|█████▏    | 52/100 [03:23<03:02,  3.80s/it] 53%|█████▎    | 53/100 [03:27<02:57,  3.78s/it] 54%|█████▍    | 54/100 [03:30<02:48,  3.67s/it] 55%|█████▌    | 55/100 [03:34<02:48,  3.75s/it] 56%|█████▌    | 56/100 [03:38<02:54,  3.98s/it] 57%|█████▋    | 57/100 [03:44<03:08,  4.37s/it] 58%|█████▊    | 58/100 [03:48<03:02,  4.34s/it] 59%|█████▉    | 59/100 [03:51<02:48,  4.11s/it] 60%|██████    | 60/100 [03:55<02:41,  4.03s/it] 61%|██████    | 61/100 [03:59<02:33,  3.94s/it] 62%|██████▏   | 62/100 [04:03<02:28,  3.91s/it] 63%|██████▎   | 63/100 [04:07<02:22,  3.84s/it] 64%|██████▍   | 64/100 [04:10<02:15,  3.76s/it] 65%|██████▌   | 65/100 [04:14<02:11,  3.74s/it] 66%|██████▌   | 66/100 [04:18<02:14,  3.95s/it] 67%|██████▋   | 67/100 [04:23<02:20,  4.26s/it] 68%|██████▊   | 68/100 [04:28<02:19,  4.35s/it] 69%|██████▉   | 69/100 [04:31<02:04,  4.00s/it] 70%|███████   | 70/100 [04:35<01:56,  3.89s/it] 71%|███████   | 71/100 [04:39<01:53,  3.91s/it] 72%|███████▏  | 72/100 [04:42<01:48,  3.88s/it] 73%|███████▎  | 73/100 [04:46<01:41,  3.78s/it] 74%|███████▍  | 74/100 [04:50<01:36,  3.70s/it] 75%|███████▌  | 75/100 [04:53<01:32,  3.72s/it] 76%|███████▌  | 76/100 [04:57<01:31,  3.80s/it] 77%|███████▋  | 77/100 [05:01<01:26,  3.78s/it] 78%|███████▊  | 78/100 [05:06<01:29,  4.05s/it] 79%|███████▉  | 79/100 [05:11<01:31,  4.34s/it] 80%|████████  | 80/100 [05:15<01:23,  4.19s/it] 81%|████████  | 81/100 [05:18<01:16,  4.04s/it] 82%|████████▏ | 82/100 [05:22<01:11,  3.97s/it] 83%|████████▎ | 83/100 [05:25<01:04,  3.79s/it] 84%|████████▍ | 84/100 [05:29<00:58,  3.67s/it] 85%|████████▌ | 85/100 [05:33<00:55,  3.69s/it] 86%|████████▌ | 86/100 [05:36<00:51,  3.65s/it] 87%|████████▋ | 87/100 [05:40<00:47,  3.68s/it] 88%|████████▊ | 88/100 [05:44<00:44,  3.69s/it] 89%|████████▉ | 89/100 [05:47<00:40,  3.64s/it] 90%|█████████ | 90/100 [05:51<00:36,  3.61s/it] 91%|█████████ | 91/100 [05:54<00:32,  3.60s/it] 92%|█████████▏| 92/100 [05:58<00:28,  3.57s/it] 93%|█████████▎| 93/100 [06:01<00:24,  3.56s/it] 94%|█████████▍| 94/100 [06:05<00:21,  3.58s/it] 95%|█████████▌| 95/100 [06:09<00:18,  3.73s/it] 96%|█████████▌| 96/100 [06:12<00:14,  3.65s/it] 97%|█████████▋| 97/100 [06:16<00:10,  3.58s/it] 98%|█████████▊| 98/100 [06:19<00:07,  3.61s/it] 99%|█████████▉| 99/100 [06:23<00:03,  3.62s/it]100%|██████████| 100/100 [06:27<00:00,  3.71s/it]100%|██████████| 100/100 [06:27<00:00,  3.88s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer8
+=) 10.34% for 8
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<02:51,  1.75s/it]  3%|▎         | 3/100 [00:07<04:28,  2.77s/it]  4%|▍         | 4/100 [00:11<04:53,  3.06s/it]  5%|▌         | 5/100 [00:14<05:06,  3.23s/it]  6%|▌         | 6/100 [00:18<05:12,  3.32s/it]  7%|▋         | 7/100 [00:22<05:21,  3.45s/it]  8%|▊         | 8/100 [00:25<05:30,  3.59s/it]  9%|▉         | 9/100 [00:29<05:23,  3.56s/it] 10%|█         | 10/100 [00:32<05:19,  3.55s/it] 11%|█         | 11/100 [00:36<05:14,  3.53s/it] 12%|█▏        | 12/100 [00:40<05:18,  3.61s/it] 13%|█▎        | 13/100 [00:44<05:25,  3.75s/it] 14%|█▍        | 14/100 [00:48<05:25,  3.78s/it] 15%|█▌        | 15/100 [00:51<05:19,  3.75s/it] 16%|█▌        | 16/100 [00:55<05:09,  3.68s/it] 17%|█▋        | 17/100 [00:58<05:01,  3.64s/it] 18%|█▊        | 18/100 [01:02<05:05,  3.72s/it] 19%|█▉        | 19/100 [01:06<05:05,  3.77s/it] 20%|██        | 20/100 [01:11<05:25,  4.07s/it] 21%|██        | 21/100 [01:16<05:55,  4.50s/it] 22%|██▏       | 22/100 [01:23<06:46,  5.22s/it] 23%|██▎       | 23/100 [01:28<06:27,  5.03s/it] 24%|██▍       | 24/100 [01:32<05:50,  4.61s/it] 25%|██▌       | 25/100 [01:35<05:24,  4.32s/it] 26%|██▌       | 26/100 [01:39<05:10,  4.19s/it] 27%|██▋       | 27/100 [01:43<05:01,  4.14s/it] 28%|██▊       | 28/100 [01:47<04:55,  4.11s/it] 29%|██▉       | 29/100 [01:51<04:50,  4.09s/it] 30%|███       | 30/100 [01:55<04:45,  4.07s/it] 31%|███       | 31/100 [01:59<04:42,  4.09s/it] 32%|███▏      | 32/100 [02:04<04:48,  4.24s/it] 33%|███▎      | 33/100 [02:08<04:34,  4.10s/it] 34%|███▍      | 34/100 [02:11<04:19,  3.93s/it] 35%|███▌      | 35/100 [02:15<04:10,  3.85s/it] 36%|███▌      | 36/100 [02:18<04:00,  3.76s/it] 37%|███▋      | 37/100 [02:22<03:57,  3.77s/it] 38%|███▊      | 38/100 [02:27<04:16,  4.14s/it] 39%|███▉      | 39/100 [02:33<04:39,  4.58s/it] 40%|████      | 40/100 [02:39<04:56,  4.94s/it] 41%|████      | 41/100 [02:44<04:56,  5.02s/it] 42%|████▏     | 42/100 [02:51<05:22,  5.56s/it] 43%|████▎     | 43/100 [02:57<05:30,  5.81s/it] 44%|████▍     | 44/100 [03:01<04:54,  5.26s/it] 45%|████▌     | 45/100 [03:05<04:23,  4.80s/it] 46%|████▌     | 46/100 [03:09<04:10,  4.64s/it] 47%|████▋     | 47/100 [03:14<04:16,  4.83s/it] 48%|████▊     | 48/100 [03:20<04:23,  5.07s/it] 49%|████▉     | 49/100 [03:24<04:05,  4.82s/it] 50%|█████     | 50/100 [03:28<03:40,  4.41s/it] 51%|█████     | 51/100 [03:31<03:24,  4.18s/it] 52%|█████▏    | 52/100 [03:35<03:16,  4.10s/it] 53%|█████▎    | 53/100 [03:39<03:09,  4.03s/it] 54%|█████▍    | 54/100 [03:42<02:56,  3.84s/it] 55%|█████▌    | 55/100 [03:46<02:50,  3.79s/it] 56%|█████▌    | 56/100 [03:50<02:46,  3.79s/it] 57%|█████▋    | 57/100 [03:54<02:45,  3.86s/it] 58%|█████▊    | 58/100 [03:58<02:38,  3.77s/it] 59%|█████▉    | 59/100 [04:01<02:33,  3.74s/it] 60%|██████    | 60/100 [04:05<02:29,  3.74s/it] 61%|██████    | 61/100 [04:09<02:24,  3.70s/it] 62%|██████▏   | 62/100 [04:13<02:24,  3.79s/it] 63%|██████▎   | 63/100 [04:16<02:20,  3.79s/it] 64%|██████▍   | 64/100 [04:20<02:18,  3.85s/it] 65%|██████▌   | 65/100 [04:24<02:15,  3.86s/it] 66%|██████▌   | 66/100 [04:28<02:06,  3.73s/it] 67%|██████▋   | 67/100 [04:31<02:03,  3.75s/it] 68%|██████▊   | 68/100 [04:36<02:03,  3.85s/it] 69%|██████▉   | 69/100 [04:40<02:07,  4.11s/it] 70%|███████   | 70/100 [04:45<02:10,  4.34s/it] 71%|███████   | 71/100 [04:49<02:03,  4.25s/it] 72%|███████▏  | 72/100 [04:53<01:53,  4.04s/it] 73%|███████▎  | 73/100 [04:56<01:44,  3.87s/it] 74%|███████▍  | 74/100 [05:00<01:39,  3.81s/it] 75%|███████▌  | 75/100 [05:04<01:34,  3.79s/it] 76%|███████▌  | 76/100 [05:07<01:30,  3.77s/it] 77%|███████▋  | 77/100 [05:11<01:24,  3.66s/it] 78%|███████▊  | 78/100 [05:14<01:20,  3.65s/it] 79%|███████▉  | 79/100 [05:18<01:16,  3.63s/it] 80%|████████  | 80/100 [05:21<01:11,  3.58s/it] 81%|████████  | 81/100 [05:25<01:08,  3.63s/it] 82%|████████▏ | 82/100 [05:29<01:05,  3.63s/it] 83%|████████▎ | 83/100 [05:32<01:00,  3.57s/it] 84%|████████▍ | 84/100 [05:36<00:57,  3.58s/it] 85%|████████▌ | 85/100 [05:40<00:55,  3.67s/it] 86%|████████▌ | 86/100 [05:43<00:50,  3.64s/it] 87%|████████▋ | 87/100 [05:47<00:49,  3.81s/it] 88%|████████▊ | 88/100 [05:52<00:49,  4.09s/it] 89%|████████▉ | 89/100 [05:56<00:42,  3.89s/it] 90%|█████████ | 90/100 [05:59<00:38,  3.80s/it] 91%|█████████ | 91/100 [06:03<00:34,  3.87s/it] 92%|█████████▏| 92/100 [06:07<00:30,  3.80s/it] 93%|█████████▎| 93/100 [06:11<00:27,  3.88s/it] 94%|█████████▍| 94/100 [06:16<00:24,  4.16s/it] 95%|█████████▌| 95/100 [06:20<00:21,  4.27s/it] 96%|█████████▌| 96/100 [06:25<00:18,  4.50s/it] 97%|█████████▋| 97/100 [06:29<00:12,  4.29s/it] 98%|█████████▊| 98/100 [06:33<00:08,  4.12s/it] 99%|█████████▉| 99/100 [06:37<00:04,  4.00s/it]100%|██████████| 100/100 [06:41<00:00,  4.00s/it]100%|██████████| 100/100 [06:41<00:00,  4.01s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer9
+=) 20.86% for 9
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:06<05:19,  3.27s/it]  3%|▎         | 3/100 [00:12<07:23,  4.57s/it]  4%|▍         | 4/100 [00:17<07:08,  4.46s/it]  5%|▌         | 5/100 [00:20<06:35,  4.16s/it]  6%|▌         | 6/100 [00:24<06:11,  3.95s/it]  7%|▋         | 7/100 [00:27<05:53,  3.80s/it]  8%|▊         | 8/100 [00:31<05:47,  3.78s/it]  9%|▉         | 9/100 [00:35<05:36,  3.70s/it] 10%|█         | 10/100 [00:38<05:28,  3.65s/it] 11%|█         | 11/100 [00:42<05:38,  3.81s/it] 12%|█▏        | 12/100 [00:48<06:16,  4.27s/it] 13%|█▎        | 13/100 [00:53<06:40,  4.61s/it] 14%|█▍        | 14/100 [00:57<06:31,  4.56s/it] 15%|█▌        | 15/100 [01:01<06:06,  4.31s/it] 16%|█▌        | 16/100 [01:05<05:39,  4.04s/it] 17%|█▋        | 17/100 [01:08<05:20,  3.87s/it] 18%|█▊        | 18/100 [01:12<05:11,  3.80s/it] 19%|█▉        | 19/100 [01:15<05:03,  3.74s/it] 20%|██        | 20/100 [01:19<05:03,  3.79s/it] 21%|██        | 21/100 [01:23<04:51,  3.70s/it] 22%|██▏       | 22/100 [01:26<04:45,  3.66s/it] 23%|██▎       | 23/100 [01:30<04:35,  3.58s/it] 24%|██▍       | 24/100 [01:33<04:29,  3.54s/it] 25%|██▌       | 25/100 [01:37<04:24,  3.53s/it] 26%|██▌       | 26/100 [01:40<04:25,  3.59s/it] 27%|██▋       | 27/100 [01:44<04:27,  3.66s/it] 28%|██▊       | 28/100 [01:48<04:28,  3.73s/it] 29%|██▉       | 29/100 [01:52<04:28,  3.78s/it] 30%|███       | 30/100 [01:56<04:32,  3.89s/it] 31%|███       | 31/100 [02:00<04:27,  3.88s/it] 32%|███▏      | 32/100 [02:04<04:23,  3.88s/it] 33%|███▎      | 33/100 [02:08<04:31,  4.05s/it] 34%|███▍      | 34/100 [02:12<04:17,  3.91s/it] 35%|███▌      | 35/100 [02:15<04:08,  3.82s/it] 36%|███▌      | 36/100 [02:19<04:00,  3.76s/it] 37%|███▋      | 37/100 [02:24<04:15,  4.05s/it] 38%|███▊      | 38/100 [02:28<04:22,  4.24s/it] 39%|███▉      | 39/100 [02:32<04:08,  4.08s/it] 40%|████      | 40/100 [02:37<04:21,  4.36s/it] 41%|████      | 41/100 [02:43<04:37,  4.70s/it] 42%|████▏     | 42/100 [02:49<05:01,  5.21s/it] 43%|████▎     | 43/100 [02:54<04:43,  4.97s/it] 44%|████▍     | 44/100 [02:57<04:12,  4.51s/it] 45%|████▌     | 45/100 [03:01<04:02,  4.40s/it] 46%|████▌     | 46/100 [03:05<03:52,  4.31s/it] 47%|████▋     | 47/100 [03:10<03:52,  4.38s/it] 48%|████▊     | 48/100 [03:13<03:37,  4.19s/it] 49%|████▉     | 49/100 [03:17<03:21,  3.96s/it] 50%|█████     | 50/100 [03:20<03:10,  3.81s/it] 51%|█████     | 51/100 [03:24<03:05,  3.79s/it] 52%|█████▏    | 52/100 [03:28<03:08,  3.92s/it] 53%|█████▎    | 53/100 [03:32<03:00,  3.85s/it] 54%|█████▍    | 54/100 [03:35<02:51,  3.74s/it] 55%|█████▌    | 55/100 [03:39<02:47,  3.73s/it] 56%|█████▌    | 56/100 [03:43<02:42,  3.70s/it] 57%|█████▋    | 57/100 [03:47<02:38,  3.69s/it] 58%|█████▊    | 58/100 [03:50<02:37,  3.74s/it] 59%|█████▉    | 59/100 [03:54<02:32,  3.72s/it] 60%|██████    | 60/100 [03:58<02:29,  3.74s/it] 61%|██████    | 61/100 [04:02<02:27,  3.79s/it] 62%|██████▏   | 62/100 [04:06<02:25,  3.82s/it] 63%|██████▎   | 63/100 [04:09<02:18,  3.74s/it] 64%|██████▍   | 64/100 [04:13<02:16,  3.79s/it] 65%|██████▌   | 65/100 [04:18<02:23,  4.11s/it] 66%|██████▌   | 66/100 [04:22<02:19,  4.09s/it] 67%|██████▋   | 67/100 [04:26<02:11,  3.98s/it] 68%|██████▊   | 68/100 [04:29<02:03,  3.84s/it] 69%|██████▉   | 69/100 [04:34<02:03,  3.99s/it] 70%|███████   | 70/100 [04:38<02:05,  4.17s/it] 71%|███████   | 71/100 [04:43<02:04,  4.28s/it] 72%|███████▏  | 72/100 [04:48<02:09,  4.62s/it] 73%|███████▎  | 73/100 [04:53<02:09,  4.79s/it] 74%|███████▍  | 74/100 [04:58<02:06,  4.88s/it] 75%|███████▌  | 75/100 [05:02<01:50,  4.42s/it] 76%|███████▌  | 76/100 [05:05<01:39,  4.13s/it] 77%|███████▋  | 77/100 [05:09<01:35,  4.13s/it] 78%|███████▊  | 78/100 [05:13<01:31,  4.14s/it] 79%|███████▉  | 79/100 [05:17<01:25,  4.09s/it] 80%|████████  | 80/100 [05:21<01:19,  3.96s/it] 81%|████████  | 81/100 [05:25<01:15,  3.98s/it] 82%|████████▏ | 82/100 [05:29<01:09,  3.85s/it] 83%|████████▎ | 83/100 [05:32<01:03,  3.75s/it] 84%|████████▍ | 84/100 [05:36<01:01,  3.87s/it] 85%|████████▌ | 85/100 [05:41<01:01,  4.12s/it] 86%|████████▌ | 86/100 [05:45<00:58,  4.21s/it] 87%|████████▋ | 87/100 [05:50<00:54,  4.17s/it] 88%|████████▊ | 88/100 [05:53<00:47,  3.99s/it] 89%|████████▉ | 89/100 [05:57<00:42,  3.86s/it] 90%|█████████ | 90/100 [06:00<00:38,  3.81s/it] 91%|█████████ | 91/100 [06:05<00:36,  4.04s/it] 92%|█████████▏| 92/100 [06:09<00:31,  3.91s/it] 93%|█████████▎| 93/100 [06:12<00:26,  3.81s/it] 94%|█████████▍| 94/100 [06:16<00:22,  3.76s/it] 95%|█████████▌| 95/100 [06:20<00:18,  3.76s/it] 96%|█████████▌| 96/100 [06:23<00:14,  3.71s/it] 97%|█████████▋| 97/100 [06:27<00:11,  3.73s/it] 98%|█████████▊| 98/100 [06:31<00:07,  3.76s/it] 99%|█████████▉| 99/100 [06:34<00:03,  3.76s/it]100%|██████████| 100/100 [06:38<00:00,  3.77s/it]100%|██████████| 100/100 [06:39<00:00,  3.99s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer10
+=) 15.79% for 10
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<02:56,  1.80s/it]  3%|▎         | 3/100 [00:07<04:14,  2.63s/it]  4%|▍         | 4/100 [00:10<04:46,  2.98s/it]  5%|▌         | 5/100 [00:14<05:02,  3.18s/it]  6%|▌         | 6/100 [00:18<05:15,  3.36s/it]  7%|▋         | 7/100 [00:21<05:16,  3.40s/it]  8%|▊         | 8/100 [00:25<05:21,  3.49s/it]  9%|▉         | 9/100 [00:28<05:19,  3.51s/it] 10%|█         | 10/100 [00:32<05:16,  3.52s/it] 11%|█         | 11/100 [00:36<05:14,  3.53s/it] 12%|█▏        | 12/100 [00:39<05:13,  3.56s/it] 13%|█▎        | 13/100 [00:43<05:19,  3.67s/it] 14%|█▍        | 14/100 [00:47<05:13,  3.65s/it] 15%|█▌        | 15/100 [00:50<05:12,  3.68s/it] 16%|█▌        | 16/100 [00:54<05:05,  3.64s/it] 17%|█▋        | 17/100 [00:57<04:57,  3.59s/it] 18%|█▊        | 18/100 [01:01<04:56,  3.61s/it] 19%|█▉        | 19/100 [01:05<04:49,  3.57s/it] 20%|██        | 20/100 [01:08<04:46,  3.58s/it] 21%|██        | 21/100 [01:12<04:39,  3.54s/it] 22%|██▏       | 22/100 [01:15<04:38,  3.57s/it] 23%|██▎       | 23/100 [01:19<04:33,  3.55s/it] 24%|██▍       | 24/100 [01:22<04:32,  3.59s/it] 25%|██▌       | 25/100 [01:26<04:27,  3.56s/it] 26%|██▌       | 26/100 [01:30<04:23,  3.56s/it] 27%|██▋       | 27/100 [01:33<04:23,  3.61s/it] 28%|██▊       | 28/100 [01:37<04:27,  3.71s/it] 29%|██▉       | 29/100 [01:42<04:43,  3.99s/it] 30%|███       | 30/100 [01:46<04:46,  4.10s/it] 31%|███       | 31/100 [01:50<04:38,  4.03s/it] 32%|███▏      | 32/100 [01:54<04:35,  4.05s/it] 33%|███▎      | 33/100 [01:58<04:32,  4.07s/it] 34%|███▍      | 34/100 [02:02<04:18,  3.91s/it] 35%|███▌      | 35/100 [02:05<04:05,  3.77s/it] 36%|███▌      | 36/100 [02:09<04:05,  3.84s/it] 37%|███▋      | 37/100 [02:15<04:34,  4.36s/it] 38%|███▊      | 38/100 [02:21<04:57,  4.80s/it] 39%|███▉      | 39/100 [02:26<04:57,  4.88s/it] 40%|████      | 40/100 [02:30<04:42,  4.71s/it] 41%|████      | 41/100 [02:33<04:13,  4.30s/it] 42%|████▏     | 42/100 [02:37<03:56,  4.08s/it] 43%|████▎     | 43/100 [02:41<03:52,  4.07s/it] 44%|████▍     | 44/100 [02:44<03:37,  3.89s/it] 45%|████▌     | 45/100 [02:48<03:31,  3.84s/it] 46%|████▌     | 46/100 [02:53<03:39,  4.06s/it] 47%|████▋     | 47/100 [02:59<04:04,  4.61s/it] 48%|████▊     | 48/100 [03:03<03:59,  4.61s/it] 49%|████▉     | 49/100 [03:08<03:51,  4.53s/it] 50%|█████     | 50/100 [03:11<03:32,  4.25s/it] 51%|█████     | 51/100 [03:15<03:17,  4.03s/it] 52%|█████▏    | 52/100 [03:18<03:05,  3.86s/it] 53%|█████▎    | 53/100 [03:22<02:58,  3.80s/it] 54%|█████▍    | 54/100 [03:25<02:49,  3.69s/it] 55%|█████▌    | 55/100 [03:29<02:44,  3.65s/it] 56%|█████▌    | 56/100 [03:33<02:40,  3.65s/it] 57%|█████▋    | 57/100 [03:36<02:37,  3.65s/it] 58%|█████▊    | 58/100 [03:40<02:33,  3.64s/it] 59%|█████▉    | 59/100 [03:44<02:31,  3.68s/it] 60%|██████    | 60/100 [03:47<02:29,  3.74s/it] 61%|██████    | 61/100 [03:51<02:21,  3.63s/it] 62%|██████▏   | 62/100 [03:55<02:19,  3.66s/it] 63%|██████▎   | 63/100 [03:58<02:18,  3.74s/it] 64%|██████▍   | 64/100 [04:04<02:35,  4.32s/it] 65%|██████▌   | 65/100 [04:09<02:33,  4.39s/it] 66%|██████▌   | 66/100 [04:12<02:21,  4.16s/it] 67%|██████▋   | 67/100 [04:16<02:11,  3.98s/it] 68%|██████▊   | 68/100 [04:20<02:07,  3.97s/it] 69%|██████▉   | 69/100 [04:24<02:04,  4.03s/it] 70%|███████   | 70/100 [04:28<02:03,  4.13s/it] 71%|███████   | 71/100 [04:33<02:05,  4.34s/it] 72%|███████▏  | 72/100 [04:39<02:13,  4.77s/it] 73%|███████▎  | 73/100 [04:44<02:13,  4.96s/it] 74%|███████▍  | 74/100 [04:48<01:56,  4.50s/it] 75%|███████▌  | 75/100 [04:51<01:44,  4.17s/it] 76%|███████▌  | 76/100 [04:55<01:39,  4.14s/it] 77%|███████▋  | 77/100 [04:59<01:33,  4.05s/it] 78%|███████▊  | 78/100 [05:03<01:28,  4.00s/it] 79%|███████▉  | 79/100 [05:07<01:22,  3.93s/it] 80%|████████  | 80/100 [05:10<01:16,  3.84s/it] 81%|████████  | 81/100 [05:14<01:12,  3.81s/it] 82%|████████▏ | 82/100 [05:18<01:07,  3.75s/it] 83%|████████▎ | 83/100 [05:21<01:02,  3.66s/it] 84%|████████▍ | 84/100 [05:25<00:57,  3.58s/it] 85%|████████▌ | 85/100 [05:28<00:53,  3.57s/it] 86%|████████▌ | 86/100 [05:32<00:50,  3.58s/it] 87%|████████▋ | 87/100 [05:35<00:46,  3.55s/it] 88%|████████▊ | 88/100 [05:39<00:43,  3.63s/it] 89%|████████▉ | 89/100 [05:43<00:39,  3.59s/it] 90%|█████████ | 90/100 [05:46<00:36,  3.63s/it] 91%|█████████ | 91/100 [05:50<00:32,  3.64s/it] 92%|█████████▏| 92/100 [05:53<00:28,  3.58s/it] 93%|█████████▎| 93/100 [05:57<00:25,  3.59s/it] 94%|█████████▍| 94/100 [06:01<00:21,  3.61s/it] 95%|█████████▌| 95/100 [06:04<00:17,  3.59s/it] 96%|█████████▌| 96/100 [06:08<00:14,  3.64s/it] 97%|█████████▋| 97/100 [06:11<00:10,  3.60s/it] 98%|█████████▊| 98/100 [06:15<00:07,  3.63s/it] 99%|█████████▉| 99/100 [06:19<00:03,  3.64s/it]100%|██████████| 100/100 [06:23<00:00,  3.71s/it]100%|██████████| 100/100 [06:23<00:00,  3.83s/it]
+/home/nlyaly/env/optimum-fresh/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+process layer11
+=) 13.92% for 11
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:03<03:06,  1.90s/it]  3%|▎         | 3/100 [00:07<04:30,  2.79s/it]  4%|▍         | 4/100 [00:12<05:46,  3.61s/it]  5%|▌         | 5/100 [00:17<06:12,  3.92s/it]  6%|▌         | 6/100 [00:20<05:57,  3.80s/it]  7%|▋         | 7/100 [00:24<05:44,  3.71s/it]  8%|▊         | 8/100 [00:28<05:47,  3.77s/it]  9%|▉         | 9/100 [00:31<05:34,  3.68s/it] 10%|█         | 10/100 [00:35<05:26,  3.63s/it] 11%|█         | 11/100 [00:38<05:20,  3.60s/it] 12%|█▏        | 12/100 [00:42<05:27,  3.72s/it] 13%|█▎        | 13/100 [00:47<05:43,  3.94s/it] 14%|█▍        | 14/100 [00:50<05:30,  3.85s/it] 15%|█▌        | 15/100 [00:54<05:21,  3.78s/it] 16%|█▌        | 16/100 [00:58<05:20,  3.82s/it] 17%|█▋        | 17/100 [01:03<05:52,  4.24s/it] 18%|█▊        | 18/100 [01:07<05:46,  4.22s/it] 19%|█▉        | 19/100 [01:11<05:25,  4.02s/it] 20%|██        | 20/100 [01:14<05:10,  3.88s/it] 21%|██        | 21/100 [01:18<04:55,  3.74s/it] 22%|██▏       | 22/100 [01:21<04:47,  3.68s/it] 23%|██▎       | 23/100 [01:25<04:37,  3.61s/it] 24%|██▍       | 24/100 [01:28<04:33,  3.59s/it] 25%|██▌       | 25/100 [01:32<04:29,  3.59s/it] 26%|██▌       | 26/100 [01:36<04:29,  3.64s/it] 27%|██▋       | 27/100 [01:40<04:36,  3.79s/it] 28%|██▊       | 28/100 [01:43<04:27,  3.72s/it] 29%|██▉       | 29/100 [01:48<04:32,  3.83s/it] 30%|███       | 30/100 [01:52<04:34,  3.92s/it] 31%|███       | 31/100 [01:56<04:29,  3.91s/it] 32%|███▏      | 32/100 [02:00<04:27,  3.93s/it] 33%|███▎      | 33/100 [02:04<04:38,  4.15s/it] 34%|███▍      | 34/100 [02:08<04:33,  4.14s/it] 35%|███▌      | 35/100 [02:12<04:15,  3.94s/it] 36%|███▌      | 36/100 [02:15<04:03,  3.80s/it] 37%|███▋      | 37/100 [02:20<04:07,  3.94s/it] 38%|███▊      | 38/100 [02:25<04:36,  4.46s/it] 39%|███▉      | 39/100 [02:30<04:39,  4.58s/it] 40%|████      | 40/100 [02:36<04:51,  4.86s/it] 41%|████      | 41/100 [02:39<04:23,  4.47s/it] 42%|████▏     | 42/100 [02:43<04:15,  4.41s/it] 43%|████▎     | 43/100 [02:47<03:57,  4.17s/it] 44%|████▍     | 44/100 [02:50<03:40,  3.94s/it] 45%|████▌     | 45/100 [02:55<03:42,  4.04s/it] 46%|████▌     | 46/100 [03:00<03:51,  4.29s/it] 47%|████▋     | 47/100 [03:05<04:02,  4.57s/it] 48%|████▊     | 48/100 [03:10<04:00,  4.63s/it] 49%|████▉     | 49/100 [03:13<03:40,  4.32s/it] 50%|█████     | 50/100 [03:17<03:22,  4.04s/it] 51%|█████     | 51/100 [03:20<03:11,  3.92s/it] 52%|█████▏    | 52/100 [03:24<03:04,  3.83s/it] 53%|█████▎    | 53/100 [03:28<02:59,  3.83s/it] 54%|█████▍    | 54/100 [03:31<02:50,  3.70s/it] 55%|█████▌    | 55/100 [03:35<02:43,  3.63s/it] 56%|█████▌    | 56/100 [03:38<02:39,  3.62s/it] 57%|█████▋    | 57/100 [03:42<02:35,  3.61s/it] 58%|█████▊    | 58/100 [03:45<02:34,  3.67s/it] 59%|█████▉    | 59/100 [03:49<02:32,  3.72s/it] 60%|██████    | 60/100 [03:53<02:29,  3.73s/it] 61%|██████    | 61/100 [03:56<02:21,  3.63s/it] 62%|██████▏   | 62/100 [04:00<02:18,  3.64s/it] 63%|██████▎   | 63/100 [04:04<02:16,  3.68s/it] 64%|██████▍   | 64/100 [04:09<02:31,  4.20s/it] 65%|██████▌   | 65/100 [04:14<02:28,  4.23s/it] 66%|██████▌   | 66/100 [04:17<02:19,  4.12s/it] 67%|██████▋   | 67/100 [04:21<02:11,  3.97s/it] 68%|██████▊   | 68/100 [04:25<02:03,  3.85s/it] 69%|██████▉   | 69/100 [04:29<02:06,  4.09s/it] 70%|███████   | 70/100 [04:35<02:14,  4.48s/it] 71%|███████   | 71/100 [04:40<02:15,  4.67s/it] 72%|███████▏  | 72/100 [04:44<02:03,  4.40s/it] 73%|███████▎  | 73/100 [04:47<01:51,  4.13s/it] 74%|███████▍  | 74/100 [04:51<01:44,  4.01s/it] 75%|███████▌  | 75/100 [04:55<01:42,  4.10s/it] 76%|███████▌  | 76/100 [04:59<01:38,  4.09s/it] 77%|███████▋  | 77/100 [05:03<01:32,  4.01s/it] 78%|███████▊  | 78/100 [05:07<01:24,  3.86s/it] 79%|███████▉  | 79/100 [05:10<01:19,  3.78s/it] 80%|████████  | 80/100 [05:14<01:13,  3.69s/it] 81%|████████  | 81/100 [05:17<01:10,  3.71s/it] 82%|████████▏ | 82/100 [05:22<01:11,  3.95s/it] 83%|████████▎ | 83/100 [05:25<01:04,  3.81s/it] 84%|████████▍ | 84/100 [05:29<00:58,  3.67s/it] 85%|████████▌ | 85/100 [05:32<00:54,  3.64s/it] 86%|████████▌ | 86/100 [05:36<00:51,  3.67s/it] 87%|████████▋ | 87/100 [05:40<00:48,  3.71s/it] 88%|████████▊ | 88/100 [05:44<00:44,  3.72s/it] 89%|████████▉ | 89/100 [05:47<00:39,  3.62s/it] 90%|█████████ | 90/100 [05:50<00:35,  3.59s/it] 91%|█████████ | 91/100 [05:54<00:32,  3.58s/it] 92%|█████████▏| 92/100 [05:58<00:28,  3.57s/it] 93%|█████████▎| 93/100 [06:01<00:24,  3.54s/it] 94%|█████████▍| 94/100 [06:05<00:21,  3.59s/it] 95%|█████████▌| 95/100 [06:09<00:18,  3.76s/it] 96%|█████████▌| 96/100 [06:13<00:14,  3.75s/it] 97%|█████████▋| 97/100 [06:16<00:10,  3.65s/it] 98%|█████████▊| 98/100 [06:20<00:07,  3.62s/it] 99%|█████████▉| 99/100 [06:23<00:03,  3.69s/it]100%|██████████| 100/100 [06:28<00:00,  4.05s/it]100%|██████████| 100/100 [06:29<00:00,  3.89s/it]
+  0%|          | 0/100 [00:00<?, ?it/s]  2%|▏         | 2/100 [00:04<03:19,  2.04s/it]  3%|▎         | 3/100 [00:10<06:05,  3.76s/it]  4%|▍         | 4/100 [00:16<07:34,  4.73s/it]  5%|▌         | 5/100 [00:21<07:20,  4.64s/it]  6%|▌         | 6/100 [00:25<06:55,  4.42s/it]  7%|▋         | 7/100 [00:29<06:42,  4.32s/it]  8%|▊         | 8/100 [00:34<06:54,  4.50s/it]  9%|▉         | 9/100 [00:37<06:28,  4.27s/it] 10%|█         | 10/100 [00:41<06:08,  4.10s/it] 11%|█         | 11/100 [00:45<05:53,  3.97s/it] 12%|█▏        | 12/100 [00:48<05:36,  3.82s/it] 13%|█▎        | 13/100 [00:52<05:33,  3.83s/it] 14%|█▍        | 14/100 [00:56<05:26,  3.80s/it] 15%|█▌        | 15/100 [01:00<05:23,  3.80s/it] 16%|█▌        | 16/100 [01:04<05:32,  3.95s/it] 17%|█▋        | 17/100 [01:10<06:13,  4.50s/it] 18%|█▊        | 18/100 [01:14<06:06,  4.47s/it] 19%|█▉        | 19/100 [01:18<05:53,  4.36s/it] 20%|██        | 20/100 [01:22<05:40,  4.26s/it] 21%|██        | 21/100 [01:26<05:20,  4.06s/it] 22%|██▏       | 22/100 [01:29<05:07,  3.95s/it] 23%|██▎       | 23/100 [01:33<04:57,  3.86s/it] 24%|██▍       | 24/100 [01:37<04:49,  3.82s/it] 25%|██▌       | 25/100 [01:40<04:41,  3.76s/it] 26%|██▌       | 26/100 [01:44<04:35,  3.72s/it] 27%|██▋       | 27/100 [01:49<04:54,  4.04s/it] 28%|██▊       | 28/100 [01:53<04:51,  4.05s/it] 29%|██▉       | 29/100 [01:57<04:37,  3.91s/it] 30%|███       | 30/100 [02:00<04:33,  3.91s/it] 31%|███       | 31/100 [02:04<04:21,  3.80s/it] 32%|███▏      | 32/100 [02:08<04:27,  3.93s/it] 33%|███▎      | 33/100 [02:12<04:23,  3.93s/it] 34%|███▍      | 34/100 [02:16<04:11,  3.80s/it] 35%|███▌      | 35/100 [02:19<04:01,  3.71s/it] 36%|███▌      | 36/100 [02:23<03:56,  3.70s/it] 37%|███▋      | 37/100 [02:28<04:12,  4.01s/it] 38%|███▊      | 38/100 [02:32<04:15,  4.12s/it] 39%|███▉      | 39/100 [02:37<04:28,  4.40s/it] 40%|████      | 40/100 [02:42<04:43,  4.72s/it] 41%|████      | 41/100 [02:46<04:15,  4.34s/it] 42%|████▏     | 42/100 [02:49<03:57,  4.09s/it] 43%|████▎     | 43/100 [02:53<03:52,  4.08s/it] 44%|████▍     | 44/100 [02:57<03:37,  3.88s/it] 45%|████▌     | 45/100 [03:00<03:28,  3.79s/it] 46%|████▌     | 46/100 [03:04<03:27,  3.84s/it] 47%|████▋     | 47/100 [03:08<03:24,  3.85s/it] 48%|████▊     | 48/100 [03:12<03:15,  3.76s/it] 49%|████▉     | 49/100 [03:15<03:07,  3.69s/it] 50%|█████     | 50/100 [03:19<03:02,  3.66s/it] 51%|█████     | 51/100 [03:22<02:57,  3.61s/it] 52%|█████▏    | 52/100 [03:26<02:50,  3.56s/it] 53%|█████▎    | 53/100 [03:30<02:51,  3.65s/it] 54%|█████▍    | 54/100 [03:33<02:44,  3.57s/it] 55%|█████▌    | 55/100 [03:37<02:40,  3.57s/it] 56%|█████▌    | 56/100 [03:40<02:38,  3.60s/it] 57%|█████▋    | 57/100 [03:45<02:51,  3.98s/it] 58%|█████▊    | 58/100 [03:51<03:04,  4.38s/it] 59%|█████▉    | 59/100 [03:55<02:58,  4.35s/it] 60%|██████    | 60/100 [04:00<03:01,  4.54s/it] 61%|██████    | 61/100 [04:04<02:47,  4.29s/it] 62%|██████▏   | 62/100 [04:07<02:33,  4.05s/it] 63%|██████▎   | 63/100 [04:10<02:22,  3.85s/it] 64%|██████▍   | 64/100 [04:14<02:16,  3.80s/it] 65%|██████▌   | 65/100 [04:18<02:14,  3.83s/it] 66%|██████▌   | 66/100 [04:22<02:13,  3.92s/it] 67%|██████▋   | 67/100 [04:25<02:03,  3.75s/it] 68%|██████▊   | 68/100 [04:29<01:58,  3.69s/it] 69%|██████▉   | 69/100 [04:32<01:51,  3.59s/it] 70%|███████   | 70/100 [04:36<01:47,  3.60s/it] 71%|███████   | 71/100 [04:40<01:44,  3.60s/it] 72%|███████▏  | 72/100 [04:43<01:43,  3.68s/it] 73%|███████▎  | 73/100 [04:48<01:44,  3.89s/it] 74%|███████▍  | 74/100 [04:54<01:55,  4.45s/it] 75%|███████▌  | 75/100 [04:58<01:51,  4.47s/it] 76%|███████▌  | 76/100 [05:03<01:47,  4.49s/it] 77%|███████▋  | 77/100 [05:07<01:39,  4.31s/it] 78%|███████▊  | 78/100 [05:10<01:30,  4.10s/it] 79%|███████▉  | 79/100 [05:14<01:23,  3.97s/it] 80%|████████  | 80/100 [05:17<01:17,  3.86s/it] 81%|████████  | 81/100 [05:22<01:17,  4.10s/it] 82%|████████▏ | 82/100 [05:26<01:13,  4.08s/it] 83%|████████▎ | 83/100 [05:30<01:06,  3.91s/it] 84%|████████▍ | 84/100 [05:34<01:05,  4.07s/it] 85%|████████▌ | 85/100 [05:39<01:06,  4.40s/it] 86%|████████▌ | 86/100 [05:44<01:01,  4.40s/it] 87%|████████▋ | 87/100 [05:47<00:54,  4.23s/it] 88%|████████▊ | 88/100 [05:52<00:50,  4.21s/it] 89%|████████▉ | 89/100 [05:56<00:45,  4.16s/it] 90%|█████████ | 90/100 [05:59<00:40,  4.00s/it] 91%|█████████ | 91/100 [06:03<00:34,  3.86s/it] 92%|█████████▏| 92/100 [06:06<00:30,  3.80s/it] 93%|█████████▎| 93/100 [06:11<00:28,  4.11s/it] 94%|█████████▍| 94/100 [06:17<00:28,  4.67s/it] 95%|█████████▌| 95/100 [06:24<00:25,  5.20s/it] 96%|█████████▌| 96/100 [06:28<00:20,  5.04s/it] 97%|█████████▋| 97/100 [06:32<00:14,  4.69s/it] 98%|█████████▊| 98/100 [06:36<00:09,  4.51s/it] 99%|█████████▉| 99/100 [06:40<00:04,  4.31s/it]100%|██████████| 100/100 [06:44<00:00,  4.14s/it]100%|██████████| 100/100 [06:44<00:00,  4.05s/it]
+***** eval metrics *****
+  eval_accuracy           =     0.7896
+  eval_loss               =     0.8218
+  eval_runtime            = 0:06:50.42
+  eval_samples_per_second =    121.826
+  eval_steps_per_second   =      0.244

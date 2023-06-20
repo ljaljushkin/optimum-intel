@@ -194,7 +194,8 @@ class OVTrainer(Trainer):
             nncf_log_file_handler.setLevel(logging.INFO)
 
             # before
-            # self.compression_controller, self.model = create_compressed_model(self.model, nncf_config)
+            print('create_compressed_model\n')
+            self.compression_controller, self.model = create_compressed_model(self.model, nncf_config)
 
             # after
             # calibration_dataloader = OVDataLoader(train_dataloader)

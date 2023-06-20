@@ -711,17 +711,28 @@ def do_lkd_tuning(training_args, student_model, teacher_model, trainer, data_arg
     student_model.eval()
     teacher_model.eval()
 
+    weight_decay=training_args.weight_decay
+    learning_rate=training_args.learning_rate
+    max_train_steps=1000
+
+    hparam_dict = {
+        'lr': learning_rate,
+        'wd': weight_decay,
+        'steps': max_train_steps,
+    }
+    from datetime import datetime
+    exp_name = '__'.join(f'{k}={v}'for k,v in hparam_dict.items()) + "__" + datetime.now().strftime("%b%d_%H-%M-%S")
+    tb = SummaryWriter(log_dir=Path('/home/nlyaly/sandbox/models/KD/iterative/QQP/Optimum') / exp_name)
+
     no_decay=['bias', 'LayerNorm.weight']
     ignored_names = ['signed_tensor', '_num_bits']#, '_scale_param_storage']
     target_names = ['weight', 'bias', '_scale_param_storage']
-    tb = SummaryWriter()
     tb.add_text('ignored_names', str(ignored_names))
     tb.add_text('target_names', str(target_names))
     tb.add_text('no_decay', str(no_decay))
-    weight_decay=0.75
+
+
     num_train_epochs=1
-    max_train_steps=1000
-    learning_rate=1e-3
     num_layers = student_model.config.num_hidden_layers
     num_improved = 0
     diff_improved = []
