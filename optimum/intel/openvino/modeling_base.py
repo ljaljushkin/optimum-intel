@@ -21,12 +21,13 @@ from typing import Dict, Optional, Union
 import openvino
 from huggingface_hub import hf_hub_download
 from openvino._offline_transformations import apply_moc_transformations, compress_model_transformation
+from openvino.tools import mo
 from openvino.runtime import Core
 from transformers import PretrainedConfig
 from transformers.file_utils import add_start_docstrings
 
-from optimum.exporters.onnx import export
-from optimum.exporters.tasks import TasksManager
+from optimum.exporters import TasksManager
+from .export import export, is_torch_model
 from optimum.modeling_base import OptimizedModel
 
 from ..utils.import_utils import is_transformers_version
@@ -130,7 +131,7 @@ class OVBaseModel(PreTrainedModel):
             file_name = Path(file_name)
         bin_file_name = file_name.with_suffix(".bin") if file_name.suffix == ".xml" else None
 
-        model = core.read_model(file_name, bin_file_name)
+        model = core.read_model(file_name, bin_file_name) if not file_name.suffix == ".onnx" else mo.convert_model(file_name)
         if file_name.suffix == ".onnx":
             model = fix_op_names_duplicates(model)  # should be called during model conversion to IR
 
@@ -276,8 +277,8 @@ class OVBaseModel(PreTrainedModel):
         )
 
         onnx_config = onnx_config_class(model.config)
-        save_dir = TemporaryDirectory()
-        save_dir_path = Path(save_dir.name)
+        #save_dir = #TemporaryDirectory()
+        save_dir_path = Path("./model")
 
         # Export the model to the ONNX format
         export(
@@ -290,7 +291,7 @@ class OVBaseModel(PreTrainedModel):
         return cls._from_pretrained(
             model_id=save_dir_path,
             config=config,
-            from_onnx=True,
+            from_onnx=not is_torch_model(model),
             use_auth_token=use_auth_token,
             revision=revision,
             force_download=force_download,
