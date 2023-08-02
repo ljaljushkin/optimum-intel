@@ -17,19 +17,17 @@ import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Dict, Optional, Union
-import time
 
 import openvino
 from huggingface_hub import hf_hub_download
 from openvino import Core, convert_model
 from openvino._offline_transformations import apply_moc_transformations, compress_model_transformation
-from openvino.tools import mo
 from openvino.runtime import Core
+from openvino.tools import mo
 from transformers import PretrainedConfig
 from transformers.file_utils import add_start_docstrings
 
 from optimum.exporters import TasksManager
-from .export import export, is_torch_model
 from optimum.modeling_base import OptimizedModel
 
 from ..utils.import_utils import is_transformers_version
