@@ -43,6 +43,7 @@ from .utils import ONNX_WEIGHTS_NAME, OV_XML_FILE_NAME, STR_TO_OV_TYPE
 logger = logging.getLogger(__name__)
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 
 TEXT_GENERATION_EXAMPLE = r"""
