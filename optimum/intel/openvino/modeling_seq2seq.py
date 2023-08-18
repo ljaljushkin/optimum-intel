@@ -35,6 +35,7 @@ else:
     from transformers.generation import GenerationMixin
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.getLogger(__name__)
 
