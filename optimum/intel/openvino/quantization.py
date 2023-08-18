@@ -54,6 +54,7 @@ from .utils import (
 register_module(ignored_algorithms=[])(Conv1D)
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 logger = logging.getLogger(__name__)
 
 
