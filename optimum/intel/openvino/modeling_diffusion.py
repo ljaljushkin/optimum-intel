@@ -59,6 +59,7 @@ from .utils import ONNX_WEIGHTS_NAME, OV_TO_NP_TYPE, OV_XML_FILE_NAME, _print_co
 
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.getLogger(__name__)
 
