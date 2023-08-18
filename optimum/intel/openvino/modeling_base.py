@@ -38,6 +38,7 @@ from .utils import ONNX_WEIGHTS_NAME, OV_XML_FILE_NAME, _print_compiled_model_pr
 
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ class OVBaseModel(OptimizedModel):
         self.model_save_dir = model_save_dir
         self._device = device.upper()
         self.is_dynamic = dynamic_shapes
-        self.ov_config = {} if ov_config is None else {**ov_config}
+        self.ov_config = {"INFERENCE_PRECISION_HINT": "f32"}#ov_config if ov_config is not None else {"PERFORMANCE_HINT": "LATENCY"}
         self.preprocessors = kwargs.get("preprocessors", [])
         enable_compilation = kwargs.get("compile", True)
 
