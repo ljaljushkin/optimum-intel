@@ -105,6 +105,7 @@ if is_torch_tpu_available(check_device=False):
     import torch_xla.core.xla_model as xm
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.get_logger(__name__)
 logger.setLevel(logging.INFO)
