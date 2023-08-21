@@ -118,6 +118,7 @@ class OVQuantizer(OptimumQuantizer):
         data_collator: Optional[DataCollator] = None,
         remove_unused_columns: bool = True,
         weights_only: bool = False,
+        alpha=0,
         **kwargs,
     ):
         """
@@ -211,6 +212,7 @@ class OVQuantizer(OptimumQuantizer):
                 data_collator,
                 remove_unused_columns,
                 weights_only,
+                alpha
             )
         else:
             raise TypeError(f"Unsupported model type: {type(self.model)}")
@@ -333,6 +335,7 @@ class OVQuantizer(OptimumQuantizer):
         data_collator: Optional[DataCollator] = None,
         remove_unused_columns: bool = True,
         weights_only: bool = False,
+        alpha=0,
     ):
         self._set_task()
         save_directory = Path(save_directory)
@@ -357,7 +360,7 @@ class OVQuantizer(OptimumQuantizer):
             quantization_config = OVConfig()
 
         if weights_only:
-            compressed_model = compress_weights(self.model)
+            compressed_model = compress_weights(self.model, alpha=alpha)
             self.model = compressed_model
         else:
             calibration_dataloader = self._get_calibration_dataloader(
