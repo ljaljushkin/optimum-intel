@@ -11,14 +11,16 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
 import logging
+import os
+from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
 import openvino
 import torch
 import transformers
+from huggingface_hub import model_info
 from transformers import (
     AutoConfig,
     AutoModel,
@@ -31,6 +33,7 @@ from transformers import (
     AutoModelForQuestionAnswering,
     AutoModelForSequenceClassification,
     AutoModelForTokenClassification,
+    PretrainedConfig,
 )
 from transformers.file_utils import add_start_docstrings, add_start_docstrings_to_model_forward
 from transformers.modeling_outputs import (
@@ -46,7 +49,9 @@ from transformers.modeling_outputs import (
 
 from optimum.exporters import TasksManager
 
+from ..utils.import_utils import is_timm_available
 from .modeling_base import OVBaseModel
+from .utils import _is_timm_ov_dir
 
 
 logger = logging.getLogger(__name__)
@@ -481,6 +486,20 @@ IMAGE_CLASSIFICATION_EXAMPLE = r"""
     >>> url = "http://images.cocodataset.org/val2017/000000039769.jpg"
     >>> outputs = pipe(url)
     ```
+    This class can also be used with [timm](https://github.com/huggingface/pytorch-image-models)
+    models hosted on [HuggingFaceHub](https://huggingface.co/timm). Example:
+    ```python
+    >>> from transformers import pipeline
+    >>> from optimum.intel.openvino.modeling_timm import TimmImageProcessor
+    >>> from optimum.intel import OVModelForImageClassification
+
+    >>> model_id = "timm/vit_tiny_patch16_224.augreg_in21k"
+    >>> preprocessor = TimmImageProcessor.from_pretrained(model_id)
+    >>> model = OVModelForImageClassification.from_pretrained(model_id, export=True)
+    >>> pipe = pipeline("image-classification", model=model, feature_extractor=preprocessor)
+    >>> url = "http://images.cocodataset.org/val2017/000000039769.jpg"
+    >>> outputs = pipe(url)
+    ```
 """
 
 
@@ -496,6 +515,60 @@ class OVModelForImageClassification(OVModel):
 
     def __init__(self, model=None, config=None, **kwargs):
         super().__init__(model, config, **kwargs)
+
+    @classmethod
+    def from_pretrained(
+        cls,
+        model_id: Union[str, Path],
+        export: bool = False,
+        config: Optional["PretrainedConfig"] = None,
+        use_auth_token: Optional[Union[bool, str]] = None,
+        revision: Optional[str] = None,
+        force_download: bool = False,
+        cache_dir: Optional[str] = None,
+        subfolder: str = "",
+        local_files_only: bool = False,
+        task: Optional[str] = None,
+        trust_remote_code: bool = False,
+        **kwargs,
+    ):
+        # Fix the mismatch between timm_config and huggingface_config
+        local_timm_model = _is_timm_ov_dir(model_id)
+        if local_timm_model or (not os.path.isdir(model_id) and model_info(model_id).library_name == "timm"):
+            if not is_timm_available():
+                raise ImportError(
+                    "To load a timm model, timm needs to be installed. Please install it with `pip install timm`."
+                )
+
+            from .modeling_timm import TimmConfig, TimmForImageClassification, TimmOnnxConfig
+
+            config = TimmConfig.from_pretrained(model_id, **kwargs)
+            #  If locally saved timm model, directly load
+            if local_timm_model:
+                return super()._from_pretrained(model_id=model_id, config=config)
+            model = TimmForImageClassification.from_pretrained(model_id, **kwargs)
+            onnx_config = TimmOnnxConfig(model.config)
+
+            return cls._to_onnx_to_load(
+                model=model,
+                config=config,
+                onnx_config=onnx_config,
+            )
+        else:
+            return super().from_pretrained(
+                model_id=model_id,
+                config=config,
+                export=export,
+                use_auth_token=use_auth_token,
+                revision=revision,
+                force_download=force_download,
+                cache_dir=cache_dir,
+                subfolder=subfolder,
+                local_files_only=local_files_only,
+                task=task,
+                trust_remote_code=trust_remote_code,
+                **kwargs,
+            )
 
     @add_start_docstrings_to_model_forward(
         IMAGE_INPUTS_DOCSTRING.format("batch_size, num_channels, height, width")
