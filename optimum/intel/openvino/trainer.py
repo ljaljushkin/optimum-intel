@@ -84,7 +84,7 @@ from optimum.exporters.tasks import TasksManager
 from ..utils.constant import _TASK_ALIASES
 from ..utils.import_utils import is_transformers_version
 from .configuration import OVConfig
-from .quantization import OVDataLoader
+# from .quantization import OVDataLoader
 from .training_args import OVTrainingArguments
 from .utils import (
     MAX_ONNX_OPSET,

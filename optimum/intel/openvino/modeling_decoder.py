@@ -29,7 +29,7 @@ from transformers.modeling_outputs import CausalLMOutputWithPast
 
 from optimum.utils import NormalizedConfigManager
 
-from ...exporters.openvino import main_export
+# from ...exporters.openvino import main_export
 from ..utils.import_utils import is_transformers_version
 from .modeling import _TOKENIZER_FOR_DOC, INPUTS_DOCSTRING, MODEL_START_DOCSTRING, OVModel
 from .utils import OV_XML_FILE_NAME, STR_TO_OV_TYPE
@@ -226,18 +226,18 @@ class OVBaseDecoderModel(OVModel):
             if use_cache:
                 task = task + "-with-past"
 
-        main_export(
-            model_name_or_path=model_id,
-            output=save_dir_path,
-            task=task,
-            subfolder=subfolder,
-            revision=revision,
-            cache_dir=cache_dir,
-            use_auth_token=use_auth_token,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            trust_remote_code=trust_remote_code,
-        )
+        # main_export(
+        #     model_name_or_path=model_id,
+        #     output=save_dir_path,
+        #     task=task,
+        #     subfolder=subfolder,
+        #     revision=revision,
+        #     cache_dir=cache_dir,
+        #     use_auth_token=use_auth_token,
+        #     local_files_only=local_files_only,
+        #     force_download=force_download,
+        #     trust_remote_code=trust_remote_code,
+        # )
 
         config.is_decoder = True
         config.is_encoder_decoder = False
@@ -469,3 +469,133 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
     def can_generate(self):
         """Returns True to validate the check that the model using `GenerationMixin.generate()` can indeed generate."""
         return True
+
+
+class OVChatGLM2Model(OVModelForCausalLM):
+    def __init__(
+        self,
+        model: openvino.runtime.Model,
+        config: PretrainedConfig = None,
+        device: str = "CPU",
+        dynamic_shapes: bool = True,
+        ov_config: Optional[Dict[str, str]] = None,
+        model_save_dir: Optional[Union[str, Path, TemporaryDirectory]] = None,
+        **kwargs,
+    ):
+        from optimum.utils import NormalizedTextConfig, NormalizedConfigManager
+        NormalizedConfigManager._conf["chatglm"] = NormalizedTextConfig.with_args(num_layers="num_layers", num_attention_heads="num_attention_heads")
+        super().__init__(model, config, device, dynamic_shapes, ov_config, model_save_dir, **kwargs)
+
+    def _reshape(
+        self,
+        model: openvino.runtime.Model,
+        batch_size: int,
+        sequence_length: int,
+        height: int = None,
+        width: int = None,
+    ):
+        return model
+
+
+    def prepare_inputs_for_generation(
+        self,
+        input_ids: torch.LongTensor,
+        past_key_values: Optional[torch.Tensor] = None,
+        attention_mask: Optional[torch.Tensor] = None,
+        position_ids: Optional[torch.Tensor] = None,
+        past: Optional[torch.Tensor] = None,
+        **kwargs
+    ) -> dict:
+        batch_size, seq_length = input_ids.shape
+        position_ids = self.get_position_ids(input_ids, "cpu")
+
+        # only last token for input_ids if past is not None
+        if past is not None or past_key_values is not None:
+            position_ids = position_ids[..., -1:] + 1
+            past = past_key_values if past_key_values is not None else past
+
+        return {
+                "input_ids": input_ids,
+                "past_key_values": past,
+                "position_ids": position_ids,
+                "attention_mask": attention_mask,
+                "use_cache": self.use_cache,
+                "token_type_ids": None
+        }
+
+    def forward(
+        self,
+        input_ids: torch.LongTensor,
+        attention_mask: Optional[torch.LongTensor] = None,
+        past_key_values: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
+        **kwargs,
+    ) -> CausalLMOutputWithPast:
+        self.compile()
+
+        if self.use_cache and past_key_values is not None:
+            input_ids = input_ids[:, -1:]
+
+        inputs = {}
+        if past_key_values is not None:
+            if self._pkv_precision == Type.bf16:
+                # numpy does not support bf16, pretending f16, should change to bf16
+                past_key_values = tuple(
+                    Tensor(past_key_value, past_key_value.shape, Type.bf16)
+                    for pkv_per_layer in past_key_values
+                    for past_key_value in pkv_per_layer
+                )
+            else:
+                # Flatten the past_key_values
+                past_key_values = tuple(
+                    past_key_value for pkv_per_layer in past_key_values for past_key_value in pkv_per_layer
+                )
+            # Add the past_key_values to the decoder inputs
+            inputs = dict(zip(self.key_value_input_names, past_key_values))
+
+        # Create empty past_key_values for decoder_with_past first generation step
+        elif self.use_cache:
+            shape_input_ids = input_ids.shape
+            num_attention_heads = (
+                self.normalized_config.num_attention_heads if self.config.model_type == "bloom" else 1
+            )
+            for input_name in self.key_value_input_names:
+                model_inputs = self.model.input(input_name)
+                shape = model_inputs.get_partial_shape()
+                shape[0] = 0
+                if shape[2].is_dynamic:
+                    shape[2] = 0
+                if shape[1].is_dynamic:
+                    shape[1] = 0
+                inputs[input_name] = Tensor(model_inputs.get_element_type(), shape.get_shape())
+
+        inputs["input_ids"] = np.array(input_ids)
+
+        if "position_ids" in kwargs and kwargs["position_ids"] is not None:
+            inputs["position_ids"] = np.array(kwargs["position_ids"])
+
+        # Add the attention_mask inputs when needed
+        if "attention_mask" in self.input_names and attention_mask is not None:
+            inputs["attention_mask"] = np.array(attention_mask)
+
+        # Run inference
+        self.request.start_async(inputs, shared_memory=True)
+        self.request.wait()
+
+        logits = torch.from_numpy(self.request.get_tensor("logits").data).to(self.device)
+
+        if self.use_cache:
+            # Tuple of length equal to : number of layer * number of past_key_value per decoder layer (2 corresponds to the self-attention layer)
+            past_key_values = tuple(self.request.get_tensor(key).data for key in self.key_value_output_names)
+            # Tuple of tuple of length `n_layers`, with each tuple of length equal to 2 (k/v of self-attention)
+            past_key_values = tuple(
+                past_key_values[i : i + self.num_pkv] for i in range(0, len(past_key_values), self.num_pkv)
+            )
+        else:
+            past_key_values = None
+
+        return CausalLMOutputWithPast(logits=logits, past_key_values=past_key_values)
+
+    def get_position_ids(self, input_ids, device):
+        batch_size, seq_length = input_ids.shape
+        position_ids = torch.arange(seq_length, dtype=torch.long, device=device).unsqueeze(0).repeat(batch_size, 1)
+        return position_ids

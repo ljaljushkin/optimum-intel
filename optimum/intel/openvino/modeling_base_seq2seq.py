@@ -24,7 +24,7 @@ from openvino._offline_transformations import apply_moc_transformations, compres
 from transformers import PretrainedConfig
 from transformers.file_utils import add_start_docstrings
 
-from ...exporters.openvino import main_export
+# from ...exporters.openvino import main_export
 from ..utils.import_utils import is_transformers_version
 from .modeling_base import OVBaseModel
 from .utils import (
@@ -250,18 +250,18 @@ class OVBaseModelForSeq2SeqLM(OVBaseModel):
             if use_cache:
                 task = task + "-with-past"
 
-        main_export(
-            model_name_or_path=model_id,
-            output=save_dir_path,
-            task=task,
-            subfolder=subfolder,
-            revision=revision,
-            cache_dir=cache_dir,
-            use_auth_token=use_auth_token,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            trust_remote_code=trust_remote_code,
-        )
+        # main_export(
+        #     model_name_or_path=model_id,
+        #     output=save_dir_path,
+        #     task=task,
+        #     subfolder=subfolder,
+        #     revision=revision,
+        #     cache_dir=cache_dir,
+        #     use_auth_token=use_auth_token,
+        #     local_files_only=local_files_only,
+        #     force_download=force_download,
+        #     trust_remote_code=trust_remote_code,
+        # )
 
         config.save_pretrained(save_dir_path)
         return cls._from_pretrained(model_id=save_dir_path, config=config, use_cache=use_cache, **kwargs)

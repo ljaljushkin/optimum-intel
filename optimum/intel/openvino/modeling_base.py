@@ -28,7 +28,7 @@ from transformers.file_utils import add_start_docstrings
 from optimum.exporters.onnx import OnnxConfig
 from optimum.modeling_base import OptimizedModel
 
-from ...exporters.openvino import export, main_export
+# from ...exporters.openvino import export, main_export
 from ..utils.import_utils import is_transformers_version
 from .utils import ONNX_WEIGHTS_NAME, OV_XML_FILE_NAME
 
@@ -242,18 +242,18 @@ class OVBaseModel(PreTrainedModel):
         save_dir = TemporaryDirectory()
         save_dir_path = Path(save_dir.name)
 
-        main_export(
-            model_name_or_path=model_id,
-            output=save_dir_path,
-            task=task or cls.export_feature,
-            subfolder=subfolder,
-            revision=revision,
-            cache_dir=cache_dir,
-            use_auth_token=use_auth_token,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            trust_remote_code=trust_remote_code,
-        )
+        # main_export(
+        #     model_name_or_path=model_id,
+        #     output=save_dir_path,
+        #     task=task or cls.export_feature,
+        #     subfolder=subfolder,
+        #     revision=revision,
+        #     cache_dir=cache_dir,
+        #     use_auth_token=use_auth_token,
+        #     local_files_only=local_files_only,
+        #     force_download=force_download,
+        #     trust_remote_code=trust_remote_code,
+        # )
 
         config.save_pretrained(save_dir_path)
         return cls._from_pretrained(model_id=save_dir_path, config=config, **kwargs)
@@ -275,12 +275,12 @@ class OVBaseModel(PreTrainedModel):
         save_dir_path = Path(save_dir.name)
 
         # Export the model to the ONNX format
-        export(
-            model=model,
-            config=onnx_config,
-            opset=onnx_config.DEFAULT_ONNX_OPSET,
-            output=save_dir_path / OV_XML_FILE_NAME,
-        )
+        # export(
+        #     model=model,
+        #     config=onnx_config,
+        #     opset=onnx_config.DEFAULT_ONNX_OPSET,
+        #     output=save_dir_path / OV_XML_FILE_NAME,
+        # )
 
         return cls._from_pretrained(
             model_id=save_dir_path,

@@ -91,6 +91,7 @@ else:
             "OVModelForAudioXVector",
             "OVModelForCTC",
             "OVModelForCausalLM",
+            "OVChatGLM2Model",
             "OVModelForFeatureExtraction",
             "OVModelForImageClassification",
             "OVModelForMaskedLM",

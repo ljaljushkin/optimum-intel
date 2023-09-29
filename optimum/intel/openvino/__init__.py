@@ -29,7 +29,7 @@ if is_nncf_available():
     patch_torch_operators()
 
     from .configuration import OVConfig
-    from .quantization import OVQuantizer
+    # from .quantization import OVQuantizer
     from .trainer import OVTrainer
     from .training_args import OVTrainingArguments
 
@@ -46,6 +46,7 @@ from .modeling import (
     OVModelForTokenClassification,
 )
 from .modeling_decoder import OVModelForCausalLM
+from .modeling_decoder import OVChatGLM2Model
 from .modeling_seq2seq import OVModelForSeq2SeqLM
 
 
