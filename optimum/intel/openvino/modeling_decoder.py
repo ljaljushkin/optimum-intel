@@ -16,7 +16,7 @@ import logging
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Dict, Optional, Tuple, Union
+from typing import Optional, Union, Dict, List, Tuple, Callable, Iterable, Any
 
 import numpy as np
 import openvino
@@ -26,6 +26,10 @@ from openvino.runtime import Core, Tensor, Type
 from transformers import AutoModelForCausalLM, PretrainedConfig
 from transformers.file_utils import add_start_docstrings, add_start_docstrings_to_model_forward
 from transformers.modeling_outputs import CausalLMOutputWithPast
+from transformers import GenerationConfig, StoppingCriteriaList
+from transformers.generation.logits_process import LogitsProcessorList, LogitsProcessor
+from transformers.generation.utils import GenerateOutput
+
 
 from optimum.utils import NormalizedConfigManager
 
@@ -372,7 +376,7 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
                 )
 
         # Run inference
-        self.request.start_async(inputs, shared_memory=True)
+        self.request.start_async(inputs, share_inputs=True)
         self.request.wait()
         logits = torch.from_numpy(self.request.get_tensor("logits").data).to(self.device)
 
@@ -591,3 +595,155 @@ class OVGPTBigCodeForCausalLM(OVModelForCausalLM):
         past_key_values: Tuple[Tuple[torch.Tensor]], beam_idx: torch.Tensor
     ) -> Tuple[Tuple[torch.Tensor]]:
         return tuple(np.take(layer_past, beam_idx, 0) for layer_past in past_key_values)
+
+
+class OVQwenModel(OVModelForCausalLM):
+    def _reshape(
+        self,
+        model: openvino.runtime.Model,
+        batch_size: int,
+        sequence_length: int,
+        height: int = None,
+        width: int = None,
+    ):
+        shapes = {}
+        for inputs in model.inputs:
+            shapes[inputs] = inputs.get_partial_shape()
+            shapes[inputs][0] = -1
+            shapes[inputs][1] = -1
+        model.reshape(shapes)
+        return model
+
+    @classmethod
+    def _from_pretrained(
+        cls,
+        model_id: Union[str, Path],
+        config: PretrainedConfig,
+        use_auth_token: Optional[Union[bool, str, None]] = None,
+        revision: Optional[Union[str, None]] = None,
+        force_download: bool = False,
+        cache_dir: Optional[str] = None,
+        file_name: Optional[str] = None,
+        subfolder: str = '',
+        from_onnx: bool = False,
+        local_files_only: bool = False,
+        load_in_8bit: bool = False,
+        **kwargs,
+    ):
+        model_path = Path(model_id)
+        default_file_name = ONNX_WEIGHTS_NAME if from_onnx else OV_XML_FILE_NAME
+        file_name = file_name or default_file_name
+
+        model_cache_path = cls._cached_file(
+            model_path=model_path,
+            use_auth_token=use_auth_token,
+            revision=revision,
+            force_download=force_download,
+            cache_dir=cache_dir,
+            file_name=file_name,
+            subfolder=subfolder,
+            local_files_only=local_files_only,
+        )
+
+        model = cls.load_model(model_cache_path, load_in_8bit=load_in_8bit)
+        init_cls = OVQwenModel
+
+        return init_cls(model=model, config=config, model_save_dir=model_cache_path.parent, **kwargs)
+
+    def prepare_inputs_for_generation(self, input_ids, past_key_values=None, **kwargs):
+        past_key_values = past_key_values or kwargs.get('past', None)
+
+        # `past_key_values` may be in the stardard format (e.g. in contrastive search), converts to bloom's format if needed
+        if past_key_values is not None and self.config.model_type == 'bloom':
+            if past_key_values[0][0].shape[0] == input_ids.shape[0]:
+                past_key_values = self._convert_to_bloom_cache(past_key_values)
+
+        attention_mask = kwargs.get('attention_mask', None)
+        position_ids = kwargs.get('position_ids', None)
+        if attention_mask is not None and position_ids is None:
+            # create position_ids on the fly for batch generation
+            position_ids = attention_mask.long().cumsum(-1) - 1
+            position_ids.masked_fill_(attention_mask == 0, 1)
+        if past_key_values:
+            position_ids = position_ids[:, -1].unsqueeze(-1)
+        return {
+            'input_ids': input_ids,
+            'past_key_values': past_key_values,
+            'use_cache': self.use_cache,
+            'position_ids': position_ids,
+            'attention_mask': attention_mask,
+            'token_type_ids': None,
+        }
+
+    def _update_model_kwargs_for_generation(
+        self,
+        outputs: 'ModelOutput',
+        model_kwargs: Dict[str, 'Any'],
+        is_encoder_decoder: bool = False,
+        standardize_cache_format: bool = False,
+    ) -> Dict[str, 'Any']:
+        # update past_key_values
+        model_kwargs['past_key_values'] = self._extract_past_from_model_output(
+            outputs, standardize_cache_format=standardize_cache_format
+        )
+
+        # update attention mask
+        if 'attention_mask' in model_kwargs:
+            attention_mask = model_kwargs['attention_mask']
+            model_kwargs['attention_mask'] = torch.cat(
+                [attention_mask, attention_mask.new_ones((attention_mask.shape[0], 1))], dim=-1
+            )
+
+        # update position ids
+        if 'position_ids' in model_kwargs:
+            position_ids = model_kwargs['position_ids']
+            new_position_id = position_ids[..., -1:].clone()
+            new_position_id += 1
+            model_kwargs['position_ids'] = torch.cat([position_ids, new_position_id], dim=-1)
+
+        model_kwargs['is_first_forward'] = False
+        return model_kwargs
+
+
+    def generate(
+        self,
+        inputs: Optional[torch.Tensor] = None,
+        generation_config: Optional[GenerationConfig] = None,
+        logits_processor: Optional[LogitsProcessorList] = None,
+        stopping_criteria: Optional[StoppingCriteriaList] = None,
+        prefix_allowed_tokens_fn: Optional[
+            Callable[[int, torch.Tensor], List[int]]
+        ] = None,
+        synced_gpus: Optional[bool] = None,
+        #assistant_model: Optional['PreTrainedModel'] = None,
+        #streamer: Optional['BaseStreamer'] = None,
+        **kwargs,
+    ) -> Union[GenerateOutput, torch.LongTensor]:
+        generation_config = generation_config if generation_config is not None else self.generation_config
+
+        # Process stop_words_ids.
+        stop_words_ids = kwargs.pop('stop_words_ids', [[151643]])
+        if stop_words_ids is None and generation_config is not None:
+            stop_words_ids = getattr(generation_config, 'stop_words_ids', None)
+        if stop_words_ids is None:
+            stop_words_ids = getattr(generation_config, 'stop_words_ids', None)
+
+        if stop_words_ids is not None:
+            stop_words_logits_processor = StopWordsLogitsProcessor(
+                stop_words_ids=stop_words_ids,
+                eos_token_id=generation_config.eos_token_id,
+            )
+            if logits_processor is None:
+                logits_processor = LogitsProcessorList([stop_words_logits_processor])
+            else:
+                logits_processor.append(stop_words_logits_processor)
+
+        return super().generate(
+            inputs,
+            generation_config=generation_config,
+            logits_processor=logits_processor,
+            stopping_criteria=stopping_criteria,
+            prefix_allowed_tokens_fn=prefix_allowed_tokens_fn,
+            synced_gpus=synced_gpus,
+            **kwargs,
+        )

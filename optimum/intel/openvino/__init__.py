@@ -46,6 +46,7 @@ from .modeling import (
     OVModelForTokenClassification,
 )
 from .modeling_decoder import OVModelForCausalLM
+from .modeling_decoder import OVQwenModel
 from .modeling_seq2seq import OVModelForPix2Struct, OVModelForSeq2SeqLM
 
 
