@@ -201,7 +201,7 @@ class OVBaseDecoderModel(OVModel):
         """
         model_to_save = self.model if self._pkv_precision == Type.f32 else self._original_model
         dst_path = os.path.join(save_directory, OV_XML_FILE_NAME)
-        openvino.save_model(model_to_save, dst_path, compress_to_fp16=False)
+        openvino.save_model(model_to_save, dst_path, compress_to_fp16=True)
 
     @classmethod
     def _from_transformers(
