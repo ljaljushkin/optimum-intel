@@ -110,10 +110,8 @@ def patch_decoder_attention_mask(model: "PreTrainedModel"):
     """
     if model.config.model_type in {"bloom", "mpt"}:
         model.transformer._prepare_attn_mask = _prepare_attn_mask
-    elif model.config.model_type == "llama":
+    elif model.config.model_type in {"llama", "stablelm_epoch"}:
         model.model._prepare_decoder_attention_mask = _prepare_decoder_attention_mask
-    # elif model.config.model_type == "mistral":
-    #     model.model._prepare_decoder_attention_mask = _prepare_decoder_sliding_window_attention_mask
     elif model.config.model_type in {"blenderbot-small", "blenderbot", "opt", "pegasus", "bart"}:
         model.model.decoder._prepare_decoder_attention_mask = _prepare_decoder_attention_mask
     return model
