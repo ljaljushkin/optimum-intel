@@ -886,15 +886,14 @@ def _hybrid_quantization(
     Returns:
         The OpenVINO Runtime model with applied hybrid quantization.
     """
-    ops_to_compress = _collect_ops_with_weights(model)
-
-    wc_config = copy.deepcopy(quantization_config)
-    wc_config.ignored_scope = wc_config.ignored_scope or {}
-    wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
-    compressed_model = _weight_only_quantization(model, wc_config)
-
+    # ops_to_compress = _collect_ops_with_weights(model)
+    # wc_config = copy.deepcopy(quantization_config)
+    # wc_config.ignored_scope = wc_config.ignored_scope or {}
+    # wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
+    # compressed_model = _weight_only_quantization(model, wc_config)
+    compressed_model = model
     ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
-    ptq_ignored_scope.names += ops_to_compress
+    # ptq_ignored_scope.names += ops_to_compress
     subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
     quantized_model = nncf.quantize(
         model=compressed_model,
@@ -903,7 +902,7 @@ def _hybrid_quantization(
         ignored_scope=ptq_ignored_scope,
         # SQ algo should be disabled for MatMul nodes because their weights are already compressed
         advanced_parameters=nncf.AdvancedQuantizationParameters(
-            smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1)
+            smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
         ),
         subset_size=subset_size,
     )
