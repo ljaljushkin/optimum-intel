@@ -22,13 +22,14 @@ from collections import deque
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
+import openvino.runtime as ov
 import nncf
 import openvino
 import torch
 import transformers
 from huggingface_hub.constants import HUGGINGFACE_HUB_CACHE
 from nncf import CompressWeightsMode, SensitivityMetric
-from nncf.quantization.advanced_parameters import AdvancedSmoothQuantParameters, OverflowFix
+from nncf.quantization.advanced_parameters import AdvancedSmoothQuantParameters, OverflowFix, AdvancedLoraCorrectionParameters, AdvancedCompressionParameters
 from nncf.torch import register_module
 from nncf.torch.initialization import PTInitializingDataLoader
 from openvino._offline_transformations import compress_quantize_weights_transformation
@@ -367,17 +368,18 @@ class OVQuantizer(OptimumQuantizer):
                     )
 
             if quantization_config.quant_method == OVQuantizationMethod.HYBRID:
+                print("code check!")
                 if calibration_dataset is None:
                     raise ValueError("Calibration dataset is required to run hybrid quantization.")
                 if is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
                     # Apply weight-only quantization to all SD submodels except UNet
-                    quantization_config_copy = copy.deepcopy(quantization_config)
-                    quantization_config_copy.dataset = None
-                    quantization_config_copy.quant_method = OVQuantizationMethod.DEFAULT
-                    sub_model_names = ["vae_encoder", "vae_decoder", "text_encoder", "text_encoder_2"]
-                    sub_models = filter(lambda x: x is not None, (getattr(self.model, name) for name in sub_model_names))
-                    for sub_model in sub_models:
-                        _weight_only_quantization(sub_model.model, quantization_config_copy)
+                    # quantization_config_copy = copy.deepcopy(quantization_config)
+                    # quantization_config_copy.dataset = None
+                    # quantization_config_copy.quant_method = OVQuantizationMethod.DEFAULT
+                    # sub_model_names = ["vae_encoder", "vae_decoder", "text_encoder", "text_encoder_2"]
+                    # sub_models = filter(lambda x: x is not None, (getattr(self.model, name) for name in sub_model_names))
+                    # for sub_model in sub_models:
+                    #     _weight_only_quantization(sub_model.model, quantization_config_copy)
 
                     # Apply hybrid quantization to UNet
                     self.model.unet.model = _hybrid_quantization(
@@ -394,9 +396,9 @@ class OVQuantizer(OptimumQuantizer):
                         _weight_only_quantization(sub_model.model, quantization_config)
                 else:
                     _weight_only_quantization(self.model.model, quantization_config, calibration_dataset)
-            if save_directory is not None:
-                self.model.save_pretrained(save_directory)
-                ov_config.save_pretrained(save_directory)
+            # if save_directory is not None:
+            #     self.model.save_pretrained(save_directory)
+            #     ov_config.save_pretrained(save_directory)
             return
 
         if not isinstance(quantization_config, OVQuantizationConfig):
@@ -891,19 +893,34 @@ def _hybrid_quantization(
     # wc_config.ignored_scope = wc_config.ignored_scope or {}
     # wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
     # compressed_model = _weight_only_quantization(model, wc_config)
-    compressed_model = model
-    ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
+    # compressed_model = model
+    # ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
     # ptq_ignored_scope.names += ops_to_compress
-    subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
-    quantized_model = nncf.quantize(
-        model=compressed_model,
-        calibration_dataset=dataset,
-        model_type=nncf.ModelType.TRANSFORMER,
-        ignored_scope=ptq_ignored_scope,
-        # SQ algo should be disabled for MatMul nodes because their weights are already compressed
-        advanced_parameters=nncf.AdvancedQuantizationParameters(
-            smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
-        ),
-        subset_size=subset_size,
-    )
-    return quantized_model
+    # subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
+    # model = nncf.quantize(
+    #     model=compressed_model,
+    #     calibration_dataset=dataset,
+    #     model_type=nncf.ModelType.TRANSFORMER,
+    #     ignored_scope=ptq_ignored_scope,
+    #     # SQ algo should be disabled for MatMul nodes because their weights are already compressed
+    #     advanced_parameters=nncf.AdvancedQuantizationParameters(
+    #         smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
+    #     ),
+    #     subset_size=subset_size,
+    # )
+
+    rank = 256
+    from nncf.common.utils.debug import nncf_debug
+    wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(rank=rank))
+    with nncf_debug():
+        model = nncf.compress_weights(
+            model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
+        )
+
+    from openvino._offline_transformations import compress_quantize_weights_transformation
+    compress_quantize_weights_transformation(model)
+
+    folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
+
+    ov.save_model(model, folder + "/openvino_model.xml", compress_to_fp16=False)
+    return model

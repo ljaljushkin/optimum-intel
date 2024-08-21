@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+*.png
+nncf_debug
+models
+.vscode
+*.bin
+*.xml
