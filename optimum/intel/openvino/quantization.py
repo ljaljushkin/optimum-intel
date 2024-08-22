@@ -894,33 +894,35 @@ def _hybrid_quantization(
     # wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
     # compressed_model = _weight_only_quantization(model, wc_config)
     # compressed_model = model
-    # ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
+    ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
     # ptq_ignored_scope.names += ops_to_compress
-    # subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
-    # model = nncf.quantize(
-    #     model=compressed_model,
-    #     calibration_dataset=dataset,
-    #     model_type=nncf.ModelType.TRANSFORMER,
-    #     ignored_scope=ptq_ignored_scope,
-    #     # SQ algo should be disabled for MatMul nodes because their weights are already compressed
-    #     advanced_parameters=nncf.AdvancedQuantizationParameters(
-    #         smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
-    #     ),
-    #     subset_size=subset_size,
-    # )
+    subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
+    model = nncf.quantize(
+        model=compressed_model,
+        calibration_dataset=dataset,
+        model_type=nncf.ModelType.TRANSFORMER,
+        ignored_scope=ptq_ignored_scope,
+        # SQ algo should be disabled for MatMul nodes because their weights are already compressed
+        advanced_parameters=nncf.AdvancedQuantizationParameters(
+            smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
+        ),
+        subset_size=subset_size,
+    )
 
-    rank = 256
-    from nncf.common.utils.debug import nncf_debug
-    wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(rank=rank))
-    with nncf_debug():
-        model = nncf.compress_weights(
-            model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
-        )
+    # rank = 256
+    # from nncf.common.utils.debug import nncf_debug
+    # wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(rank=rank))
+    # with nncf_debug():
+    #     model = nncf.compress_weights(
+    #         model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
+    #     )
+    folder = Path('/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/stable-diffusion-v1-5_UNET_W8A8_REST_W8/unet')
+    ov.save_model(model, folder + "/openvino_model.xml", compress_to_fp16=False)
 
     from openvino._offline_transformations import compress_quantize_weights_transformation
     compress_quantize_weights_transformation(model)
-
-    folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
-
+    # folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
+    folder = Path('/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/stable-diffusion-v1-5_UNET_W8A8_REST_W8/unet_transformed')
+    folder.mkdir(exist_ok=True, parents=True)
     ov.save_model(model, folder + "/openvino_model.xml", compress_to_fp16=False)
     return model
