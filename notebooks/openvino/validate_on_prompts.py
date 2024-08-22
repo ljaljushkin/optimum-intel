@@ -9,11 +9,8 @@ from openvino.runtime import Core
 from optimum.intel import OVConfig, OVQuantizer, OVStableDiffusionPipeline, OVWeightQuantizationConfig
 from optimum.intel.openvino.configuration import OVQuantizationMethod
 from tqdm import tqdm
-
+from diffusers import EulerDiscreteScheduler
 transformers.logging.set_verbosity_error()
-
-MODEL_ID = "stabilityai/stable-diffusion-2-1"
-base_model_path = Path(f"models/{MODEL_ID}")
 
 
 @dataclass
@@ -21,66 +18,86 @@ class ExpDesc:
     prompt: str
     seed: int = 1
     negative_prompt: str = ''
-    num_inference_steps: int = 50
+    num_inference_steps: int = 20
 
 DESCS = [
+    ExpDesc(
+        prompt="a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowskiand magali villanueve",
+        negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
+        seed=1507302932
+    ),
+    ExpDesc(
+        prompt = "Pikachu commitingtax fraud, paperwork, exhausted, cute, really cute, cozy, by stevehanks, by lisa yuskavage, by serov valentin, by tarkovsky, 8 k render, detailed, cute cartoon style",
+        seed = 345,
+        negative_prompt="",
+    ),
+    ExpDesc(
+        prompt = "amazon rainforest with many trees photorealistic detailed leaves",
+        negative_prompt = "blurry, poor quality, deformed, cartoonish, painting",
+        seed = 1137900754
+    ),
+    ExpDesc(
+        prompt="autumn in paris, ornate, beautiful, atmosphere, vibe, mist, smoke, fire, chimney, rain, wet, pristine, puddles, melting, dripping, snow, creek, lush, ice, bridge, forest, roses, flowers, by stanley artgerm lau, greg rutkowski, thomas kindkade, alphonse mucha, loish, norman rockwell",
+        negative_prompt="",
+        seed = 2132889432
+    ),
+    ExpDesc(
+        prompt="portrait of renaud sechan, pen and ink, intricate line drawings, by craig mullins, ruanjia, kentaro miura, greg rutkowski, loundraw",
+        negative_prompt="hyperrealism",
+        seed = 206890696,
+    ),
+    ExpDesc(
+        prompt="An astronaut laying down in a bed of millions of vibrant, colorful flowers and plants, photoshoot",
+        negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
+        seed = 3997429436,
+    ),
+    ExpDesc(
+        prompt="long range view, Beautiful Japanese flower garden, elegant bridges, waterfalls, pink and white, by Akihito Yoshida, Ismail Inceoglu, Karol Bak, Airbrush, Dramatic, Panorama, Cool ColorPalette, Megapixel, Lumen Reflections, insanely detailed and intricate, hypermaximalist, elegant, ornate, hyper realistic, super detailed, unreal engine",
+        negative_prompt="lowres, bad, deformed",
+        seed = 128694831,
+    ),
+
+    ### my
+    ExpDesc(
+        prompt = "the best place in Bayern",
+        seed = 1,
+        negative_prompt="",
+    ),
+
+    ### Liubov
     ExpDesc(
         prompt = "a photo of an astronaut riding a horse on mars",
         seed = 1,
         negative_prompt="",
     ),
     ExpDesc(
-        prompt = "the best place in Bayern",
+        prompt = "close-up photography of old man standing in the rain at night, in a street lit by lamps, leica 35mm summilux",
         seed = 1,
         negative_prompt="",
     ),
+
     # ExpDesc(
-    #     prompt = "close-up photography of old man standing in the rain at night, in a street lit by lamps, leica 35mm summilux",
+    #     prompt = "The spirit of a tamagotchi wandering in the city of Vienna",
+    #     seed = 23,
+    #     negative_prompt="",
+    # ),
+    # ExpDesc(
+    #     prompt = "a beautiful pink unicorn, 8k",
     #     seed = 1,
     #     negative_prompt="",
     # ),
     # ExpDesc(
-    #     prompt = "Pikachu commitingtax fraud, paperwork, exhausted, cute, really cute, cozy, by stevehanks, by lisa yuskavage, by serov valentin, by tarkovsky, 8 k render, detailed, cute cartoon style",
-    #     seed = 345,
+    #     prompt = "Super cute fluffy cat warrior in armor, photorealistic, 4K, ultra detailed, vray rendering, unreal engine",
+    #     seed = 1,
     #     negative_prompt="",
     # ),
     # ExpDesc(
-    #     prompt = "amazon rainforest with many trees photorealistic detailed leaves",
-    #     negative_prompt = "blurry, poor quality, deformed, cartoonish, painting",
-    #     seed = 1137900754
-    # ),
-    # ExpDesc(
-    #     prompt="autumn in paris, ornate, beautiful, atmosphere, vibe, mist, smoke, fire, chimney, rain, wet, pristine, puddles, melting, dripping, snow, creek, lush, ice, bridge, forest, roses, flowers, by stanley artgerm lau, greg rutkowski, thomas kindkade, alphonse mucha, loish, norman rockwell",
+    #     prompt = "a train that is parked on tracks and has graffiti writing on it, with a mountain range in the background",
+    #     seed = 1,
     #     negative_prompt="",
-    #     seed = 2132889432
-    # ),
-    # ExpDesc(
-    #     prompt="portrait of renaud sechan, pen and ink, intricate line drawings, by craig mullins, ruanjia, kentaro miura, greg rutkowski, loundraw",
-    #     negative_prompt="hyperrealism",
-    #     seed = 206890696,
-    # ),
-    # ExpDesc(
-    #     prompt="An astronaut laying down in a bed of millions of vibrant, colorful flowers and plants, photoshoot",
-    #     negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
-    #     seed = 3997429436,
-    # ),
-    # ExpDesc(
-    #     prompt="long range view, Beautiful Japanese flower garden, elegant bridges, waterfalls, pink and white, by Akihito Yoshida, Ismail Inceoglu, Karol Bak, Airbrush, Dramatic, Panorama, Cool ColorPalette, Megapixel, Lumen Reflections, insanely detailed and intricate, hypermaximalist, elegant, ornate, hyper realistic, super detailed, unreal engine",
-    #     negative_prompt="lowres, bad, deformed",
-    #     seed = 128694831,
     # ),
 ]
 
-
-# TODO:
-# visualize results for the same model and different prompts in a line
-    # Can take saved pictures and locate in the layout afterwards
-    # import matplotlib.pyplot as plt
-    # import matplotlib.image as mpimg
-    # img = mpimg.imread('your_image.png')
-    # imgplot = plt.imshow(img)
-    # plt.show()
-# try 1.5 vs 2.1 base
 
 def generate_image(pipeline, prompt, seed, negative_prompt, num_inference_steps):
     transformers.set_seed(seed)
@@ -88,56 +105,55 @@ def generate_image(pipeline, prompt, seed, negative_prompt, num_inference_steps)
         prompt=prompt,
         negative_prompt=negative_prompt,
         num_inference_steps=num_inference_steps,
-        guidance_scale=8.0,
+        # guidance_scale=8.0,
+        guidance_scale=7.5,
         output_type="pil"
     ).images[0]
 
-PREFIXES = [
-    # "_INT8_LORA_8",
-    # "_INT8_LORA_256",
-    "_INT8",
-    # "_INT8_HYBRID",
-    "_FP32",
-    # "_INT8_LORA_32",
+MODEL_IDS = [
+    "runwayml/stable-diffusion-v1-5",
+    # "stabilityai/stable-diffusion-2-1"
 ]
-for prefix in tqdm(PREFIXES, desc='Evaluating models'):
-    model_path = base_model_path.with_name(base_model_path.name + prefix)
-    print(f'Evaluating {prefix}')
-    sd_pipe = OVStableDiffusionPipeline.from_pretrained(model_id=model_path)
-    for desc in DESCS:
-        prompt = desc.prompt
-        print('process %s' % prompt)
-        lora_img = generate_image(sd_pipe, **vars(desc))
-        img_name = (prompt.replace(' ', '_')[:20] + '.png')
-        im_folder = model_path / f'{desc.num_inference_steps}steps_env2'
-        im_folder.mkdir(exist_ok=True, parents=True)
-        img_path = im_folder / img_name
-        plt.imsave(img_path, np.array(lora_img))
-        print('save img to %s' % img_path)
 
+PREFIXES = [
 
-# visualize_results(lora_img)
+    # '_UNET_W8A8_LORA_8_REST_W8',
+    # '_UNET_W8A8_LORA_32_REST_W8',
+    # '_UNET_W8A8_LORA_256_REST_W8',
+    "_FP32",
+    '_UNET_HYBRID_REST_W32',
+    "_UNET_W8A8_REST_W32",
+    "_UNET_HYBRID_REST_W8",
+    "_UNET_W8A8_REST_W8",
+]
 
-# def visualize_results(lora_img):
-#     im_w, im_h = lora_img.size
-#     is_horizontal = im_h <= im_w
-#     figsize = (20, 30) if is_horizontal else (30, 20)
-#     fig, axs = plt.subplots(1 if is_horizontal else 2, 2 if is_horizontal else 1, figsize=figsize, sharex='all', sharey='all')
-#     fig.patch.set_facecolor('white')
-#     list_axes = list(axs.flat)
-#     for a in list_axes:
-#         a.set_xticklabels([])
-#         a.set_yticklabels([])
-#         a.get_xaxis().set_visible(False)
-#         a.get_yaxis().set_visible(False)
-#         a.grid(False)
-#     list_axes[0].imshow(np.array(lora_img))
-#     # list_axes[1].imshow(np.array(int8_img))
-#     img1_title = "INT8 lora result"
-#     # img2_title = "INT8 result"
-#     list_axes[0].set_title(img1_title, fontsize=20)
-#     # list_axes[1].set_title(img2_title, fontsize=20)
-#     fig.subplots_adjust(wspace=0.0 if is_horizontal else 0.01 , hspace=0.01 if is_horizontal else 0.0)
-#     fig.tight_layout()
+NUM_STEPS = [
+    20,
+    # 50
+]
 
-# visualize_results(lora_img)
+for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
+    border = '#'*50 + ' '
+    print(f'\n\n\n{border}Current model: {model_id}')
+    base_model_path = Path(f"models/{model_id}")
+    for prefix in tqdm(PREFIXES, desc='Evaluating per model\'s mode'):
+        print(f'\n\n{border}Current mode: {prefix}')
+        model_path = base_model_path.with_name(base_model_path.name + prefix)
+        if not model_path.exists():
+            print('Skipping the mode, path does not exists: ', model_path)
+            continue
+        scheduler = EulerDiscreteScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear")
+        sd_pipe = OVStableDiffusionPipeline.from_pretrained(model_id=model_path, scheduler=scheduler)
+        for desc in DESCS:
+            prompt = desc.prompt
+            print(f'{border}Current prompt: {prompt}')
+            for num_steps in NUM_STEPS:
+                print(f'{border}Current num_steps: {num_steps}')
+                desc.num_inference_steps = num_steps
+                lora_img = generate_image(sd_pipe, **vars(desc))
+                img_name = (prompt.replace(' ', '_')[:20] + '.png')
+                im_folder = model_path / f'{desc.num_inference_steps}steps'
+                im_folder.mkdir(exist_ok=True, parents=True)
+                img_path = im_folder / img_name
+                plt.imsave(img_path, np.array(lora_img))
+                print('save img to %s' % img_path)

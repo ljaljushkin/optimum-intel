@@ -7,35 +7,56 @@ from collections import OrderedDict
 
 transformers.logging.set_verbosity_error()
 
-MODEL_ID = "stabilityai/stable-diffusion-2-1"
+# MODEL_ID = "stabilityai/stable-diffusion-2-1"
+MODEL_ID = "runwayml/stable-diffusion-v1-5"
 base_model_path = Path(f"models/{MODEL_ID}")
 
 PREFIXES = [
-    # "_INT8_HYBRID",
     "_FP32",
-    "_INT8",
-    # "_INT8_LORA_8",
-    # "_INT8_LORA_32",
-    # "_INT8_LORA_256",
+    '_UNET_HYBRID_REST_W32',
+    "_UNET_HYBRID_REST_W8",
+    # "_UNET_W8A8_REST_W8",
+    # '_UNET_W8A8_LORA_8_REST_W8',
+    # '_UNET_W8A8_LORA_32_REST_W8',
+    # '_UNET_W8A8_LORA_256_REST_W8',
 ]
-NUM_STEPS = '50steps'
-IMG_INDEXES = [0,1,5]
+NUM_STEPS = '20steps'
+
+IMG_NAMES = [
+    # Xiaofan
+    'a_portrait_of_an_old',
+    'Pikachu_commitingtax',
+    'amazon_rainforest_wi',
+    'autumn_in_paris,_orn',
+    'portrait_of_renaud_s',
+    'An_astronaut_laying_',
+    'long_range_view,_Bea',
+    # # my
+    # 'the_best_place_in_Ba',
+    # # Liubov
+    # 'a_photo_of_an_astron',
+    # 'close-up_photography',
+]
+# IMG_INDEXES = [1,3,4,5,7,8]
 img_path_per_prefix = OrderedDict()
 N_MODELS = len(PREFIXES)
 num_images = set()
 for prefix in PREFIXES:
     imgs_dir = base_model_path.with_name(base_model_path.name + prefix) / NUM_STEPS
     assert imgs_dir.exists(), f'Directory with images does not exist: {imgs_dir}'
-    paths = list(imgs_dir.glob('*.png'))
-    paths = np.array(paths).take(IMG_INDEXES)
+    paths = [img_path for img_name in IMG_NAMES if (img_path := (imgs_dir / img_name).with_suffix('.png')).exists()]
+    # paths = list(imgs_dir.glob('*.png'))
+    # if IMG_INDEXES is not None:
+    #     paths = np.array(paths).take(IMG_INDEXES)
     num_images.add(len(paths))
     img_path_per_prefix[prefix] = paths
 
 assert len(num_images) == 1, f'Not equal number of images: {num_images}'
 N_IMAGES = num_images.pop()
 
-figsize = (N_IMAGES * 20, N_MODELS * 20)
-fig, axs = plt.subplots(N_MODELS, N_IMAGES, figsize=figsize, sharex='all', sharey='all')
+FIG_SIZE = (N_IMAGES * 10, N_MODELS * 10)
+FONT_SIZE = 40
+fig, axs = plt.subplots(N_MODELS, N_IMAGES, figsize=FIG_SIZE, sharex='all', sharey='all')
 fig.patch.set_facecolor('white')
 list_axes = list(axs.flat)
 for a in list_axes:
@@ -50,14 +71,16 @@ for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
         print('Process ', img_path)
         img = mpimg.imread(img_path)
         if i==0 and j==0:
-            list_axes[i * N_IMAGES + j].set_title(f"{MODEL_ID}\n{NUM_STEPS}\n{prefix[1:]}", fontsize=40)
+            list_axes[i * N_IMAGES + j].set_title(f"{MODEL_ID}\n{NUM_STEPS}\n{prefix[1:]}", fontsize=FONT_SIZE)
         if i > 0 and j==0:
-            list_axes[i * N_IMAGES + j].set_title(prefix[1:], fontsize=40)
+            list_axes[i * N_IMAGES + j].set_title(prefix[1:], fontsize=FONT_SIZE)
         list_axes[i * N_IMAGES + j].imshow(img)
     # fig.subplots_adjust(wspace=0.01, hspace=0.0)
-    fig.tight_layout()
+    # fig.tight_layout()
 
-    indexes = 'all' if IMG_INDEXES is None else 'IDs' + ''.join(map(str,IMG_INDEXES))
+    # indexes = 'all' if IMG_INDEXES is None else 'IDs' + ''.join(map(str, IMG_INDEXES))
     modes = ''.join(PREFIXES)[1:]
-    name = f"{modes}_{NUM_STEPS}_{indexes}.png"
-    plt.savefig(name)
+    name = f"SD_v{base_model_path.name[-3:]}_{modes}_{NUM_STEPS}_{N_IMAGES}imgs"
+
+    print('Saving result to: ', name)
+    plt.savefig('results/' + name)
