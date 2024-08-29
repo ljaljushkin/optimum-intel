@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 *.png
-nncf_debug
+nncf_debug*
 models
 .vscode
 *.bin

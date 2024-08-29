@@ -120,11 +120,42 @@ PREFIXES = [
     # '_UNET_W8A8_LORA_8_REST_W8',
     # '_UNET_W8A8_LORA_32_REST_W8',
     # '_UNET_W8A8_LORA_256_REST_W8',
-    "_FP32",
-    '_UNET_HYBRID_REST_W32',
-    "_UNET_W8A8_REST_W32",
-    "_UNET_HYBRID_REST_W8",
-    "_UNET_W8A8_REST_W8",
+
+    # "_FP32",
+    # "_FP16",
+    # '_UNET_HYBRID_REST_W32',
+    # "_UNET_HYBRID_REST_W16",
+    # "_UNET_HYBRID_REST_W8",
+    # "_UNET_W8A8_REST_W32",
+    # "_UNET_W8A8_REST_W16",
+    # "_UNET_W8A8_REST_W8",
+
+    # "_UNET_W8A8_LORA_32_REST_W32",
+    # "_UNET_W8A8_LORA_32_REST_W16",
+    # "_UNET_W8A8_LORA_32_REST_W16_cache"
+    # "_UNET_W8A8_LORA_32_REST_W8",
+
+#     "_UNET_W8A8_LORA_32_ADAPT32_REST_W32",
+#     "_UNET_W8A8_LORA_32_ADAPT32_REST_W16",
+#     "_UNET_W8A8_LORA_32_ADAPT32_REST_W8",
+
+#     "_UNET_W8A8_LORA_256_REST_W32",
+#     "_UNET_W8A8_LORA_256_REST_W16",
+#     "_UNET_W8A8_LORA_256_REST_W8",
+
+    # "_UNET_W8A8_LORA_32__X32__REST_W16",
+    # "_UNET_W8A8_LORA_8__X32_iter1_noreg__REST_W16"
+    # "_UNET_W8A8_SQ_conv0.15_REST_W16"
+    # "_UNET_W8A8_LORA_32_SQ_conv0.15_iter3_reg_cache_REST_W16"
+    # "_UNET_W8A8_LORA_32__X32__SQ_conv0.15_iter3_reg_cache_REST_W16"
+
+    # "_UNET_W8A8_LORA_32__X32__SQ_conv0.15_iter3_reg_last_REST_W16",
+    # "_UNET_W8A8_LORA_32__X32__SQ_conv0.15_iter3_reg_last3_REST_W16",
+    # "_UNET_W8A8_LORA_32__X32__SQ_conv0.15_iter3_reg_last10_REST_W16",
+    # "w8a8_x32_sq0.15_first_half_rest_w16",
+    # "w8a8_x32_sq0.15_last_half_rest_w16",
+    "w8a8_x32_sq0.15_higher_median_rest_w16",
+    "w8a8_x32_sq0.15_less_median_rest_w16"
 ]
 
 NUM_STEPS = [
@@ -138,7 +169,10 @@ for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
     base_model_path = Path(f"models/{model_id}")
     for prefix in tqdm(PREFIXES, desc='Evaluating per model\'s mode'):
         print(f'\n\n{border}Current mode: {prefix}')
-        model_path = base_model_path.with_name(base_model_path.name + prefix)
+        if prefix.startswith('_'):
+            model_path = base_model_path.with_name(base_model_path.name + prefix)
+        else:
+            model_path = base_model_path.with_name(prefix)
         if not model_path.exists():
             print('Skipping the mode, path does not exists: ', model_path)
             continue

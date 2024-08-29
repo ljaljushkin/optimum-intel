@@ -12,29 +12,59 @@ MODEL_ID = "runwayml/stable-diffusion-v1-5"
 base_model_path = Path(f"models/{MODEL_ID}")
 
 PREFIXES = [
-    "_FP32",
-    '_UNET_HYBRID_REST_W32',
-    "_UNET_HYBRID_REST_W8",
+    # "_FP32",
+    "_FP16",
+
+    # '_UNET_HYBRID_REST_W32',
+    '_UNET_HYBRID_REST_W16',
+    # "_UNET_HYBRID_REST_W8",
+
+    # "_UNET_W8A8_REST_W32",
+    # "_UNET_W8A8_REST_W16",
     # "_UNET_W8A8_REST_W8",
+
+    "_UNET_W8A8_SQ_conv0.15_REST_W16",
+    "_UNET_W8A8_LORA_32_SQ_conv0.15_iter3_reg_cache_REST_W16",
+    # "w8a8_x32_sq0.15_last1_rest_w16",
+    # "w8a8_x32_sq0.15_last3_rest_w16",
+    "w8a8_x32_sq0.15_last10_rest_w16",
+    "w8a8_x32_sq0.15_first_half_rest_w16",
+    "w8a8_x32_sq0.15_last_half_rest_w16",
+    'w8a8_x32_sq0.15_less_median_rest_w16',
+    'w8a8_x32_sq0.15_higher_median_rest_w16',
+
     # '_UNET_W8A8_LORA_8_REST_W8',
+
+    # '_UNET_W8A8_LORA_32_REST_W32',
+    # '_UNET_W8A8_LORA_32_REST_W16',
+    # '_UNET_W8A8_LORA_32_REST_W16_cache',
     # '_UNET_W8A8_LORA_32_REST_W8',
+
+    # '_UNET_W8A8_LORA_256_REST_W32',
+    # '_UNET_W8A8_LORA_256_REST_W16',
     # '_UNET_W8A8_LORA_256_REST_W8',
+
+    # '_UNET_W8A8_LORA_32_ADAPT32_REST_W32',
+    # '_UNET_W8A8_LORA_32_ADAPT32_REST_W16',
+    # '_UNET_W8A8_LORA_32_ADAPT32_REST_W8',
+
+    # "_UNET_W8A8_LORA_32__X32__REST_W16"
 ]
 NUM_STEPS = '20steps'
-
+FILENAME = 'sq0.15_median_half_last.png'
 IMG_NAMES = [
     # Xiaofan
     'a_portrait_of_an_old',
     'Pikachu_commitingtax',
-    'amazon_rainforest_wi',
+    # 'amazon_rainforest_wi',
     'autumn_in_paris,_orn',
     'portrait_of_renaud_s',
     'An_astronaut_laying_',
-    'long_range_view,_Bea',
-    # # my
-    # 'the_best_place_in_Ba',
-    # # Liubov
-    # 'a_photo_of_an_astron',
+    # 'long_range_view,_Bea',
+    # my
+    'the_best_place_in_Ba',
+    # Liubov
+    'a_photo_of_an_astron',
     # 'close-up_photography',
 ]
 # IMG_INDEXES = [1,3,4,5,7,8]
@@ -42,7 +72,10 @@ img_path_per_prefix = OrderedDict()
 N_MODELS = len(PREFIXES)
 num_images = set()
 for prefix in PREFIXES:
-    imgs_dir = base_model_path.with_name(base_model_path.name + prefix) / NUM_STEPS
+    if prefix.startswith('_'):
+        imgs_dir = base_model_path.with_name(base_model_path.name + prefix) / NUM_STEPS
+    else:
+        imgs_dir = base_model_path.with_name(prefix) / NUM_STEPS
     assert imgs_dir.exists(), f'Directory with images does not exist: {imgs_dir}'
     paths = [img_path for img_name in IMG_NAMES if (img_path := (imgs_dir / img_name).with_suffix('.png')).exists()]
     # paths = list(imgs_dir.glob('*.png'))
@@ -79,8 +112,10 @@ for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
     # fig.tight_layout()
 
     # indexes = 'all' if IMG_INDEXES is None else 'IDs' + ''.join(map(str, IMG_INDEXES))
-    modes = ''.join(PREFIXES)[1:]
-    name = f"SD_v{base_model_path.name[-3:]}_{modes}_{NUM_STEPS}_{N_IMAGES}imgs"
+    # modes = ''.join(PREFIXES)[1:]
+    # name = f"SD_v{base_model_path.name[-3:]}_{modes}_{NUM_STEPS}_{N_IMAGES}imgs"
+    # name = name.replace('.', '_')
+    name = FILENAME
 
-    print('Saving result to: ', name)
-    plt.savefig('results/' + name)
+print('Saving result to: ', name)
+plt.savefig('results/' + name)

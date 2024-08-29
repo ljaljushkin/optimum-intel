@@ -319,54 +319,53 @@ class OVQuantizer(OptimumQuantizer):
         quantization_config = ov_config.quantization_config
 
         if calibration_dataset is not None:
+            calibration_dataset = {}
             # Process custom calibration dataset
-
-            if is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
-                calibration_dataset = self._prepare_unet_dataset(
-                    quantization_config.num_samples, dataset=calibration_dataset
-                )
-            elif is_datasets_available() and isinstance(calibration_dataset, Dataset):
-                calibration_dataloader = self._get_calibration_dataloader(
-                    calibration_dataset=calibration_dataset,
-                    batch_size=batch_size,
-                    remove_unused_columns=remove_unused_columns,
-                    data_collator=data_collator,
-                )
-                if self.model.export_feature == "text-generation" and self.model.use_cache:
-                    calibration_dataset = self._prepare_text_generation_dataset(
-                        quantization_config, calibration_dataloader
-                    )
-                else:
-                    calibration_dataset = nncf.Dataset(calibration_dataloader)
-            elif isinstance(calibration_dataset, collections.abc.Iterable):
-                calibration_dataset = nncf.Dataset(calibration_dataset)
-            elif not isinstance(calibration_dataset, nncf.Dataset):
-                raise ValueError(
-                    "`calibration_dataset` must be either an `Iterable` object or an instance of "
-                    f"`nncf.Dataset` or `datasets.Dataset`. Found: {type(calibration_dataset)}."
-                )
+            # if is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
+            #     calibration_dataset = self._prepare_unet_dataset(
+            #         quantization_config.num_samples, dataset=calibration_dataset
+            #     )
+            # elif is_datasets_available() and isinstance(calibration_dataset, Dataset):
+            #     calibration_dataloader = self._get_calibration_dataloader(
+            #         calibration_dataset=calibration_dataset,
+            #         batch_size=batch_size,
+            #         remove_unused_columns=remove_unused_columns,
+            #         data_collator=data_collator,
+            #     )
+            #     if self.model.export_feature == "text-generation" and self.model.use_cache:
+            #         calibration_dataset = self._prepare_text_generation_dataset(
+            #             quantization_config, calibration_dataloader
+            #         )
+            #     else:
+            #         calibration_dataset = nncf.Dataset(calibration_dataloader)
+            # elif isinstance(calibration_dataset, collections.abc.Iterable):
+            #     calibration_dataset = nncf.Dataset(calibration_dataset)
+            # elif not isinstance(calibration_dataset, nncf.Dataset):
+            #     raise ValueError(
+            #         "`calibration_dataset` must be either an `Iterable` object or an instance of "
+            #         f"`nncf.Dataset` or `datasets.Dataset`. Found: {type(calibration_dataset)}."
+            #     )
 
         if isinstance(quantization_config, OVWeightQuantizationConfig):
-            if quantization_config.dataset is not None and calibration_dataset is not None:
-                logger.info(
-                    "Both `quantization_config.dataset` and `calibration_dataset` were provided for weight only "
-                    "quantization. Will rely on `calibration_dataset`."
-                )
+            # if quantization_config.dataset is not None and calibration_dataset is not None:
+            #     logger.info(
+            #         "Both `quantization_config.dataset` and `calibration_dataset` were provided for weight only "
+            #         "quantization. Will rely on `calibration_dataset`."
+            #     )
 
-            if calibration_dataset is None and isinstance(quantization_config.dataset, str):
-                from optimum.intel import OVModelForCausalLM
+            # if calibration_dataset is None and isinstance(quantization_config.dataset, str):
+            #     from optimum.intel import OVModelForCausalLM
 
-                if isinstance(self.model, OVModelForCausalLM):
-                    calibration_dataset = self._prepare_builtin_dataset(quantization_config)
-                elif is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
-                    calibration_dataset = self._prepare_unet_dataset(
-                        quantization_config.num_samples, dataset_name=quantization_config.dataset
-                    )
-                else:
-                    raise ValueError(
-                        f"Can't create weight compression calibration dataset from string for {type(self.model)}"
-                    )
-
+            #     if isinstance(self.model, OVModelForCausalLM):
+            #         calibration_dataset = self._prepare_builtin_dataset(quantization_config)
+            #     elif is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
+            #         calibration_dataset = self._prepare_unet_dataset(
+            #             quantization_config.num_samples, dataset_name=quantization_config.dataset
+            #         )
+            #     else:
+            #         raise ValueError(
+            #             f"Can't create weight compression calibration dataset from string for {type(self.model)}"
+            #         )
             if quantization_config.quant_method == OVQuantizationMethod.HYBRID:
                 print("code check!")
                 if calibration_dataset is None:
@@ -906,31 +905,42 @@ def _hybrid_quantization(
     #     ignored_scope=ptq_ignored_scope,
     #     # SQ algo should be disabled for MatMul nodes because their weights are already compressed
     #     advanced_parameters=nncf.AdvancedQuantizationParameters(
-    #         smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1)
+    #         smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=0.15)
     #     ),
     #     subset_size=subset_size,
     # )
-    # folder = Path('/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_NOT_TRANSFORMED')
+    # prefix = 'SQ_conv0.15'
+    # folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_NOT_TRANSFORMED')
     # folder.mkdir(exist_ok=True, parents=True)
     # ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
 
     # from openvino._offline_transformations import compress_quantize_weights_transformation
     # compress_quantize_weights_transformation(model)
     # # folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
-    # folder = Path('/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_TRANSFORMED')
+    # folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_TRANSFORMED')
     # folder.mkdir(exist_ok=True, parents=True)
     # ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
     # ---- END W8A8
 
+    # ---- START LORA
     rank = 32
+    num_iters = 3
+    add_regul = True
+    reg_str = 'reg' if add_regul else 'noreg'
     from nncf.common.utils.debug import nncf_debug
-    wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(rank=rank))
-    with nncf_debug():
-        model = nncf.compress_weights(
-            model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
-        )
-    folder = Path('/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/stable-diffusion-v1-5_UNET_W8A8_LORA_32_REST_W8')
+    wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(
+        rank=rank,
+        num_iters=num_iters,
+        add_regularization=add_regul
+    ))
+    dataset = {}
+    # with nncf_debug():
+    model = nncf.compress_weights(
+        model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
+    )
+    folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_LORA_{rank}__X32__SQ_conv0.15_iter{num_iters}_{reg_str}_higher_median')
     folder.mkdir(exist_ok=True, parents=True)
     ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
+    # ---- END LORA
 
     return model
