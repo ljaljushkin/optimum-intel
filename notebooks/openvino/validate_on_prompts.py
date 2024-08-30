@@ -154,8 +154,9 @@ PREFIXES = [
     # "_UNET_W8A8_LORA_32__X32__SQ_conv0.15_iter3_reg_last10_REST_W16",
     # "w8a8_x32_sq0.15_first_half_rest_w16",
     # "w8a8_x32_sq0.15_last_half_rest_w16",
-    "w8a8_x32_sq0.15_higher_median_rest_w16",
-    "w8a8_x32_sq0.15_less_median_rest_w16"
+    # "w8a8_x32_sq0.15_higher_median_rest_w16",
+    # "w8a8_x32_sq0.15_less_median_rest_w16"
+    "w8a8_biascorr_rest_w16_TRANSFORMED"
 ]
 
 NUM_STEPS = [

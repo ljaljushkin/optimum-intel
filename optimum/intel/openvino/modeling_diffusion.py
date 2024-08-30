@@ -750,6 +750,7 @@ class OVStableDiffusionPipeline(OVStableDiffusionPipelineBase, StableDiffusionPi
         prompt: Optional[Union[str, List[str]]] = None,
         height: Optional[int] = None,
         width: Optional[int] = None,
+        # TODO: temp!!!! revert! revert! revert! temp!!! TODO:
         num_inference_steps: int = 50,
         guidance_scale: float = 7.5,
         negative_prompt: Optional[Union[str, List[str]]] = None,
