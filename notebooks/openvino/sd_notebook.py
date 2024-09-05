@@ -18,7 +18,8 @@ DATASET_NAME = "jxie/coco_captions"
 base_model_path = Path(f"/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/{MODEL_ID}")
 fp32_model_path = base_model_path.with_name(base_model_path.name + "_FP32")
 # int8_model_path = base_model_path.with_name(base_model_path.name + "_UNET_W8A8_NOT_TRANSFORMED_REST_W8")
-int8_model_path = base_model_path.with_name(base_model_path.name + "_UNET_W8A8_SQ_conv0.15_NOT_TRANSFORMED_REST_W8")
+# int8_model_path = base_model_path.with_name(base_model_path.name + "_UNET_W8A8_SQ_conv0.15_NOT_TRANSFORMED_REST_W8")
+int8_model_path = base_model_path.parent / "w8a8_biascorr_rest_w16_NOT_TRANSFORMED"
 
 dataset = datasets.load_dataset(DATASET_NAME, split="train", streaming=True).shuffle(seed=42)
 print(next(iter(dataset)))
@@ -34,12 +35,12 @@ calibration_dataset = dataset.map(lambda x: preprocess_fn(x), remove_columns=dat
 # int8_pipe = OVStableDiffusionPipeline.from_pretrained(model_id=MODEL_ID, export=True)
 import os
 # os.environ["FP32_LORA_ACTIVATION_STATS_SAVE_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_STATS.npz'
-# os.environ["FP32_LORA_ACTIVATION_STATS_LOAD_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_STATS.npz'
+os.environ["FP32_LORA_ACTIVATION_STATS_LOAD_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_STATS.npz'
 
-os.environ["FP32_LORA_ACTIVATION_STATS_SAVE_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_BIAS_CORRECT_STATS.npz'
-# os.environ["FP32_LORA_ACTIVATION_STATS_LOAD_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_STATS.npz'
+# os.environ["FP32_LORA_ACTIVATION_STATS_SAVE_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_BIAS_CORRECT_STATS.npz'
+# os.environ["FP32_LORA_ACTIVATION_STATS_LOAD_PATH"] = '/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/X32_BIAS_CORRECT_STATS.npz'
 
-# os.environ["ACTIVATION_STATS_SAVE_PATH"] = str(int8_model_path / 'sX_lora_stats.npz')
+os.environ["ACTIVATION_STATS_SAVE_PATH"] = str(fp32_model_path / 'sX_lora_stats.npz')
 # os.environ["ACTIVATION_STATS_LOAD_PATH"] = str(int8_model_path / 'sX_lora_stats.npz')
 
 int8_pipe = OVStableDiffusionPipeline.from_pretrained(model_id=fp32_model_path)
