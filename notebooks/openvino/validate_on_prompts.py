@@ -11,93 +11,13 @@ from optimum.intel.openvino.configuration import OVQuantizationMethod
 from tqdm import tqdm
 from diffusers import EulerDiscreteScheduler
 transformers.logging.set_verbosity_error()
-
-
-@dataclass
-class ExpDesc:
-    prompt: str
-    seed: int = 1
-    negative_prompt: str = ''
-    num_inference_steps: int = 20
-
-DESCS = [
-    ExpDesc(
-        prompt="a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowskiand magali villanueve",
-        negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
-        seed=1507302932
-    ),
-    ExpDesc(
-        prompt = "Pikachu commitingtax fraud, paperwork, exhausted, cute, really cute, cozy, by stevehanks, by lisa yuskavage, by serov valentin, by tarkovsky, 8 k render, detailed, cute cartoon style",
-        seed = 345,
-        negative_prompt="",
-    ),
-    ExpDesc(
-        prompt = "amazon rainforest with many trees photorealistic detailed leaves",
-        negative_prompt = "blurry, poor quality, deformed, cartoonish, painting",
-        seed = 1137900754
-    ),
-    ExpDesc(
-        prompt="autumn in paris, ornate, beautiful, atmosphere, vibe, mist, smoke, fire, chimney, rain, wet, pristine, puddles, melting, dripping, snow, creek, lush, ice, bridge, forest, roses, flowers, by stanley artgerm lau, greg rutkowski, thomas kindkade, alphonse mucha, loish, norman rockwell",
-        negative_prompt="",
-        seed = 2132889432
-    ),
-    ExpDesc(
-        prompt="portrait of renaud sechan, pen and ink, intricate line drawings, by craig mullins, ruanjia, kentaro miura, greg rutkowski, loundraw",
-        negative_prompt="hyperrealism",
-        seed = 206890696,
-    ),
-    ExpDesc(
-        prompt="An astronaut laying down in a bed of millions of vibrant, colorful flowers and plants, photoshoot",
-        negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
-        seed = 3997429436,
-    ),
-    ExpDesc(
-        prompt="long range view, Beautiful Japanese flower garden, elegant bridges, waterfalls, pink and white, by Akihito Yoshida, Ismail Inceoglu, Karol Bak, Airbrush, Dramatic, Panorama, Cool ColorPalette, Megapixel, Lumen Reflections, insanely detailed and intricate, hypermaximalist, elegant, ornate, hyper realistic, super detailed, unreal engine",
-        negative_prompt="lowres, bad, deformed",
-        seed = 128694831,
-    ),
-
-    ### my
-    ExpDesc(
-        prompt = "the best place in Bayern",
-        seed = 1,
-        negative_prompt="",
-    ),
-
-    ### Liubov
-    ExpDesc(
-        prompt = "a photo of an astronaut riding a horse on mars",
-        seed = 1,
-        negative_prompt="",
-    ),
-    ExpDesc(
-        prompt = "close-up photography of old man standing in the rain at night, in a street lit by lamps, leica 35mm summilux",
-        seed = 1,
-        negative_prompt="",
-    ),
-
-    # ExpDesc(
-    #     prompt = "The spirit of a tamagotchi wandering in the city of Vienna",
-    #     seed = 23,
-    #     negative_prompt="",
-    # ),
-    # ExpDesc(
-    #     prompt = "a beautiful pink unicorn, 8k",
-    #     seed = 1,
-    #     negative_prompt="",
-    # ),
-    # ExpDesc(
-    #     prompt = "Super cute fluffy cat warrior in armor, photorealistic, 4K, ultra detailed, vray rendering, unreal engine",
-    #     seed = 1,
-    #     negative_prompt="",
-    # ),
-    # ExpDesc(
-    #     prompt = "a train that is parked on tracks and has graffiti writing on it, with a mountain range in the background",
-    #     seed = 1,
-    #     negative_prompt="",
-    # ),
-]
-
+from torchmetrics.functional.multimodal import clip_score
+import json
+import torch
+from prompts import DESCS
+from prompts import PROMPTS_MAP
+from prompts import encode_prompt
+from functools import partial
 
 def generate_image(pipeline, prompt, seed, negative_prompt, num_inference_steps):
     transformers.set_seed(seed)
@@ -116,13 +36,12 @@ MODEL_IDS = [
 ]
 
 PREFIXES = [
-
     # '_UNET_W8A8_LORA_8_REST_W8',
     # '_UNET_W8A8_LORA_32_REST_W8',
     # '_UNET_W8A8_LORA_256_REST_W8',
 
     # "_FP32",
-    # "_FP16",
+    "_FP16",
     # '_UNET_HYBRID_REST_W32',
     # "_UNET_HYBRID_REST_W16",
     # "_UNET_HYBRID_REST_W8",
@@ -156,13 +75,47 @@ PREFIXES = [
     # "w8a8_x32_sq0.15_last_half_rest_w16",
     # "w8a8_x32_sq0.15_higher_median_rest_w16",
     # "w8a8_x32_sq0.15_less_median_rest_w16"
-    "w8a8_biascorr_rest_w16_TRANSFORMED"
+    # "w8a8_biascorr_rest_w16_TRANSFORMED"
+    # "w8a8_partx32_biascorr_lora32_rest_w16"
+
+    # "w4a16_datafree_rest_w16",
+    # "w4a16_datafree_pc_rest_w16",
+    # "w4a16_lora32_pc_rest_w16",
+    # "w4a16_scale_skip_rest_w16",
+    # "w4a16_scale_lora32_skip_rest_w16",
+    # "w4a16_datafree_skip_ign_scope_rest_w16",
+    # "w8a16_rest_w16",
+
+    # 'w8a16_rest_w16',
+    # 'w4a16_datafree_rest_w16',
+    # 'w4a16_scale_rest_w16',
+    # 'w4a16_svd32_rest_w16',
+    # 'w4a16_lora32_rest_w16',
+    # 'w4a16_scale_svd32_rest_w16',
+    # 'w4a16_scale_lora32_rest_w16',
+    # "W8A8_biascorr_LORA_32__X32__iter0_rest_w16"
+
+    # overfit on single prompt
+    # 'w4a16_datafree_horse_rest_w16',
+    # 'w4a16_scale_horse_rest_w16',
+
+    # asym
+    # 'w4a16_asym_datafree_rest_w16',
+
+    # sym
+    'w4a16_sym_datafree_ign_time_emb_rest_w16',
+    'w4a16_sym_gptq_ign_time_emb_rest_w16',
+    'w4a16_sym_gptq_scale_ign_time_emb_rest_w16',
+    'w4a16_sym_scale_ign_time_emb_rest_w16',
 ]
 
 NUM_STEPS = [
     20,
     # 50
 ]
+
+
+clip_score_fn = partial(clip_score, model_name_or_path="openai/clip-vit-base-patch16")
 
 for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
     border = '#'*50 + ' '
@@ -179,16 +132,27 @@ for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
             continue
         scheduler = EulerDiscreteScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear")
         sd_pipe = OVStableDiffusionPipeline.from_pretrained(model_id=model_path, scheduler=scheduler)
+        scores_map = {}
         for desc in DESCS:
             prompt = desc.prompt
             print(f'{border}Current prompt: {prompt}')
             for num_steps in NUM_STEPS:
                 print(f'{border}Current num_steps: {num_steps}')
                 desc.num_inference_steps = num_steps
-                lora_img = generate_image(sd_pipe, **vars(desc))
-                img_name = (prompt.replace(' ', '_')[:20] + '.png')
-                im_folder = model_path / f'{desc.num_inference_steps}steps'
+                img = generate_image(sd_pipe, **vars(desc))
+                img_name = encode_prompt(prompt)
+                im_folder = model_path / f'{desc.num_inference_steps}steps_optimum_1.23_2'
                 im_folder.mkdir(exist_ok=True, parents=True)
-                img_path = im_folder / img_name
-                plt.imsave(img_path, np.array(lora_img))
+                img_path = im_folder / (img_name + '.png')
+                plt.imsave(img_path, np.array(img))
                 print('save img to %s' % img_path)
+
+                prompt = PROMPTS_MAP[img_name]
+                clip_score = clip_score_fn(torch.from_numpy(np.array(img)), prompt).detach()
+                sd_clip_score = round(float(clip_score), 4)
+                scores_map[img_name] = sd_clip_score
+                print(f"CLIP score: {sd_clip_score}")
+
+        with (im_folder / 'clip_scores_on_fly.json').open('w') as f:
+            json.dump(scores_map, f)
+

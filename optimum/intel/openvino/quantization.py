@@ -895,32 +895,32 @@ def _hybrid_quantization(
     # compressed_model = model
 
     # ---- START W8A8
-    ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
-    # ptq_ignored_scope.names += ops_to_compress
-    subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
-    model = nncf.quantize(
-        model=model,
-        calibration_dataset=dataset,
-        model_type=nncf.ModelType.TRANSFORMER,
-        ignored_scope=ptq_ignored_scope,
-        # SQ algo should be disabled for MatMul nodes because their weights are already compressed
-        advanced_parameters=nncf.AdvancedQuantizationParameters(
-            smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1),
-        ),
-        fast_bias_correction=False,
-        subset_size=subset_size,
-    )
-    prefix = 'BiasCorrect'
-    folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_NOT_TRANSFORMED')
-    folder.mkdir(exist_ok=True, parents=True)
-    ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
+    # ptq_ignored_scope = quantization_config.get_ignored_scope_instance()
+    # # ptq_ignored_scope.names += ops_to_compress
+    # subset_size = quantization_config.num_samples if quantization_config.num_samples else 200
+    # model = nncf.quantize(
+    #     model=model,
+    #     calibration_dataset=dataset,
+    #     model_type=nncf.ModelType.TRANSFORMER,
+    #     ignored_scope=ptq_ignored_scope,
+    #     # SQ algo should be disabled for MatMul nodes because their weights are already compressed
+    #     advanced_parameters=nncf.AdvancedQuantizationParameters(
+    #         smooth_quant_alphas=AdvancedSmoothQuantParameters(matmul=-1, convolution=-1),
+    #     ),
+    #     fast_bias_correction=False,
+    #     subset_size=subset_size,
+    # )
+    # prefix = 'BiasCorrect'
+    # folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_NOT_TRANSFORMED')
+    # folder.mkdir(exist_ok=True, parents=True)
+    # ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
 
-    from openvino._offline_transformations import compress_quantize_weights_transformation
-    compress_quantize_weights_transformation(model)
-    # folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
-    folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_TRANSFORMED')
-    folder.mkdir(exist_ok=True, parents=True)
-    ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
+    # from openvino._offline_transformations import compress_quantize_weights_transformation
+    # compress_quantize_weights_transformation(model)
+    # # folder = f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/stabilityai/stable-diffusion-2-1_INT8_LORA_{rank}/unet'
+    # folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_{prefix}_TRANSFORMED')
+    # folder.mkdir(exist_ok=True, parents=True)
+    # ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
     # ---- END W8A8
 
     # ---- START LORA
@@ -934,14 +934,25 @@ def _hybrid_quantization(
     #     num_iters=num_iters,
     #     add_regularization=add_regul
     # ))
-    # dataset = {}
-    # # with nncf_debug():
-    # model = nncf.compress_weights(
-    #     model, ratio=1.0, dataset=dataset, mode=nncf.CompressWeightsMode.INT8_ASYM, lora_correction=True, advanced_parameters=wc_advanced
-    # )
-    # folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_W8A8_LORA_{rank}__X32__SQ_conv0.15_iter{num_iters}_{reg_str}_higher_median')
-    # folder.mkdir(exist_ok=True, parents=True)
-    # ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
+    # dataset = None#{}
+    # with nncf_debug():
+    model = nncf.compress_weights(
+        model,
+        ratio=1.0,
+        dataset=dataset,
+        mode=nncf.CompressWeightsMode.INT4_SYM,
+        ignored_scope=nncf.IgnoredScope(patterns=['.*time_embedding.*']),
+        # wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
+        # scale_estimation=True,
+        # gptq=True,
+        # lora_correction=True,
+        # advanced_parameters=wc_advanced,
+        # subset_size=40
+    )
+    folder = Path(f'/home/nlyaly/projects/optimum-intel/notebooks/openvino/models/runwayml/UNET_tmp')#LORA_32__X32__iter3')
+    folder.mkdir(exist_ok=True, parents=True)
+    ov.save_model(model, folder / "openvino_model.xml", compress_to_fp16=False)
+    print('compressed to ', folder)
     # ---- END LORA
 
     return model
