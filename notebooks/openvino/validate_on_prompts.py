@@ -62,7 +62,7 @@ PREFIXES = [
 #     "_UNET_W8A8_LORA_256_REST_W16",
 #     "_UNET_W8A8_LORA_256_REST_W8",
 
-    # "_UNET_W8A8_LORA_32__X32__REST_W16",
+    "_UNET_W8A8_LORA_32__X32__REST_W16",
     # "_UNET_W8A8_LORA_8__X32_iter1_noreg__REST_W16"
     # "_UNET_W8A8_SQ_conv0.15_REST_W16"
     # "_UNET_W8A8_LORA_32_SQ_conv0.15_iter3_reg_cache_REST_W16"
@@ -141,7 +141,7 @@ for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
                 desc.num_inference_steps = num_steps
                 img = generate_image(sd_pipe, **vars(desc))
                 img_name = encode_prompt(prompt)
-                im_folder = model_path / f'{desc.num_inference_steps}steps_optimum_1.23_2'
+                im_folder = model_path / f'{desc.num_inference_steps}steps'
                 im_folder.mkdir(exist_ok=True, parents=True)
                 img_path = im_folder / (img_name + '.png')
                 plt.imsave(img_path, np.array(img))
