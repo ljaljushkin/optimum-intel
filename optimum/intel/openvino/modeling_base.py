@@ -48,6 +48,7 @@ from .utils import (
 
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class OVBaseModel(OptimizedModel):
         self.model_save_dir = model_save_dir
         self._device = device.upper()
         self.is_dynamic = dynamic_shapes
-        self.ov_config = {} if ov_config is None else {**ov_config}
+        self.ov_config = {"INFERENCE_PRECISION_HINT": "f32"}#ov_config if ov_config is not None else {"PERFORMANCE_HINT": "LATENCY"}
         self.preprocessors = kwargs.get("preprocessors", [])
         self._compile_only = kwargs.get("compile_only", False)
         enable_compilation = kwargs.get("compile", True)
@@ -272,7 +273,7 @@ class OVBaseModel(OptimizedModel):
             cache_dir = Path(model_save_dir).joinpath("model_cache")
             ov_config["CACHE_DIR"] = str(cache_dir)
             logger.info(f"Setting OpenVINO CACHE_DIR to {str(cache_dir)}")
-
+        print('OV_CONFIG', ov_config)
         compiled_model = core.compile_model(model, device.upper() if device is not None else device, config=ov_config)
         if "OPENVINO_LOG_LEVEL" in os.environ and int(os.environ["OPENVINO_LOG_LEVEL"]) > 2:
             logger.info(f"{device if device is not None else 'AUTO'} SUPPORTED_PROPERTIES:")
