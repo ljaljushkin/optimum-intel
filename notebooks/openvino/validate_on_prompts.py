@@ -20,9 +20,11 @@ from prompts import encode_prompt
 from functools import partial
 
 def generate_image(pipeline, prompt, seed, negative_prompt, num_inference_steps):
+    rng = torch.Generator(device="cpu").manual_seed(seed)
     transformers.set_seed(seed)
     return pipeline(
         prompt=prompt,
+        generator=rng,
         negative_prompt=negative_prompt,
         num_inference_steps=num_inference_steps,
         # guidance_scale=8.0,
@@ -41,9 +43,8 @@ PREFIXES = [
     # '_UNET_W8A8_LORA_256_REST_W8',
 
     # "_FP32",
-    "_FP16",
+
     # '_UNET_HYBRID_REST_W32',
-    # "_UNET_HYBRID_REST_W16",
     # "_UNET_HYBRID_REST_W8",
     # "_UNET_W8A8_REST_W32",
     # "_UNET_W8A8_REST_W16",
@@ -62,7 +63,7 @@ PREFIXES = [
 #     "_UNET_W8A8_LORA_256_REST_W16",
 #     "_UNET_W8A8_LORA_256_REST_W8",
 
-    "_UNET_W8A8_LORA_32__X32__REST_W16",
+
     # "_UNET_W8A8_LORA_8__X32_iter1_noreg__REST_W16"
     # "_UNET_W8A8_SQ_conv0.15_REST_W16"
     # "_UNET_W8A8_LORA_32_SQ_conv0.15_iter3_reg_cache_REST_W16"
@@ -103,10 +104,15 @@ PREFIXES = [
     # 'w4a16_asym_datafree_rest_w16',
 
     # sym
-    'w4a16_sym_datafree_ign_time_emb_rest_w16',
-    'w4a16_sym_gptq_ign_time_emb_rest_w16',
-    'w4a16_sym_gptq_scale_ign_time_emb_rest_w16',
-    'w4a16_sym_scale_ign_time_emb_rest_w16',
+    # "_FP16",
+    # "_UNET_HYBRID_REST_W16",
+    # 'w4a16_sym_datafree_ign_time_emb_rest_w16',
+    # 'w4a16_sym_gptq_ign_time_emb_rest_w16',
+    # 'w4a16_sym_gptq_scale_ign_time_emb_rest_w16',
+    # 'w4a16_sym_scale_ign_time_emb_rest_w16',
+    # "_UNET_W8A8_LORA_32__X32__REST_W16",
+    # 'w4a16_lora_rank32_gptq_style_rest_w16'
+    'w4a16_lora_rank256_gptq_style_rest_w16'
 ]
 
 NUM_STEPS = [
@@ -141,7 +147,7 @@ for model_id in tqdm(MODEL_IDS, desc='Evaluation per Model'):
                 desc.num_inference_steps = num_steps
                 img = generate_image(sd_pipe, **vars(desc))
                 img_name = encode_prompt(prompt)
-                im_folder = model_path / f'{desc.num_inference_steps}steps'
+                im_folder = model_path / f'{desc.num_inference_steps}steps_optimum_1.23'
                 im_folder.mkdir(exist_ok=True, parents=True)
                 img_path = im_folder / (img_name + '.png')
                 plt.imsave(img_path, np.array(img))

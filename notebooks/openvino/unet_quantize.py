@@ -121,7 +121,9 @@ exp_names = [
     # 'w4a16_sym_datafree_ign_time_emb',
     # 'w4a16_sym_gptq_ign_time_emb',
     # 'w4a16_sym_gptq_scale_ign_time_emb',
-    'w4a16_sym_scale_ign_time_emb',
+    # 'w4a16_sym_scale_ign_time_emb',
+    # 'w4a16_lora_rank32_gptq_style',
+    'w4a16_lora_rank256_gptq_style'
 ]
 
 curr_exp = exp_names[0]

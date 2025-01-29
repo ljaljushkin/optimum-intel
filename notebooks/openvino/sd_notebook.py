@@ -29,7 +29,7 @@ def preprocess_fn(example):
     return {"prompt": example["caption"]}
 
 # NUM_SAMPLES = 200
-NUM_SAMPLES = 9
+NUM_SAMPLES = 6
 dataset = dataset.take(NUM_SAMPLES)
 calibration_dataset = dataset.map(lambda x: preprocess_fn(x), remove_columns=dataset.column_names)
 print(type(calibration_dataset), calibration_dataset)

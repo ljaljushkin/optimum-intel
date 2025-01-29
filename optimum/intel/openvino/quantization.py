@@ -319,53 +319,53 @@ class OVQuantizer(OptimumQuantizer):
         quantization_config = ov_config.quantization_config
 
         if calibration_dataset is not None:
-            calibration_dataset = {}
-            # # Process custom calibration dataset
-            # if is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
-            #     calibration_dataset = self._prepare_unet_dataset(
-            #         quantization_config.num_samples, dataset=calibration_dataset
-            #     )
-            # elif is_datasets_available() and isinstance(calibration_dataset, Dataset):
-            #     calibration_dataloader = self._get_calibration_dataloader(
-            #         calibration_dataset=calibration_dataset,
-            #         batch_size=batch_size,
-            #         remove_unused_columns=remove_unused_columns,
-            #         data_collator=data_collator,
-            #     )
-            #     if self.model.export_feature == "text-generation" and self.model.use_cache:
-            #         calibration_dataset = self._prepare_text_generation_dataset(
-            #             quantization_config, calibration_dataloader
-            #         )
-            #     else:
-            #         calibration_dataset = nncf.Dataset(calibration_dataloader)
-            # elif isinstance(calibration_dataset, collections.abc.Iterable):
-            #     calibration_dataset = nncf.Dataset(calibration_dataset)
-            # elif not isinstance(calibration_dataset, nncf.Dataset):
-            #     raise ValueError(
-            #         "`calibration_dataset` must be either an `Iterable` object or an instance of "
-            #         f"`nncf.Dataset` or `datasets.Dataset`. Found: {type(calibration_dataset)}."
-            #     )
+            # calibration_dataset = {}
+            # Process custom calibration dataset
+            if is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
+                calibration_dataset = self._prepare_unet_dataset(
+                    quantization_config.num_samples, dataset=calibration_dataset
+                )
+            elif is_datasets_available() and isinstance(calibration_dataset, Dataset):
+                calibration_dataloader = self._get_calibration_dataloader(
+                    calibration_dataset=calibration_dataset,
+                    batch_size=batch_size,
+                    remove_unused_columns=remove_unused_columns,
+                    data_collator=data_collator,
+                )
+                if self.model.export_feature == "text-generation" and self.model.use_cache:
+                    calibration_dataset = self._prepare_text_generation_dataset(
+                        quantization_config, calibration_dataloader
+                    )
+                else:
+                    calibration_dataset = nncf.Dataset(calibration_dataloader)
+            elif isinstance(calibration_dataset, collections.abc.Iterable):
+                calibration_dataset = nncf.Dataset(calibration_dataset)
+            elif not isinstance(calibration_dataset, nncf.Dataset):
+                raise ValueError(
+                    "`calibration_dataset` must be either an `Iterable` object or an instance of "
+                    f"`nncf.Dataset` or `datasets.Dataset`. Found: {type(calibration_dataset)}."
+                )
 
         if isinstance(quantization_config, OVWeightQuantizationConfig):
-            # if quantization_config.dataset is not None and calibration_dataset is not None:
-            #     logger.info(
-            #         "Both `quantization_config.dataset` and `calibration_dataset` were provided for weight only "
-            #         "quantization. Will rely on `calibration_dataset`."
-            #     )
+            if quantization_config.dataset is not None and calibration_dataset is not None:
+                logger.info(
+                    "Both `quantization_config.dataset` and `calibration_dataset` were provided for weight only "
+                    "quantization. Will rely on `calibration_dataset`."
+                )
 
-            # if calibration_dataset is None and isinstance(quantization_config.dataset, str):
-            #     from optimum.intel import OVModelForCausalLM
+            if calibration_dataset is None and isinstance(quantization_config.dataset, str):
+                from optimum.intel import OVModelForCausalLM
 
-            #     if isinstance(self.model, OVModelForCausalLM):
-            #         calibration_dataset = self._prepare_builtin_dataset(quantization_config)
-            #     elif is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
-            #         calibration_dataset = self._prepare_unet_dataset(
-            #             quantization_config.num_samples, dataset_name=quantization_config.dataset
-            #         )
-            #     else:
-            #         raise ValueError(
-            #             f"Can't create weight compression calibration dataset from string for {type(self.model)}"
-            #         )
+                if isinstance(self.model, OVModelForCausalLM):
+                    calibration_dataset = self._prepare_builtin_dataset(quantization_config)
+                elif is_diffusers_available() and isinstance(self.model, OVStableDiffusionPipelineBase):
+                    calibration_dataset = self._prepare_unet_dataset(
+                        quantization_config.num_samples, dataset_name=quantization_config.dataset
+                    )
+                else:
+                    raise ValueError(
+                        f"Can't create weight compression calibration dataset from string for {type(self.model)}"
+                    )
             if quantization_config.quant_method == OVQuantizationMethod.HYBRID:
                 print("code check!")
                 if calibration_dataset is None:
@@ -924,24 +924,24 @@ def _hybrid_quantization(
     # ---- END W8A8
 
     # ---- START LORA
-    # rank = 32
-    # num_iters = 3
-    # add_regul = True
-    # reg_str = 'reg' if add_regul else 'noreg'
+    rank = 256
+    num_iters = 3
+    add_regul = True
+    reg_str = 'reg' if add_regul else 'noreg'
     # from nncf.common.utils.debug import nncf_debug
-    # wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(
-    #     rank=rank,
-    #     num_iters=num_iters,
-    #     add_regularization=add_regul
-    # ))
+    wc_advanced = AdvancedCompressionParameters(lora_correction_params=AdvancedLoraCorrectionParameters(
+        adapter_rank=rank,
+        num_iterations=num_iters,
+        apply_regularization=add_regul
+    ))
     # dataset = None#{}
     # with nncf_debug():
     model = nncf.compress_weights(
         model,
-        ratio=1.0,
+        ratio=0.5,
         dataset=dataset,
         mode=nncf.CompressWeightsMode.INT4_SYM,
-        ignored_scope=nncf.IgnoredScope(patterns=['.*time_embedding.*']),
+        # ignored_scope=nncf.IgnoredScope(patterns=['.*time_embedding.*']),
         # wc_config.ignored_scope["types"] = wc_config.ignored_scope.get("types", []) + ["Convolution"]
         # scale_estimation=True,
         # gptq=True,

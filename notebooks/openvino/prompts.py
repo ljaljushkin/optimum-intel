@@ -9,17 +9,17 @@ class ExpDesc:
 
 DESCS = [
     ExpDesc(
-        prompt="a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowskiand magali villanueve",
+        prompt="a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowski and magali villanueve",
         negative_prompt="deformed face, Ugly, bad quality, lowres, monochrome, bad anatomy",
         seed=1507302932
     ),
     ExpDesc(
-        prompt = "Pikachu commitingtax fraud, paperwork, exhausted, cute, really cute, cozy, by stevehanks, by lisa yuskavage, by serov valentin, by tarkovsky, 8 k render, detailed, cute cartoon style",
+        prompt = "Pikachu committing tax fraud, paperwork, exhausted, cute, really cute, cozy, by steve hanks, by lisa yuskavage, by serov valentin, by tarkovsky, 8k render, detailed, cute cartoon style",
         seed = 345,
         negative_prompt="",
     ),
     ExpDesc(
-        prompt = "amazon rainforest with many trees photorealistic detailed leaves",
+        prompt = "amazon rain forest with many trees photorealistic detailed leaves",
         negative_prompt = "blurry, poor quality, deformed, cartoonish, painting",
         seed = 1137900754
     ),

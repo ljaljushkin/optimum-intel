@@ -15,8 +15,6 @@ from prompts import encode_prompt
 from prompts import PROMPTS_MAP
 import json
 from collections import defaultdict
-from PIL import Image
-import torch.nn.functional as F
 # from torchmetrics.functional.multimodal import clip_score
 # inception_score = InceptionScore(normalize=True, splits=1)
 # clip_score_fn = partial(clip_score, model_name_or_path="openai/clip-vit-base-patch16")
@@ -99,25 +97,20 @@ PREFIXES = [
 
     # 'w4a16_datafree_horse_rest_w16',
     # 'w4a16_scale_horse_rest_w16',
+    'w4a16_sym_gptq_ign_time_emb_rest_w16',
     '_UNET_HYBRID_REST_W16',
     'w4a16_sym_datafree_ign_time_emb_rest_w16',
-    # 'w4a16_sym_scale_ign_time_emb_rest_w16',
-    'w4a16_sym_gptq_ign_time_emb_rest_w16',
-    # 'w4a16_sym_gptq_scale_ign_time_emb_rest_w16',
+    'w4a16_sym_gptq_scale_ign_time_emb_rest_w16',
+    'w4a16_sym_scale_ign_time_emb_rest_w16',
     # 'w4a16_asym_datafree_rest_w16',
-    'w4a16_lora_rank32_gptq_style_rest_w16',
-    'w4a16_lora_rank256_gptq_style_rest_w16',
 ]
-NUM_STEPS = '20steps_optimum_1.23'
-FILENAME = 'sym_optimum_1.23.png'
+NUM_STEPS = '20steps'
+FILENAME = 'sym.png'
 IMG_NAMES = [
     # Xiaofan
     'a_portrait_of_an_old',
-    # 'Pikachu_commitingtax',
-    # 'Pikachu_commiting_t',
-    'Pikachu_committing_t',
-    # 'amazon_rainforest_wi',
-    'amazon_rain_forest_w',
+    'Pikachu_commitingtax',
+    'amazon_rainforest_wi',
     'autumn_in_paris,_orn',
     'portrait_of_renaud_s',
     'An_astronaut_laying_',
@@ -142,8 +135,6 @@ for prefix in PREFIXES:
     # paths = list(imgs_dir.glob('*.png'))
     # if IMG_INDEXES is not None:
     #     paths = np.array(paths).take(IMG_INDEXES)
-    if len(paths) == 8:
-        print(prefix)
     num_images.add(len(paths))
     img_path_per_prefix[prefix] = paths
 
@@ -162,31 +153,6 @@ for a in list_axes:
     a.get_yaxis().set_visible(False)
     a.grid(False)
 
-from transformers import CLIPProcessor, CLIPModel, CLIPVisionModel, CLIPImageProcessor
-model_id = 'openai/clip-vit-large-patch14'
-clip_processor = CLIPImageProcessor.from_pretrained(model_id)
-clip_model = CLIPModel.from_pretrained(model_id).eval()
-
-def wwb_similarity(img_prediction_path):
-    parts = list(img_prediction_path.parts)
-    parts[-3] = 'stable-diffusion-v1-5_FP16'
-    img_gold_path = Path(*parts)
-
-    gold_image = Image.open(img_gold_path)
-    prediction_image = Image.open(img_prediction_path)
-
-    gold_inputs = clip_processor(images=gold_image, return_tensors="pt")["pixel_values"]
-    prediction_inputs = clip_processor(images=prediction_image, return_tensors="pt")["pixel_values"]
-
-    with torch.no_grad():
-        gold_outputs = clip_model.get_image_features(gold_inputs)
-        prediction_outputs = clip_model.get_image_features(prediction_inputs)
-
-    cos_sim = F.cosine_similarity(gold_outputs, prediction_outputs)
-    print("cos_sim: ", cos_sim.item())
-    return cos_sim.item()
-
-
 score_table = defaultdict(dict)
 for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
     scores_map = {}
@@ -203,14 +169,13 @@ for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
             print(avg_clip_score_str)
             score_table[prefix]['avg_clip_score'] = avg_clip_score
     inception_score_str = ''
-    inception_scores_path = img_path.parent.parent / 'inception_score_optimum_1.23.json'
+    inception_scores_path = img_path.parent.parent / 'inception_score.json'
     if inception_scores_path.exists():
         with inception_scores_path.open('r') as f:
             inception_score = json.load(f)['inception_score']
             inception_score_str = f"     Inception Score: {inception_score:.2f}"
             print(inception_score_str)
             score_table[prefix]['inception_score'] = inception_score
-    sim_per_image = []
     for j, img_path in enumerate(paths):
         # print('Process ', img_path)
         img = mpimg.imread(img_path)[:,:,:3]
@@ -225,9 +190,7 @@ for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
             # clip_score = clip_score_fn(torch.from_numpy(img), prompt).detach()
             # sd_clip_score = round(float(clip_score), 4)
             # scores_map[image_name] = sd_clip_score
-        cos_sim = wwb_similarity(img_path)
-        sim_per_image.append(cos_sim)
-        clip_score_str = cos_sim_str = f"{cos_sim:.2f}"
+
         title = clip_score_str
         if i==0 and j==0:
             title = f"{MODEL_ID}\n{NUM_STEPS}\n{prefix}{inception_score_str}{avg_clip_score_str}\n{clip_score_str}"
@@ -241,7 +204,6 @@ for i, (prefix, paths) in enumerate(img_path_per_prefix.items()):
     # fig.tight_layout()
 
     name = FILENAME
-    score_table[prefix]['similarity'] = np.mean(sim_per_image)
 
 df = pd.DataFrame.from_dict(score_table)
 df = df.transpose()
@@ -254,3 +216,5 @@ plt.savefig(fig_path)
 
 print('Image location: ', fig_path)
 print('Score table: ', score_table_path)
+
+

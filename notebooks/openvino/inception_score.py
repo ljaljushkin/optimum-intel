@@ -13,6 +13,7 @@ from transformers import set_seed
 import json
 torch.manual_seed(42)
 set_seed(42)
+rng = torch.Generator(device="cpu").manual_seed(42)
 
 # VALIDATION_DATASET_SIZE = 100
 VALIDATION_DATASET_SIZE = 25
@@ -26,6 +27,7 @@ core = ov.Core()
 # model_id = "runwayml/stable-diffusion-v1-5"
 # model_id = "sd_vit_per_token/runwayml/stable-diffusion-v1-5/models"
 # pipe = OVStableDiffusionPipeline.from_pretrained(model_id, compile=False)
+
 
 
 def compute_inception_score(pipe, unet_path, validation_set_size, batch_size=100):
@@ -45,7 +47,7 @@ def compute_inception_score(pipe, unet_path, validation_set_size, batch_size=100
         if len(prompt) > pipe.tokenizer.model_max_length:
             continue
         start_time = time.perf_counter()
-        image = pipe(prompt).images[0]
+        image = pipe(prompt, generator=rng).images[0]
         infer_times.append(time.perf_counter() - start_time)
         image = transforms.ToTensor()(image)
         images.append(image)
@@ -70,7 +72,7 @@ PREFIXES = [
     # "_FP32",
     # "_FP16", # GOLD
     # '_UNET_HYBRID_REST_W32',
-    # "_UNET_HYBRID_REST_W16", # GOLD
+    "_UNET_HYBRID_REST_W16", # GOLD
     # "_UNET_HYBRID_REST_W8",
     # "_UNET_W8A8_REST_W32",
     # "_UNET_W8A8_REST_W16", # GOLD
@@ -89,7 +91,7 @@ PREFIXES = [
 #     "_UNET_W8A8_LORA_256_REST_W16",
 #     "_UNET_W8A8_LORA_256_REST_W8",
 
-    # "_UNET_W8A8_LORA_32__X32__REST_W16", # GOLD
+    "_UNET_W8A8_LORA_32__X32__REST_W16", # GOLD
     # "_UNET_W8A8_LORA_8__X32_iter1_noreg__REST_W16"
     # "_UNET_W8A8_SQ_conv0.15_REST_W16"
     # "_UNET_W8A8_LORA_32_SQ_conv0.15_iter3_reg_cache_REST_W16"
