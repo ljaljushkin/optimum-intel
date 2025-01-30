@@ -1,0 +1,11 @@
+{
+    "cmake.configureOnOpen": false,
+    "python.testing.cwd": "${workspaceFolder}/tests/openvino",
+    "python.testing.pytestArgs": [
+        "test_quantization.py",
+        "-svv",
+        "-k test_ovmodel_hybrid_quantization",// or test_stable_diffusion_with_weight_compression"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
