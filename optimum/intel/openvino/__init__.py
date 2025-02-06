@@ -51,11 +51,13 @@ if is_nncf_available():
     from .quantization import OVQuantizer
     from .training_args import OVTrainingArguments
 
+    from .training_args import FQLoraTrainingArguments
+    from .fq_lora_model import FQLoraModel, get_fq_lora_model
+    from .fq_lora_trainer_mvp import FQLoraTrainerMVP
+
     if is_accelerate_available():
         from .trainer import OVTrainer
 
-from .fq_lora_model import FQLoRAModel
-# from .fq_lora_trainer import FQLoraTrainer
 
 from .configuration import OVConfig, OVDynamicQuantizationConfig, OVQuantizationConfig, OVWeightQuantizationConfig
 from .modeling import (

@@ -22,7 +22,7 @@ import time
 from collections import defaultdict
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import *
 
 
 # Integrations must be imported before ML frameworks:
@@ -140,14 +140,13 @@ def maybe_get_0th_element(x: Union[Any, Sequence[Any]]) -> Any:
         return x[0]
     return x
 
-class FQLoraTrainer(Trainer):
+class FQLoraTrainerMVP(Trainer):
     """
     """
 
     def __init__(
         self,
         model: Union[FQLoraModel, torch.nn.Module] = None,
-        teacher_model: Union[PreTrainedModel, torch.nn.Module] = None,
         args: OVTrainingArguments = None,
         data_collator: Optional[DataCollator] = None,
         train_dataset: Optional[Dataset] = None,
@@ -164,18 +163,20 @@ class FQLoraTrainer(Trainer):
         assert isinstance(model, FQLoraModel)
         self.neftune_noise_alpha = None
 
+        print(optimizers)
+
         super().__init__(
-            model,
-            args,
-            data_collator,
-            train_dataset,
-            eval_dataset,
-            tokenizer,
-            model_init,
-            compute_metrics,
-            callbacks,
-            optimizers,
-            preprocess_logits_for_metrics,
+            model=model,
+            args=args,
+            data_collator=data_collator,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            tokenizer=tokenizer,
+            model_init=model_init,
+            compute_metrics=compute_metrics,
+            callbacks=callbacks,
+            optimizers=optimizers,
+            preprocess_logits_for_metrics=preprocess_logits_for_metrics,
         )
 
         # self.ov_config = ov_config
@@ -189,31 +190,41 @@ class FQLoraTrainer(Trainer):
             self.deepspeed = None
 
         # cache original logits
-        with torch.no_grad(), model.temporary_original_inference() as orig_model:
-            # TODO: more unique name
-            cache_dir = Path(self.args.output_dir) / 'cache_hiddens'
-            cache_dir.mkdir(exist_ok=True, parents=True)
-            self._orig_hiddens = self._get_orig_hiddens(
-                orig_model,
-                train_dataset,
-                cache_file=cache_dir/f'n{len(train_dataset)}.pth'
-            )
+        # with torch.no_grad(), model.temporary_original_inference() as orig_model:
+        cache_dir = Path(self.args.output_dir) / 'cache_hiddens'
+        cache_dir.mkdir(exist_ok=True, parents=True)
+        self._orig_hiddens = self._get_orig_hiddens(
+            self.model,
+            train_dataset,
+            cache_file=cache_dir/f'n{len(train_dataset)}.pth'
+        )
 
 
     @staticmethod
-    def _get_orig_hiddens(model, dataloader, cache_file):
+    @torch.no_grad
+    def _get_orig_hiddens(model: FQLoraModel, dataloader, cache_file):
         # TODO: savetensor or maybe without it?? how long?
         if cache_file.exists():
             print("Load cached hiddens from: ", cache_file)
             orig_hiddens = torch.load(cache_file)
         else:
+            for quantizer in self.model._base_model._nncf.external_quantizers.values():
+                quantizer.disable_quantization()
+
             device = next(model.parameters()).device
             orig_hiddens = []
-            for i in trange(len(dataloader), total=len(dataloader), desc="Caching hiddens", leave=False):
-                batch = maybe_get_0th_element(dataloader[i]).to(device)
-                orig_hiddens.append(model.model(batch).last_hidden_state.cpu())
+            for i in range(len(dataloader)):
+                batch = maybe_get_0th_element(dataloader[i])['input_ids'].to(device)
+                # batch = dict(map(lambda x: (x[0], x[1].to(device),), batch.items()))
+                # TODO: _base_model in not convinient
+                # TODO: GPTNeoXForCausalLM has gpt_neox instead of model, embed_out instead of lm_head
+                # TODO: TypeError: embedding(): argument 'indices' (position 2) must be Tensor, not dict
+                orig_hiddens.append(model._base_model.model(batch).last_hidden_state.cpu())
             torch.save(orig_hiddens, cache_file)
             print("Save cached hiddens to: ", cache_file.resolve())
+
+            for quantizer in self.model._base_model._nncf.external_quantizers.values():
+                quantizer.enable_quantization()
         return orig_hiddens
 
     def _inner_training_loop(

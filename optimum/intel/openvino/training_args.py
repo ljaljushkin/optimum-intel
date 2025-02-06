@@ -35,3 +35,16 @@ class OVTrainingArguments(TrainingArguments):
 
         if self.distillation_temperature < 1:
             raise ValueError("distillation_temperature must be >= 1.0")
+
+@dataclass
+class FQLoraTrainingArguments(TrainingArguments):
+    """
+    Arguments pertaining to OpenVINO/NNCF-enabled training flow
+    """
+
+    learning_rate_fq: float = field(
+        default=1e-5, metadata={"help": "learning rate for quantization params - scale or input_low/input_high"}
+    )
+
+    def __post_init__(self):
+        super().__post_init__()
