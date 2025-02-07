@@ -23,8 +23,9 @@ from collections import defaultdict
 from itertools import chain
 from pathlib import Path
 from typing import *
-
-
+from copy import deepcopy
+import logging
+logger = logging.getLogger(__name__)
 # Integrations must be imported before ML frameworks:
 # isort: off
 from transformers.integrations import hp_params
@@ -198,6 +199,7 @@ class FQLoraTrainerMVP(Trainer):
             train_dataset,
             cache_file=cache_dir/f'n{len(train_dataset)}.pth'
         )
+        self.orig_lm_head = deepcopy(self.model._base_model.lm_head)
 
 
     @staticmethod
@@ -208,7 +210,7 @@ class FQLoraTrainerMVP(Trainer):
             print("Load cached hiddens from: ", cache_file)
             orig_hiddens = torch.load(cache_file)
         else:
-            for quantizer in self.model._base_model._nncf.external_quantizers.values():
+            for quantizer in model._base_model._nncf.external_quantizers.values():
                 quantizer.disable_quantization()
 
             device = next(model.parameters()).device
@@ -223,7 +225,7 @@ class FQLoraTrainerMVP(Trainer):
             torch.save(orig_hiddens, cache_file)
             print("Save cached hiddens to: ", cache_file.resolve())
 
-            for quantizer in self.model._base_model._nncf.external_quantizers.values():
+            for quantizer in model._base_model._nncf.external_quantizers.values():
                 quantizer.enable_quantization()
         return orig_hiddens
 
@@ -233,11 +235,12 @@ class FQLoraTrainerMVP(Trainer):
         self.accelerator.free_memory()
         self._train_batch_size = batch_size
 
-        if self.args.auto_find_batch_size:
-            self.state.train_batch_size = self._train_batch_size
         logger.debug(f"Currently training with a batch size of: {self._train_batch_size}")
         # Data loader and number of training steps
-        train_dataloader = self.get_train_dataloader()
+        # TODO: doesn't support collate, sampler for now.
+        # train_dataloader = self.get_train_dataloader()
+        train_dataloader = self.train_dataset
+        num_samples = len(train_dataloader)
 
         # Setting up training control variables:
         # number of training epochs: num_train_epochs
@@ -360,9 +363,6 @@ class FQLoraTrainerMVP(Trainer):
 
             is_distributed = self.args.distributed_state.distributed_type != DistributedType.NO
 
-        if self.compression_controller is not None and is_distributed:
-            self.compression_controller.distributed()
-
         model = self._wrap_model(self.model_wrapped)
 
         # as the model is wrapped, don't use `accelerator.prepare`
@@ -426,7 +426,6 @@ class FQLoraTrainerMVP(Trainer):
         logger.info(f"  Gradient Accumulation steps = {args.gradient_accumulation_steps}")
         logger.info(f"  Total optimization steps = {max_steps:,}")
         logger.info(f"  Number of trainable parameters = {get_model_param_count(model, trainable_only=True):,}")
-
         self.state.epoch = 0
         start_time = time.time()
         epochs_trained = 0
@@ -518,6 +517,8 @@ class FQLoraTrainerMVP(Trainer):
                 if len_dataloader is not None
                 else args.max_steps * args.gradient_accumulation_steps
             )
+            print(epoch_iterator)
+            print('sie, ms, gas=', steps_in_epoch, args.max_steps, args.gradient_accumulation_steps)
             self.control = self.callback_handler.on_epoch_begin(args, self.state, self.control)
 
             if epoch == epochs_trained and resume_from_checkpoint is not None and steps_trained_in_current_epoch == 0:
@@ -525,18 +526,23 @@ class FQLoraTrainerMVP(Trainer):
 
             rng_to_sync = False
             steps_skipped = 0
-            if steps_trained_in_current_epoch > 0:
-                epoch_iterator = skip_first_batches(epoch_iterator, steps_trained_in_current_epoch)
-                steps_skipped = steps_trained_in_current_epoch
-                steps_trained_in_current_epoch = 0
-                rng_to_sync = True
+            # if steps_trained_in_current_epoch > 0:
+            #     epoch_iterator = skip_first_batches(epoch_iterator, steps_trained_in_current_epoch)
+            #     steps_skipped = steps_trained_in_current_epoch
+            #     steps_trained_in_current_epoch = 0
+            #     rng_to_sync = True
 
             step = -1
-            for step, inputs in enumerate(epoch_iterator):
-
-                # TODO: implement random shuffling in train_dataloader
-                # batch_indices_epoch = torch.randperm(steps_in_epoch)[:epoch_samples].chunk(microbatches_per_epoch)
-
+            # TODO: iterate over cache_hiddens by the same indices of inputs, permute randomly
+            # batch_indices_epoch = torch.randperm(steps_in_epoch)[:epoch_samples].chunk(microbatches_per_epoch)
+            # batch_indices = [0,1]
+            # targets = self._orig_lm_head(self._extract_into_tensor(orig_hiddens, batch_indices))#, device=device, dtype=torch_dtype))
+            # inputs = _extract_into_tensor(train_loader, batch_indices)#, device=device)
+            for step, (inputs, orig_hiddens) in enumerate(zip(epoch_iterator, self._orig_hiddens)):
+                with torch.no_grad():
+                    param = next(iter(self.orig_lm_head.parameters()))
+                    orig_hiddens = orig_hiddens.to(device=param.device, dtype=param.dtype)
+                    targets = self.orig_lm_head(orig_hiddens)
                 total_batched_samples += 1
 
                 if is_transformers_version(">=", "4.36.0") and self.args.include_num_input_tokens_seen:
@@ -573,8 +579,11 @@ class FQLoraTrainerMVP(Trainer):
 
                 with self.accelerator.accumulate(model):
                     # NOTE: compute_loss is happening there
+                    print('training_step')
+                    # tr_loss_step = self.training_step(model, inputs)
+                    # TODO: have to combine cached hiddens with inputs?
+                    inputs['teacher_outputs'] = targets
                     tr_loss_step = self.training_step(model, inputs)
-
                 if (
                     args.logging_nan_inf_filter
                     and not is_torch_xla_available()
@@ -724,50 +733,32 @@ class FQLoraTrainerMVP(Trainer):
 
         return TrainOutput(self.state.global_step, train_loss, metrics)
 
-    def compute_distillation_loss(self, inputs, student_outputs):
-        with torch.no_grad():
-            teacher_outputs = self.teacher(**inputs)
-        teacher_logits = teacher_outputs.logits
-        student_logits = student_outputs.logits
-        temperature = self.args.distillation_temperature
-        return F.kl_div(
-            input=F.log_softmax(student_logits / temperature, dim=-1),
-            target=F.softmax(teacher_logits / temperature, dim=-1),
-            reduction="batchmean",
-        ) * (temperature**2)
+    def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+        """
+        How the loss is computed by Trainer. By default, all models return the loss in the first element.
 
-    def compute_loss(self, model, inputs, return_outputs=False):
-        pass
+        Subclass and override for custom behavior.
+        """
+        teacher_outputs = inputs.pop('teacher_outputs')
+        print(inputs)
+        inputs = inputs['input_ids']
+        print(inputs)
+        student_outputs = model(inputs).logits
 
-    def kl_div(student_hiddens, teacher_hiddens):
-        C = student_hiddens.shape[-1]  # num classes
-        return F.kl_div(
-            input=F.log_softmax(student_hiddens.view(-1, C), dim=-1),
-            target=F.log_softmax(teacher_hiddens.view(-1, C), dim=-1),
+        C = student_outputs.shape[-1]  # num classes
+        loss = F.kl_div(
+            input=F.log_softmax(student_outputs.view(-1, C), dim=-1),
+            target=F.log_softmax(teacher_outputs.view(-1, C), dim=-1),
             log_target=True,
             reduction="batchmean",
         )
+        # loss = kl_div(student_outputs, teacher_outputs)#, dtype=torch_dtype))
+        return loss
 
-        if self.teacher is None:
-            retval = super().compute_loss(model, inputs, return_outputs)
+    def _extract_into_tensor(tensor_list: List[torch.Tensor], indices: Iterable[int], device=None, dtype=None):
+        extracted_items = [maybe_get_0th_element(tensor_list[i]) for i in indices]
+        return torch.cat(extracted_items, dim=0).to(device=device, dtype=dtype)
 
-            if return_outputs is True:
-                loss, outputs = retval
-            else:
-                loss = retval
-        else:
-            task_loss, outputs = super().compute_loss(model, inputs, return_outputs=True)
-            if self.args.n_gpu > 1:
-                task_loss = task_loss.mean()
-            distillation_loss = self.compute_distillation_loss(inputs, outputs)
-            loss = (1 - self.args.distillation_weight) * task_loss + self.args.distillation_weight * distillation_loss
-
-            if model.training:
-                self.compression_metrics["task_loss"] = task_loss.item()
-                self.compression_metrics["distillation_loss"] = distillation_loss.item()
-                self.compression_metrics["compression_loss"] = compression_loss.item()
-
-        return (loss, outputs) if return_outputs else loss
 
     def _maybe_log_save_evaluate(self, tr_loss, model, trial, epoch, ignore_keys_for_eval):
         if self.control.should_log:

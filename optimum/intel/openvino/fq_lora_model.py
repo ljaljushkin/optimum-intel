@@ -43,7 +43,8 @@ class FQLoraModel(torch.nn.Module):
             save_dir / self.CKPT_NAME,
         )
 
-
+    def forward(self, *args, **kwargs):
+        return self._base_model(*args, **kwargs)
     # config = PeftConfig.from_pretrained(peft_model_id)
     # model = AutoModelForSeq2SeqLM.from_pretrained(config.base_model_name_or_path)
     # model = PeftModel.from_pretrained(model, peft_model_id)
