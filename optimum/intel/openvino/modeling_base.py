@@ -53,6 +53,7 @@ from .utils import (
 
 
 core = Core()
+core.set_property("CPU", {"EXECUTION_MODE_HINT": "ACCURACY"})
 
 logger = logging.getLogger(__name__)
 
@@ -164,7 +165,7 @@ class OVBaseModel(OptimizedModel):
         if quantization_config:
             self._openvino_config = OVConfig(quantization_config=quantization_config)
         self._set_ov_config_parameters()
-
+        print('OVERRIDE OVERRIDE OVERRIDE CONFIG:\n', self.ov_config)
         if not self._compile_only and enable_compilation:
             self.compile()
 
@@ -528,9 +529,9 @@ class OVBaseModel(OptimizedModel):
         return quantization_config
 
     def _set_ov_config_parameters(self):
-        if self.ov_config.get("PERFORMANCE_HINT") is None:
-            self.ov_config["PERFORMANCE_HINT"] = "LATENCY"
-
+        # if self.ov_config.get("PERFORMANCE_HINT") is None:
+        #     self.ov_config["PERFORMANCE_HINT"] = "LATENCY"
+        self.ov_config = {"INFERENCE_PRECISION_HINT": "f32"}
         q_config = self._openvino_config.quantization_config if self._openvino_config else None
         if isinstance(q_config, OVDynamicQuantizationConfig):
             self.ov_config["DYNAMIC_QUANTIZATION_GROUP_SIZE"] = str(q_config.activations_group_size)
